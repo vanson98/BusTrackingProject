@@ -4,9 +4,10 @@ using System.Text;
 
 namespace BusTracking.Data.Enum
 {
-    public enum Status
+    public enum TypeAccount
     {
-        Unactive,
-        Active,
+        ParentAcc,
+        MonitorAcc,
+        AdminAcc
     }
 }

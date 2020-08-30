@@ -1,14 +1,16 @@
 ﻿using BusTracking.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using BusTracking.Data.FluentConfigModel;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using Microsoft.AspNetCore.Identity;
+using BusTracking.Data.Extension;
 
 namespace BusTracking.Data.EF
 {
-    class BusTrackingDBContext : DbContext
+    public class BusTrackingDbContext : IdentityDbContext<AppUser,AppRole,Guid>
     {
-        public BusTrackingDBContext(DbContextOptions<BusTrackingDBContext> options) : base(options)
+        public BusTrackingDbContext(DbContextOptions<BusTrackingDbContext> options) : base(options)
         {
 
         }
@@ -16,6 +18,33 @@ namespace BusTracking.Data.EF
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Apply config fluent api for entity
+            modelBuilder.ApplyConfiguration(new BusConfiguration());
+            modelBuilder.ApplyConfiguration(new DriverConfiguration());
+            modelBuilder.ApplyConfiguration(new MonitorConfiguration());
+            modelBuilder.ApplyConfiguration(new NotifyConfiguration());
+            modelBuilder.ApplyConfiguration(new PointConfiguration());
+            modelBuilder.ApplyConfiguration(new RoundConfiguration());
+            modelBuilder.ApplyConfiguration(new RouteConfiguration());
+            modelBuilder.ApplyConfiguration(new RouteRoundConfiguration());
+            modelBuilder.ApplyConfiguration(new RouteStopConfiguration());
+            modelBuilder.ApplyConfiguration(new StopConfiguration());
+            modelBuilder.ApplyConfiguration(new StudentConfiguration());
+            // Phần Entity xác thực 
+            modelBuilder.ApplyConfiguration(new AppUserConfiguration());
+            modelBuilder.ApplyConfiguration(new AppRoleConfiguration());
+            modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("AppUserClaims");
+            modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("AppUserRoles").HasKey(x => new { x.UserId, x.RoleId });
+            modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("AppUserLogins").HasKey(x => x.UserId);
+            modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("AppRoleClaims");
+            modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("AppUserTokens").HasKey(x => x.UserId);
+
+            // Fake Data
+            modelBuilder.Seed();
         }
 
         public DbSet<Bus> Buses { get; set; }

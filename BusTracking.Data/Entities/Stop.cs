@@ -13,8 +13,8 @@ namespace BusTracking.Data.Entities
         public int NumberOfStudents { get; set; }
         public Status Status { get; set; }
         public Boolean IsDeleted { get; set; }
-        public string Longitude { get; set; }
-        public string Latitude { get; set; }
+        public decimal Longitude { get; set; }
+        public decimal Latitude { get; set; }
         public List<RouteStop> RouteStops { get; set; }
 
     }

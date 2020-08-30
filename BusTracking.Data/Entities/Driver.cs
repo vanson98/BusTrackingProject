@@ -15,7 +15,9 @@ namespace BusTracking.Data.Entities
        public string Email { get; set; }
        public string PhoneNumber { get; set; }
        public Status Status { get; set; }
-       public Boolean IsDelete { get; set; }
+       public Boolean IsDeleted { get; set;}
+       public int BusId { get; set; }
+       public Bus Bus { get; set; }
 
     }
 }

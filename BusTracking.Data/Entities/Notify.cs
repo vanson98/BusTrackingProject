@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BusTracking.Data.Entities
 {
-    class Notify
+    public class Notify
     {
         public TypeMessage Type { get; set; }
         public string Content { get; set; }

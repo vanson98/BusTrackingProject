@@ -5,8 +5,8 @@ using System.Text;
 namespace BusTracking.Data.Enum
 {
     public enum PointStatus
-    {
-        Running,
-        Stop
+    {   
+        Stop,
+        Running
     }
 }

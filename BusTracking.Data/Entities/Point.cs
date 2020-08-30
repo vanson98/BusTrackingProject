@@ -14,7 +14,5 @@ namespace BusTracking.Data.Entities
         public string Address { get; set; }
 
         public int BusId { get; set; }
-        public Bus Bus { get; set; }
-
     }
 }

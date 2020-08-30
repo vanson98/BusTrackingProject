@@ -10,6 +10,6 @@ namespace BusTracking.Data.Entities
         public int Id { get; set; }
         public DateTime TimeStart   { get; set; }
         public RoundStatus  Status { get; set; }
-        public RouteRound RouteRounds { get; set; }
+        public List<RouteRound> RouteRounds { get; set; }
     }
 }
