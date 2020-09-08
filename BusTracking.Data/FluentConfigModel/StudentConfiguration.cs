@@ -18,11 +18,12 @@ namespace BusTracking.Data.FluentConfigModel
                    .WithMany(b => b.Students)
                    .HasForeignKey(s => s.BusId)
                    .OnDelete(DeleteBehavior.Cascade);
-            builder.Property(s => s.BusId).HasDefaultValue(0);
+            builder.Property(s => s.BusId).IsRequired(true);
 
             builder.HasOne(s => s.Parent)
                    .WithMany(p => p.Students)
                    .HasForeignKey(s => s.ParentId);
+            builder.Property(s => s.ParentId).IsRequired(true);
 
             builder.Property(d => d.FisrtName).IsRequired();
             builder.Property(d => d.LastName).IsRequired();

@@ -25,7 +25,6 @@ namespace BusTracking.Data.EF
             // Apply config fluent api for entity
             modelBuilder.ApplyConfiguration(new BusConfiguration());
             modelBuilder.ApplyConfiguration(new DriverConfiguration());
-            modelBuilder.ApplyConfiguration(new MonitorConfiguration());
             modelBuilder.ApplyConfiguration(new NotifyConfiguration());
             modelBuilder.ApplyConfiguration(new PointConfiguration());
             modelBuilder.ApplyConfiguration(new RoundConfiguration());
@@ -42,14 +41,14 @@ namespace BusTracking.Data.EF
             modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("AppUserLogins").HasKey(x => x.UserId);
             modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("AppRoleClaims");
             modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("AppUserTokens").HasKey(x => x.UserId);
-
             // Fake Data
             modelBuilder.Seed();
         }
 
+        public DbSet<AppUser> AppUsers { get; set; }
+        public DbSet<AppRole> AppRoles { get; set; }
         public DbSet<Bus> Buses { get; set; }
         public DbSet<Driver> Drivers { get; set; }
-        public DbSet<Monitor> Monitors { get; set; }
         public DbSet<Notify> Notifies { get; set; }
         public DbSet<Point> Points { get; set; }
         public DbSet<Round> Rounds { get; set; }

@@ -8,6 +8,6 @@ namespace BusTracking.Data.Enum
     {
         ParentAcc,
         MonitorAcc,
-        AdminAcc
+        WebAcc
     }
 }

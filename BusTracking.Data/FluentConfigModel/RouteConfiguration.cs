@@ -14,11 +14,11 @@ namespace BusTracking.Data.FluentConfigModel
             builder.HasKey(r => r.Id);
             builder.Property(r => r.Id).UseIdentityColumn();
 
+            builder.Property(r => r.RouteCode).IsRequired().IsUnicode(false);
             builder.Property(r => r.Name).IsRequired().HasMaxLength(50);
             builder.Property(r => r.Distance).IsRequired();
             builder.Property(r => r.IsDeleted).HasDefaultValue(false);
             builder.Property(r => r.Status).IsRequired();
-            builder.Property(r => r.BusId).HasDefaultValue(0);
         }
     }
 }

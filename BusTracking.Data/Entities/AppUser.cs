@@ -10,10 +10,12 @@ namespace BusTracking.Data.Entities
     public class AppUser : IdentityUser<Guid>
     {
         public string FullName { get; set; }
+        public DateTime Dob { get; set; }
         public TypeAccount TypeAccount { get; set; }
         public Boolean IsDeleted { get; set; }
         public Status Status { get; set; }
         public List<Student> Students { get; set; }
-        public Monitor Monitor { get; set; }
+        public Bus Bus { get; set; }
+       
     }
 }

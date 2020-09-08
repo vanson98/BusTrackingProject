@@ -22,7 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Host Api", "3. Host Api"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusTracking.BackendApi", "BusTracking.BackendApi\BusTracking.BackendApi.csproj", "{E488E42B-10EA-447D-9186-103FF2D7E7EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusTracking.Application", "BusTracking.Application\BusTracking.Application.csproj", "{D2316B75-26BF-4CD8-8C80-39B168A93824}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusTracking.Application", "BusTracking.Application\BusTracking.Application.csproj", "{D2316B75-26BF-4CD8-8C80-39B168A93824}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
