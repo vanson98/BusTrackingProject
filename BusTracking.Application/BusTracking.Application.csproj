@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BusTracking.Data\BusTracking.Data.csproj" />
+    <ProjectReference Include="..\BusTracking.Utilities\BusTracking.Utilities.csproj" />
     <ProjectReference Include="..\BusTracking.ViewModels\BusTracking.ViewModels.csproj" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>

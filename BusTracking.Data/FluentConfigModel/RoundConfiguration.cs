@@ -13,6 +13,7 @@ namespace BusTracking.Data.FluentConfigModel
         public void Configure(EntityTypeBuilder<Round> builder)
         {
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Name).IsRequired().HasMaxLength(255);
             builder.Property(x => x.Id).UseIdentityColumn();
             builder.Property(x => x.TimeStart).IsRequired();
         }

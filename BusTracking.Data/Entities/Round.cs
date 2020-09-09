@@ -8,6 +8,7 @@ namespace BusTracking.Data.Entities
     public class Round
     {
         public int Id { get; set; }
+        public string Name { get; set; }
         public DateTime TimeStart   { get; set; }
         public RoundStatus  Status { get; set; }
         public List<RouteRound> RouteRounds { get; set; }

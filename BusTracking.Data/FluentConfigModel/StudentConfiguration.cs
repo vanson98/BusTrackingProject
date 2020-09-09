@@ -25,8 +25,7 @@ namespace BusTracking.Data.FluentConfigModel
                    .HasForeignKey(s => s.ParentId);
             builder.Property(s => s.ParentId).IsRequired(true);
 
-            builder.Property(d => d.FisrtName).IsRequired();
-            builder.Property(d => d.LastName).IsRequired();
+            builder.Property(d => d.Name).IsRequired();
             builder.Property(d => d.Address).HasMaxLength(255);
             builder.Property(d => d.Email).IsUnicode(false);
             builder.Property(d => d.Dob).IsRequired();

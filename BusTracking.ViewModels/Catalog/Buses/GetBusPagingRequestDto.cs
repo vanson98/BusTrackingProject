@@ -5,6 +5,7 @@ using System.Text;
 
 namespace BusTracking.ViewModels.Catalog.Buses
 {
+    // Tìm kiếm
     public class GetBusPagingRequestDto : PageRequestBaseDto
     {
         public string LicenseCode { get; set; }

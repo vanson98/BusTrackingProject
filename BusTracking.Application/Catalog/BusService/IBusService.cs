@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using BusTracking.ViewModels.Catalog.Buses;
 using BusTracking.ViewModels.Common;
 
-namespace BusTracking.Application.Catalog.Bus
+namespace BusTracking.Application.Catalog.BusService
 {
     public interface IBusService
     {
         Task<PageResultDto<BusDto>> GetAllPaging(GetBusPagingRequestDto request);
-        Task<BusDto> GetById(int busId); 
+        Task<BusDto> GetById(int busId);
         Task<int> Create(CreateBusRequestDto createBusRequestDto);
         Task<int> Update(UpdateBusRequestDto updateBusRequestDto);
         Task<int> Delete(int busId);

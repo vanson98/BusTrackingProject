@@ -8,6 +8,7 @@ using System.Text;
 
 namespace BusTracking.Data.EF
 {
+    // Dành riêng cho migration DB
     public class BusTrackingDbContextFactory : IDesignTimeDbContextFactory<BusTrackingDbContext>
     {
         public BusTrackingDbContext CreateDbContext(string[] args)
