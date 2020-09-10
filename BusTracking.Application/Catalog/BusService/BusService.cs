@@ -32,7 +32,7 @@ namespace BusTracking.Application.Catalog.BusService
             // Filter
             if (request.LicenseCode != null)
             {
-                query = query.Where(x => x.b.LicenseCode == request.LicenseCode);
+                query = query.Where(x => x.b.LicenseCode.Contains(request.LicenseCode));
             }
             if (request.Status != null)
             {
@@ -133,7 +133,7 @@ namespace BusTracking.Application.Catalog.BusService
             bus.MonitorId = request.MonitorId;
             bus.RouteId = request.RouteId;
             _context.Buses.Update(bus);
-            return await _context.SaveChangesAsync(); ;
+            return await _context.SaveChangesAsync();
         }
 
         public async Task<int> Delete(int Id)

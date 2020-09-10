@@ -27,9 +27,7 @@ namespace BusTracking.Data.EF
             modelBuilder.ApplyConfiguration(new DriverConfiguration());
             modelBuilder.ApplyConfiguration(new NotifyConfiguration());
             modelBuilder.ApplyConfiguration(new PointConfiguration());
-            modelBuilder.ApplyConfiguration(new RoundConfiguration());
             modelBuilder.ApplyConfiguration(new RouteConfiguration());
-            modelBuilder.ApplyConfiguration(new RouteRoundConfiguration());
             modelBuilder.ApplyConfiguration(new RouteStopConfiguration());
             modelBuilder.ApplyConfiguration(new StopConfiguration());
             modelBuilder.ApplyConfiguration(new StudentConfiguration());
@@ -51,9 +49,7 @@ namespace BusTracking.Data.EF
         public DbSet<Driver> Drivers { get; set; }
         public DbSet<Notify> Notifies { get; set; }
         public DbSet<Point> Points { get; set; }
-        public DbSet<Round> Rounds { get; set; }
         public DbSet<Route> Routes { get; set; }
-        public DbSet<RouteRound> RouteRounds { get; set; }
         public DbSet<RouteStop> RouteStops {get;set;}
         public DbSet<Stop> Stops  {get;set;}
         public DbSet<Student> Students  {get;set;}

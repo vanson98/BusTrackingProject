@@ -7,7 +7,9 @@ namespace BusTracking.Data.Enum
     public enum StudentStatus
     {
         AtHome,
-        OnTheBus,
-        AtSchool
+        GoingToSholl,
+        AtScholl,
+        GoingToHome,
+        OnLeave,
     }
 }

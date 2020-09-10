@@ -8,6 +8,7 @@ namespace BusTracking.Data.Entities
     public class Bus
     {
         public int Id { get; set; }
+        public string Name { get; set; }
         public string LicenseCode { get; set; }
         public int MaxSize { get; set; }
         public decimal MaxSpeed { get; set; }

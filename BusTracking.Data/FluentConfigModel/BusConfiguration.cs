@@ -13,7 +13,7 @@ namespace BusTracking.Data.FluentConfigModel
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).UseIdentityColumn();
-
+            builder.Property(x => x.Name).IsRequired().HasMaxLength(255);
             builder.HasOne(x => x.Driver)
                    .WithOne(d => d.Bus)
                    .HasForeignKey<Bus>(x => x.DriverId)

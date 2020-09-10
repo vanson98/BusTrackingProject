@@ -16,6 +16,7 @@ namespace BusTracking.Data.Extension
             modelBuilder.Entity<Bus>().HasData(
                 new Bus() {
                     Id=1, 
+                    Name="Xe 01",
                     LicenseCode="29S6-81655",
                     MaxSize=12,MaxSpeed=45,
                     Description=null, 
@@ -26,6 +27,7 @@ namespace BusTracking.Data.Extension
                 },
                 new Bus() {
                     Id=2, 
+                    Name="Xe 02",
                     LicenseCode="29S6-81656",
                     MaxSize = 10,
                     MaxSpeed = 40,
@@ -37,6 +39,7 @@ namespace BusTracking.Data.Extension
                 },
                 new Bus() {
                     Id=3, 
+                    Name="Xe 03",
                     LicenseCode="29S6-81657",
                     MaxSize = 22,
                     MaxSpeed = 35,
@@ -85,9 +88,31 @@ namespace BusTracking.Data.Extension
 
             // Route
             modelBuilder.Entity<Route>().HasData(
-                new Route() { Id = 1,RouteCode="R001",Name="Tuyến 01",Distance=(decimal)12.34,Status=Status.Active},
-                new Route() { Id = 2,RouteCode="R002",Name="Tuyến 02",Distance=(decimal)10.34,Status=Status.Active},
-                new Route() { Id = 3,RouteCode="R003",Name="Tuyến 03",Distance=(decimal)77.15,Status=Status.Active}
+                new Route() { 
+                    Id = 1,
+                    RouteCode="R001",
+                    Name="Tuyến 01",
+                    Distance=(decimal)12.34,
+                    TimePickUp=new TimeSpan(7,0,0),
+                    TimeDropOff = new TimeSpan(17,0,0),
+                    Status=Status.Active},
+                new Route() { 
+                    Id = 2,
+                    RouteCode="R002",
+                    Name="Tuyến 02",
+                    Distance=(decimal)10.34,
+                    TimePickUp = new TimeSpan(7, 0, 0),
+                    TimeDropOff = new TimeSpan(17, 0, 0),
+                    Status =Status.Active},
+                new Route() { 
+                    Id = 3,
+                    RouteCode="R003",
+                    Name="Tuyến 03",
+                    Distance=(decimal)77.15,
+                    TimePickUp = new TimeSpan(7, 0, 0),
+                    TimeDropOff = new TimeSpan(17, 0, 0),
+                    Status =Status.Active
+                }
             );
             // Identity
             var roleId = new Guid("8D04DCE2-969A-435D-BBA4-DF3F325983DC");

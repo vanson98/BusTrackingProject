@@ -52,11 +52,11 @@ namespace BusTracking.Application.Catalog.DriverService
             // Filter
             if (!string.IsNullOrEmpty(request.Name))
             {
-                query = query.Where(x => x.Name == request.Name);
+                query = query.Where(x => x.Name.Contains(request.Name));
             }
             if (!string.IsNullOrEmpty(request.PhoneNumber))
             {
-                query = query.Where(x => x.PhoneNumber == request.PhoneNumber);
+                query = query.Where(x => x.PhoneNumber.Contains(request.PhoneNumber));
             }
             if (request.Status>=0)
             {
@@ -113,7 +113,7 @@ namespace BusTracking.Application.Catalog.DriverService
             driver.PhoneNumber = request.PhoneNumber;
             driver.Status = (Status)request.Status;
             _context.Drivers.Update(driver);
-            return await _context.SaveChangesAsync(); ;
+            return await _context.SaveChangesAsync();
         }
     }
 }

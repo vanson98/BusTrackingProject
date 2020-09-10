@@ -10,7 +10,6 @@ namespace BusTracking.Data.Entities
         public int Id { get; set; }
         public int BusId { get; set; }
         public Guid ParentId { get; set; }
-        public int RoundId { get; set; }
         public string Name { get; set; }
         public DateTime Dob { get; set; }
         public string Address { get; set; }
@@ -20,6 +19,5 @@ namespace BusTracking.Data.Entities
         public Boolean IsDeleted { get; set; }
         public Bus Bus { get; set; }
         public AppUser Parent { get; set; }
-        public Round Round { get; set; }
     }
 }
