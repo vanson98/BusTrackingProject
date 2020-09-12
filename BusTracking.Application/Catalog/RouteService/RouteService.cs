@@ -28,6 +28,8 @@ namespace BusTracking.Application.Catalog.RouteService
                RouteCode = request.RouteCode,
                Name = request.Name,
                Distance = request.Distance,
+               TimePickUp = new TimeSpan(request.HourPickUp,request.MinutePickUp,0),
+               TimeDropOff = new TimeSpan(request.HourDropOff, request.MinuteDropOff, 0),
                Desctiption = request.Desctiption,
                Status = (Status)request.Status
             };
@@ -75,6 +77,8 @@ namespace BusTracking.Application.Catalog.RouteService
                                       Distance = x.Distance,
                                       RouteCode = x.RouteCode,
                                       Desctiption = x.Desctiption,
+                                      TimePickUp = x.TimePickUp,
+                                      TimeDropOff = x.TimeDropOff,
                                       Status = (int)x.Status
                                   }).ToListAsync();
             // Return 
@@ -87,9 +91,23 @@ namespace BusTracking.Application.Catalog.RouteService
             return pageResult;
         }
 
-        public Task<RouteDto> GetById(int busId)
+        public async Task<RouteDto> GetById(int id)
         {
-            throw new NotImplementedException();
+            var x = await _context.Routes.Where(x => x.IsDeleted == false).FirstOrDefaultAsync(x => x.Id == id);
+            if (x == null)
+                return null;
+            var route = new RouteDto()
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Distance = x.Distance,
+                RouteCode = x.RouteCode,
+                Desctiption = x.Desctiption,
+                TimePickUp = x.TimePickUp,
+                TimeDropOff = x.TimeDropOff,
+                Status = (int)x.Status
+            };
+            return route;
         }
 
         public async Task<int> Update(UpdateRouteRequestDto request)
@@ -100,6 +118,8 @@ namespace BusTracking.Application.Catalog.RouteService
             route.Desctiption = request.Desctiption;
             route.RouteCode = request.RouteCode;
             route.Distance = request.Distance;
+            route.TimePickUp = new TimeSpan(request.HourPickUp, request.MinutePickUp, 0);
+            route.TimeDropOff = new TimeSpan(request.HourDropOff, request.MinuteDropOff, 0);
             route.Status = (Status)request.Status;
             _context.Routes.Update(route);
             return await _context.SaveChangesAsync();

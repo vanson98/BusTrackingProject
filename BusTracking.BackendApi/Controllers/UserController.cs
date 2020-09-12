@@ -19,12 +19,6 @@ namespace BusTracking.BackendApi.Controllers
             _userService = userService;
         }
 
-        [HttpGet("test")]
-        public IActionResult Test()
-        {
-            return Ok("Test");
-        }
-
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody]LoginRequestDto request)
         {
@@ -46,5 +40,7 @@ namespace BusTracking.BackendApi.Controllers
                 return BadRequest("Create user fail!");
             return Ok();
         }
+
+
     }
 }

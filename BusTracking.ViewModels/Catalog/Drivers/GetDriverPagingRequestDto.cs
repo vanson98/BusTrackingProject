@@ -9,6 +9,6 @@ namespace BusTracking.ViewModels.Catalog.Drivers
     {
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
-        public int Status { get; set; }
+        public int? Status { get; set; }
     }
 }

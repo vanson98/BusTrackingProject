@@ -12,7 +12,6 @@ namespace BusTracking.ViewModels.Catalog.Stops
         public int NumberOfStudents { get; set; }
         public int Status { get; set; }
         public decimal Longitude { get; set; }
-        public int Order { get; set; }
         public decimal Latitude { get; set; }
     }
 }

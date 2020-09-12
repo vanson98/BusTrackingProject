@@ -28,7 +28,6 @@ namespace BusTracking.Application.Catalog.StopService
                 Name = request.Name,
                 Address = request.Address,
                 NumberOfStudents = request.NumberOfStudents,
-                Order = request.Order,
                 Longitude = request.Longitude,
                 Latitude = request.Latitude,
                 Status = (Status)request.Status
@@ -77,7 +76,6 @@ namespace BusTracking.Application.Catalog.StopService
                                       Address = x.Address,
                                       Longitude = x.Longitude,
                                       Latitude = x.Latitude,
-                                      Order = x.Order,
                                       NumberOfStudents = x.NumberOfStudents,
                                       Status = (int)x.Status
                                   }).ToListAsync();
@@ -90,9 +88,22 @@ namespace BusTracking.Application.Catalog.StopService
             return pageResult;
         }
 
-        public async Task<StopDto> GetById(int busId)
+        public async Task<StopDto> GetById(int id)
         {
-            throw new NotImplementedException();
+            var x = await _context.Stops.Where(x => x.IsDeleted == false).FirstOrDefaultAsync(x => x.Id == id);
+            if (x == null)
+                return null;
+            var stop = new StopDto()
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Address = x.Address,
+                Longitude = x.Longitude,
+                Latitude = x.Latitude,
+                NumberOfStudents = x.NumberOfStudents,
+                Status = (int)x.Status
+            };
+            return stop;
         }
 
         public async Task<int> Update(UpdateStopRequestDto request)
@@ -103,7 +114,6 @@ namespace BusTracking.Application.Catalog.StopService
             stop.Longitude = request.Longitude;
             stop.Latitude = request.Latitude;
             stop.NumberOfStudents = request.NumberOfStudents;
-            stop.Order = request.Order;
             stop.Status = (Status)request.Status;
             _context.Stops.Update(stop);
             return await _context.SaveChangesAsync();

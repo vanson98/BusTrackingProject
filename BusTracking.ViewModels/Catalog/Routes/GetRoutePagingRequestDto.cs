@@ -9,6 +9,6 @@ namespace BusTracking.ViewModels.Catalog.Routes
     {
         public string RouteCode { get; set; }
         public string Name { get; set; }
-        public int Status { get; set; }
+        public int? Status { get; set; }
     }
 }

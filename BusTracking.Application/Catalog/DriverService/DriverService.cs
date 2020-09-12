@@ -89,6 +89,9 @@ namespace BusTracking.Application.Catalog.DriverService
         public async Task<DriverDto> GetById(int Id)
         {
             var x = await _context.Drivers.Where(x => x.IsDeleted == false).FirstOrDefaultAsync(d=>d.Id==Id);
+            if (x == null)
+                return null;
+            
             var driver = new DriverDto()
             {
                 Id = x.Id,

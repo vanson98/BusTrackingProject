@@ -21,7 +21,7 @@ namespace BusTracking.Data.FluentConfigModel
                    .WithMany(s => s.RouteStops)
                    .HasForeignKey(rs => rs.StopId)
                    .OnDelete(DeleteBehavior.Cascade);
-
+            builder.Property(x => x.Order).IsRequired();
         }
     }
 }

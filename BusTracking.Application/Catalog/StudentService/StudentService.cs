@@ -65,13 +65,17 @@ namespace BusTracking.Application.Catalog.StudentService
             {
                 query = query.Where(x => x.s.PhoneNumber == request.PhoneNumber);
             }
-            if (request.ParentId != null)
+            if (request.ParentId != Guid.Empty)
             {
                 query = query.Where(x => x.s.ParentId == request.ParentId);
             }
             if (request.BusId > 0)
             {
                 query = query.Where(x => x.s.BusId == request.BusId);
+            }
+            if(request.Status >= 0)
+            {
+                query = query.Where(x => (int)x.s.Status == request.Status);
             }
             // Paging
             int totalRow = await query.CountAsync();

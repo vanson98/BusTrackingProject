@@ -15,7 +15,6 @@ namespace BusTracking.Data.Entities
         public Boolean IsDeleted { get; set; }
         public decimal Longitude { get; set; }
         public decimal Latitude { get; set; }
-        public int Order { get; set; }
         public List<RouteStop> RouteStops { get; set; }
 
     }

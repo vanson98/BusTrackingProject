@@ -10,6 +10,8 @@ namespace BusTracking.ViewModels.Catalog.Routes
         public string RouteCode { get; set; }
         public string Name { get; set; }
         public decimal Distance { get; set; }
+        public TimeSpan TimePickUp { get; set; }
+        public TimeSpan TimeDropOff { get; set; }
         public string Desctiption { get; set; }
         public int Status { get; set; }
     }

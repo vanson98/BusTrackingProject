@@ -25,9 +25,9 @@ namespace BusTracking.Application.Catalog.BusService
             // Select and Join 
             var query = from b in _context.Buses
                         where b.IsDeleted == false
-                        join dr in _context.Drivers on b.DriverId equals dr.Id
-                        join m in _context.AppUsers on b.MonitorId equals m.Id
-                        join r in _context.Routes on b.RouteId equals r.Id
+                        from dr in _context.Drivers.Where(dr => dr.Id == b.DriverId).DefaultIfEmpty()
+                        from m in _context.AppUsers.Where(m => b.MonitorId == m.Id).DefaultIfEmpty()
+                        from r in _context.Routes.Where(r => b.RouteId == r.Id).DefaultIfEmpty()
                         select new { b, dr, m, r };
             // Filter
             if (request.LicenseCode != null)
@@ -48,7 +48,7 @@ namespace BusTracking.Application.Catalog.BusService
             }
             // Paging
             int totalRow = await query.CountAsync();
-            var data = await query.Skip(request.PageIndex * request.PageSize)
+            var data = await query.Skip((request.PageIndex-1) * request.PageSize)
                                   .Take(request.PageSize)
                                   .Select(x => new BusDto()
                                   {
@@ -58,12 +58,12 @@ namespace BusTracking.Application.Catalog.BusService
                                       MaxSpeed = x.b.MaxSpeed,
                                       Description = x.b.Description,
                                       Status = (int)x.b.Status,
-                                      DriverId = x.dr.Id,
-                                      DriverName = x.dr.Name,
-                                      MonitorId = x.m.Id,
-                                      MonitorName = x.m.FullName,
-                                      RouteId = x.r.Id,
-                                      RouteName = x.r.Name
+                                      DriverId = x.dr == null ? -1 : x.dr.Id,
+                                      DriverName = x.dr == null ? null : x.dr.Name,
+                                      MonitorId = x.m == null ? Guid.Empty : x.m.Id,
+                                      MonitorName = x.m == null ? null : x.m.FullName,
+                                      RouteId = x.r == null ? -1 : x.r.Id,
+                                      RouteName = x.r == null ? null : x.r.Name
                                   })
                                   .ToListAsync();
             // Return 
@@ -79,28 +79,27 @@ namespace BusTracking.Application.Catalog.BusService
         public async Task<BusDto> GetById(int busId)
         {
             // Select and Join 
-            var query = from b in _context.Buses
-                        where b.Id == busId && b.IsDeleted == false
-                        join dr in _context.Drivers on b.DriverId equals dr.Id
-                        join m in _context.AppUsers on b.MonitorId equals m.Id
-                        join r in _context.Routes on b.RouteId equals r.Id
+            var query = from b in _context.Buses where b.Id == busId && b.IsDeleted == false
+                        from dr in _context.Drivers.Where(dr => dr.Id == b.DriverId).DefaultIfEmpty()
+                        from m in _context.AppUsers.Where(m => b.MonitorId == m.Id).DefaultIfEmpty()
+                        from r in _context.Routes.Where(r=>b.RouteId == r.Id).DefaultIfEmpty()
                         select new { b, dr, m, r };
-            var bus = await query.FirstOrDefaultAsync();
-            if (bus == null) throw new BusTrackingException($"Can't not find any object with id is {busId}");
+            var x = await query.FirstOrDefaultAsync();
+            if (x == null) throw new BusTrackingException($"Can't not find any object with id is {busId}");
             return new BusDto()
             {
-                Id = bus.b.Id,
-                LicenseCode = bus.b.LicenseCode,
-                MaxSize = bus.b.MaxSize,
-                MaxSpeed = bus.b.MaxSpeed,
-                Description = bus.b.Description,
-                Status = (int)bus.b.Status,
-                DriverId = bus.dr.Id,
-                DriverName = bus.dr.Name,
-                MonitorId = bus.m.Id,
-                MonitorName = bus.m.FullName,
-                RouteId = bus.r.Id,
-                RouteName = bus.r.Name
+                Id = x.b.Id,
+                LicenseCode = x.b.LicenseCode,
+                MaxSize = x.b.MaxSize,
+                MaxSpeed = x.b.MaxSpeed,
+                Description = x.b.Description,
+                Status = (int)x.b.Status,
+                DriverId = x.dr ==null ? -1 : x.dr.Id,
+                DriverName = x.dr == null ? null : x.dr.Name,
+                MonitorId = x.m == null ? Guid.Empty : x.m.Id,
+                MonitorName = x.m == null ? null:  x.m.FullName,
+                RouteId = x.r ==null ? -1 : x.r.Id,
+                RouteName = x.r == null? null :  x.r.Name
             };
         }
 
@@ -109,6 +108,7 @@ namespace BusTracking.Application.Catalog.BusService
             var bus = new Bus()
             {
                 LicenseCode = request.LicenseCode,
+                Name = request.Name,
                 MaxSize = request.MaxSize,
                 MaxSpeed = request.MaxSpeed,
                 Description = request.Description,
@@ -118,13 +118,15 @@ namespace BusTracking.Application.Catalog.BusService
                 RouteId = request.RouteId
             };
             _context.Buses.Add(bus);
-            return await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+            return bus.Id;
         }
         public async Task<int> Update(UpdateBusRequestDto request)
         {
             var bus = await _context.Buses.Where(x=>x.IsDeleted==false).FirstOrDefaultAsync(x => x.Id == request.Id);
             if (bus == null) throw new BusTrackingException($"Can't not find any object with id is {request.Id}");
             bus.LicenseCode = request.LicenseCode;
+            bus.Name = request.Name;
             bus.MaxSize = request.MaxSize;
             bus.MaxSpeed = request.MaxSpeed;
             bus.Description = request.Description;

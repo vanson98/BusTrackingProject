@@ -17,6 +17,11 @@ using BusTracking.Application.System.Users;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.IO;
+using BusTracking.Application.Catalog.DriverService;
+using BusTracking.Application.Catalog.BusService;
+using BusTracking.Application.Catalog.RouteService;
+using BusTracking.Application.Catalog.StudentService;
+using BusTracking.Application.Catalog.StopService;
 
 namespace BusTracking.BackendApi
 {
@@ -39,11 +44,16 @@ namespace BusTracking.BackendApi
                     .AddEntityFrameworkStores<BusTrackingDbContext>()
                     .AddDefaultTokenProviders();
 
-            // DI
+            // DI Services
             services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
             services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
             services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IDriverService, DriverService>();
+            services.AddTransient<IBusService, BusService>();
+            services.AddTransient<IRouteService, RouteService>();
+            services.AddTransient<IStopService, StopService>();
+            services.AddTransient<IStudentService, StudentService>();
 
             // Cấu hình swagger
             services.AddSwaggerGen(c =>
@@ -97,7 +107,7 @@ namespace BusTracking.BackendApi
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
             app.UseRouting();
 
             app.UseAuthorization();

@@ -10,5 +10,6 @@ namespace BusTracking.Application.System.Users
     {
         Task<string> Authencate(LoginRequestDto loginRequest);
         Task<bool> CreateUser(CreateUserRequestDto createUserRequestDto);
+        
     }
 }
