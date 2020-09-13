@@ -341,7 +341,7 @@ healthchecksdb
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
-/dist   
+WEB/angular/dist   
 /tmp
 
 # dependencies
