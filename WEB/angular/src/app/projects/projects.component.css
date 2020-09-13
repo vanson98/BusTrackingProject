@@ -1,0 +1,19 @@
+.cate{
+    padding: 2px;
+    background: white;
+}
+.cate>div{
+    padding: 0 12px 12px 12px;
+    cursor: pointer;
+}
+.all-cate{
+    font-weight: 700;
+}
+.cate>div>div{
+    width: 182px;
+    height: 30px;
+    padding: 6px;
+}
+.mat-form-field {
+    margin: 0 22px;
+}

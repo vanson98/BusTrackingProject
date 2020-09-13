@@ -1,0 +1,202 @@
+<div class="container-fluid">
+  <div class="backlog-header">
+    <h3>Backlog</h3>
+    <div class="bl-hd">
+      <div class="bl-header-search">
+        <input type="text" placeholder="Tìm kiếm" />
+      </div>
+      <div class="bl-header-filter">
+        <div>{{"OnlyMyIssues"}}</div>
+        <div>{{"RecentlyUpdate"}}</div>
+      </div>
+    </div>
+  </div>
+  <div class="backlog-content">
+    <div class="backlog-left">
+      <div class="epic-card">
+        <div class="epic-title">Epics</div>
+        <div class="epic-created"><a (click)="createEpic()">Create new epic</a></div>
+      </div>
+      <!-- List epic -->
+      <div class="epic-list">
+        <div class="epic-list-item" *ngFor="let item of listEpic" (click)="LoadSprintByEpic(item.epic.id)">
+          <div class="epic-header">
+            <span class="btn-down" (click)="onButtonExpandClicked($event)"
+              ><i class="fa fa-caret-right" aria-hidden="true" state="0"></i
+            ></span>
+            <span class="epic-name">{{item.epic.name}}</span>
+            <div class="epic-item-option">
+              <i class="fa fa-ellipsis-v" aria-hidden="true" [matMenuTriggerFor]="option"></i>
+              <mat-menu #option="matMenu">
+                 <button mat-menu-item (click)="editEpic(item.epic)"> <!-- Truyền sprint hiện tại vào  -->
+                  <mat-icon>edit</mat-icon>
+                  <span>{{ "Edit" | localize }}</span>
+                </button>
+                <button mat-menu-item (click)="deleteEpic(item)"> <!-- Truyền sprint hiện tại vào  -->
+                  <mat-icon>delete</mat-icon>
+                  <span>{{ "Delete" | localize }}</span>
+                </button>
+              </mat-menu>
+            </div>
+          </div>
+          <div class="epic-expand expand-none">
+            <div class="summary">
+              <span class="epic-key">{{item.epic.key}} -</span>
+              <span class="epic-summary">{{item.epic.summary}}</span>
+              <div class="epic-duadate">
+                <span>Hạn:  </span>
+                <span>{{item.epic.dueDate | mydate}}</span>
+              </div>
+              
+              <div class="epic-group">
+                <div class="epic-item">Issues</div>
+                <div class="epic-badge">{{item.issueCount.allIssue}}</div>
+              </div>
+              <div class="epic-group">
+                <div class="epic-item">Completed</div>
+                <div class="epic-badge">{{item.issueCount.completedIssue}}</div>
+              </div>
+              <div class="epic-group">
+                <div class="epic-item">In Process</div>
+                <div class="epic-badge">{{item.issueCount.inprocessIssue}}</div>
+              </div>
+              <div class="epic-group">
+                <div class="epic-item">Open</div>
+                <div class="epic-badge">{{item.issueCount.openIssue}}</div>
+              </div>
+            </div>
+            <div class="subheader"><span></span></div>
+          </div>
+        </div>
+       
+
+        <div class="epic-selected">
+          <span>Issues without epics</span>
+        </div>
+      </div>
+      <!-- End List Epic -->
+    </div>
+    <div class="backlog-mid">
+      <!-- List sprint and backlog-->
+      <div class="backlog-sprint">
+        <div class="spint-item" *ngFor="let item of listSprint">
+          <div class="sp-item-header">
+            <!--start left-->
+            <div class="item-header-left">
+              <span class="btn-down" (click)="onExpandSprint($event)"><i class="fa fa-caret-right" aria-hidden="true" state="0"></i>
+              </span>
+              <div class="sp-it-name">
+                <span (click)='showInputSprintName($event)'>{{item.sprint.name}}</span>
+                <input
+                  (blur)='editSprintName($event)'
+                  (keydown)='keydownInputSprintName($event)'
+                  class="item-name-input"
+                  type="text"
+                  required
+                  maxlength="30"
+                  [value]="item.sprint.name"
+                />
+              </div>
+              <div class="sp-it-count">
+                <span>{{item.listIssues.length + " công việc"}}</span>
+              </div>
+            </div>
+            <!--end left-->
+            <!--start right-->
+            <div class="item-header-right">
+              <div class="sp-it-state">
+                <span *ngIf="item.sprint.state==1">Trạng thái: Mới bắt đầu</span>
+                <span *ngIf="item.sprint.state==2">Trạng thái: Đang diễn ra</span>
+                <span *ngIf="item.sprint.state==3">Trạng thái: Đã kết thúc</span>
+              </div>
+            </div>
+            <!--end right-->
+            <div class="sp-item-option">
+                <i class="fa fa-ellipsis-v" aria-hidden="true" [matMenuTriggerFor]="option"></i>
+                <mat-menu #option="matMenu">
+                   <button mat-menu-item (click)="editSprint(item.sprint)"> 
+                    <mat-icon>edit</mat-icon>
+                    <span>Edit</span>
+                  </button>
+                </mat-menu>
+            </div>
+          </div>
+          <!-- Phần mở rộng sprint -->
+          <div class="sp-item-expand expand-none">
+            <div class="issue-time">
+                <span>{{item.sprint.startDate | mydate}} - {{item.sprint.dueDate | mydate}}</span>
+            </div>
+            <!-- Phần danh sách issue -->
+            <div class="issues-list" *ngIf="item.listIssues.length>0">
+              <div class='bl-issue-item' *ngFor="let issue of item.listIssues">
+                <div class="is-it-left">
+                  <span class="is-type"><i class="fa fa-tasks" aria-hidden="true"></i></span>
+                  <span class="is-priority">
+                    <img *ngIf="issue.priority==4" class="is-ic-priority" src="../../../assets/images/up-arrow.png" aria-hidden="true"/>
+                    <img *ngIf="issue.priority==3" class="is-ic-priority" src="../../../assets/images/up-arrow-cam.png" aria-hidden="true"/>
+                    <img *ngIf="issue.priority==2" class="is-ic-priority" src="../../../assets/images/down-arrow-xanh.png" aria-hidden="true"/>
+                    <img *ngIf="issue.priority==1" class="is-ic-priority" src="../../../assets/images/down-arrow-xm.png" aria-hidden="true"/>
+                  </span>
+                  <span class="is-key"><a href="#">{{issue.key}}</a></span>
+                  <p class="is-summary">{{issue.summary}}</p>
+                </div>
+                <div class="is-it-right">
+                  <span class="is-epic">{{issue.epicName}}</span>
+                  <span class="is-point">{{issue.storyPoint}}</span>
+                </div>
+              </div>
+            </div>
+            <div class="issues-list" *ngIf="item.listIssues.length<=0">
+              <div class="it-sp-no-is">
+                <p>
+                  Sprint này chưa có công việc nào
+                </p>
+              </div>
+            </div>
+            <!--KT Phần danh sách issue -->
+          </div>
+          <!-- KT Phần mở rộng sprint -->
+        </div>
+        <!-- Kết thúc một sprint -->
+        <div class="backlog-issues">
+          <div class="bl-header">
+            <div class="bl-hd-left">
+              <span>Backlog</span>
+              <div class="sp-it-count">
+                <span>1 issues</span>
+              </div>
+            </div>
+            <div class="bl-hd-right">
+                <button (click)='createSprint()'>Create Sprint</button>
+            </div>
+          </div>
+          <div class="bl-issue-list">
+            <div class='bl-issue-item'>
+              <div class="is-it-left">
+                <span class="is-type"><i class="fa fa-tasks" aria-hidden="true"></i></span>
+                <span class="is-priority"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
+                <span class="is-key"><a href="#">PORT-245</a></span>
+                <p class="is-summary">Kết quả đánh giá ATBM dự án quản lý hệ thống văn bản</p>
+              </div>
+              <div class="is-it-right">
+                <span class="is-point">8</span>
+              </div>
+            </div>
+            <div class='bl-issue-item'>
+              <div class="is-it-left">
+                <span class="is-type"><i class="fa fa-book" aria-hidden="true"></i></span>
+                <span class="is-priority"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
+                <span class="is-key"><a href="#">PORT-246</a></span>
+                <p class="is-summary">Xây dựng web quản trị cho VCB</p>
+              </div>
+              <div class="is-it-right">
+                <span class="is-point">8</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+     <!-- End list sprint and issue -->
+    </div>
+  </div>
+</div>

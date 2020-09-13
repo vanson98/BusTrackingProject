@@ -1,0 +1,38 @@
+
+  <div class="row">
+    <section (window:resize)="onResize($event)" class="col-md-2">
+      <aside id="leftsidebar" class="sidebar-project">
+        <div class="sidebar-top">
+          <div class="sb-project-name">{{projectName}}</div>
+          <div class="sb-project-key">{{projectKey}}</div>
+        </div>
+        <div class="sidebar-body">
+          <ul class="nav-project">
+            <li>
+              <i  class="material-icons">assignment</i>
+              <a [routerLink]="['./project-backlog',projectID]">Backlog</a>
+            </li>
+            <li>
+              <i  class="material-icons">line_weight</i>
+              <a routerLink='./project-sprint'>Active Sprint</a>
+            </li>
+            <li>
+              <i  class="material-icons">live_help</i>
+              <a routerLink='./project-issues'>Issues</a>
+            </li>
+            <li>
+              <i  class="material-icons">signal_cellular_alt</i>
+              <a href="#">Report</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+    </section>
+    <section class="col-md-10">
+      <router-outlet></router-outlet> 
+    </section>
+  </div>
+
+
+
+

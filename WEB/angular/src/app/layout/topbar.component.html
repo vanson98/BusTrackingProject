@@ -1,0 +1,71 @@
+﻿
+<nav class="navbar">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
+            <a href="javascript:void(0);" class="bars"></a>
+            <a routerLink="/app/home" class="navbar-brand"><i class="fa fa-cubes"></i>Work Manager</a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- <li class="pull-right"><a href="javascript:void(0);" class="js-right-sidebar" data-close="true"><i class="material-icons">more_vert</i></a></li> -->
+                <ng-template ngFor let-menuItem [ngForOf]='menuItems'>
+                    <li *ngIf="showMenuItem(menuItem)" routerLinkActive="active" class="menu-top">
+                        <a [routerLink]="menuItem.route" *ngIf="!menuItem.items.length && menuItem.route.indexOf('http')!=0">
+                            <i *ngIf="menuItem.icon" class="material-icons">{{menuItem.icon}}</i>
+                            <span class="span-menu-c1">{{menuItem.name}}</span>
+                        </a>
+                         <!-- Has child menu items (so, this is a parent menu) -->
+                        <a href="javascript:void(0);" [ngClass]="{'menu-toggle': menuItem.items.length}" *ngIf="menuItem.items.length">
+                            <i *ngIf="menuItem.icon" class="material-icons">{{menuItem.icon}}</i>
+                            <span class="span-menu-c1">{{menuItem.name}}</span>
+                        </a>
+                        <ul class="ml-menu " *ngIf="menuItem.items.length">
+                            <ng-template ngFor let-subMenuItem [ngForOf]="menuItem.items" let-mainMenuItemIndex="index">
+                                <li *ngIf="showMenuItem(subMenuItem)" routerLinkActive="active" class="menu-top-child">
+                                    <!-- route name -->
+                                    <a [routerLink]="[subMenuItem.route]" class="toggled" *ngIf="!subMenuItem.items.length && subMenuItem.route.indexOf('http') != 0">
+                                        <i *ngIf="subMenuItem.icon" class="material-icons">{{subMenuItem.icon}}</i>
+                                        <span>{{subMenuItem.name}}</span>
+                                    </a>
+                                </li>
+                            </ng-template>
+                        </ul>
+                    </li>
+                </ng-template>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Search Bar -->
+<div class="search-bar">
+    <div class="search-icon">
+        <i class="material-icons">search</i>
+    </div>
+    <input matInput type="text" placeholder="START TYPING...">
+    <div class="close-search">
+        <i class="material-icons">close</i>
+    </div>
+</div> <!-- #END# Search Bar -->
+
+<div class="user-info">
+    <div class="image">
+        <img src="assets/images/user.png" width="48" height="48" alt="User" />
+    </div>
+    <div class="btn-group user-helper-dropdown">
+        <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
+        <ul class="dropdown-menu pull-right">
+            <li><a [routerLink]="['/app/update-password']"><i class="material-icons">lock</i>{{'Update Password'}}</a></li>
+            <li><a (click)="logout()"><i class="material-icons">input</i>{{ 'Logout'}}</a></li>
+        </ul>
+    </div>
+    <div class="info-container">
+        <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{shownLoginName}}</div>
+        <div class="email">{{appSession.user.emailAddress}}</div>
+    </div>
+    <!-- <li><a href="javascript:void(0);" class="js-search" data-close="true"><i class="material-icons">search</i></a></li> -->
+    <!-- <topbar-languageswitch></topbar-languageswitch> -->
+</div>
+
+
