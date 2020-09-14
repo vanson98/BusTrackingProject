@@ -19,17 +19,6 @@ namespace BusTracking.BackendApi.Controllers
             _userService = userService;
         }
 
-        [HttpPost("authenticate")]
-        public async Task<IActionResult> Authenticate([FromBody]LoginRequestDto request)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-            var resultToken = await _userService.Authencate(request);
-            if (string.IsNullOrEmpty(resultToken))
-                return BadRequest("Login fail!");
-            return Ok(resultToken);
-        }
-
         [HttpPost("create-user")]
         public async Task<IActionResult> CreateUser([FromBody]CreateUserRequestDto request)
         {

@@ -18,14 +18,14 @@ namespace RouteTracking.BackendApi.Controllers
             _routeService = routeService;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllPaging([FromQuery]GetRoutePagingRequestDto request)
         {
             var result = await _routeService.GetAllPaging(request);
             return Ok(result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("Get/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var Route = await _routeService.GetById(id);
@@ -34,7 +34,7 @@ namespace RouteTracking.BackendApi.Controllers
             return Ok(Route);
         }
 
-        [HttpPost]
+        [HttpPost("Create")]
         public async Task<IActionResult> Create([FromBody] CreateRouteRequestDto requestDto)
         {
             if (!ModelState.IsValid)
@@ -46,7 +46,7 @@ namespace RouteTracking.BackendApi.Controllers
             return Ok(route);
         }
 
-        [HttpPut]
+        [HttpPut("Update")]
         public async Task<IActionResult> Update([FromBody] UpdateRouteRequestDto request)
         {
             int rowEffected = await _routeService.Update(request);
@@ -55,7 +55,7 @@ namespace RouteTracking.BackendApi.Controllers
             return Ok("Cập nhật thành công");
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             int rowEffected = await _routeService.Delete(id);

@@ -18,14 +18,14 @@ namespace StopTracking.BackendApi.Controllers
             _stopService = stopService;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllPaging([FromQuery]GetStopPagingReqestDto request)
         {
             var result = await _stopService.GetAllPaging(request);
             return Ok(result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("Get/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var stop = await _stopService.GetById(id);
@@ -34,7 +34,7 @@ namespace StopTracking.BackendApi.Controllers
             return Ok(stop);
         }
 
-        [HttpPost]
+        [HttpPost("Create")]
         public async Task<IActionResult> Create([FromBody] CreateStopRequestDto requestDto)
         {
             if (!ModelState.IsValid)
@@ -46,7 +46,7 @@ namespace StopTracking.BackendApi.Controllers
             return CreatedAtAction(nameof(GetById), new { id = stopId }, stop);
         }
 
-        [HttpPut]
+        [HttpPut("Update")]
         public async Task<IActionResult> Update([FromBody] UpdateStopRequestDto request)
         {
             int rowEffected = await _stopService.Update(request);
@@ -55,7 +55,7 @@ namespace StopTracking.BackendApi.Controllers
             return Ok("Cập nhật thành công");
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             int rowEffected = await _stopService.Delete(id);

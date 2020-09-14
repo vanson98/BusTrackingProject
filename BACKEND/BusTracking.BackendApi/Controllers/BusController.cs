@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BusTracking.Application.Catalog.BusService;
 using BusTracking.ViewModels.Catalog.Buses;
+using BusTracking.ViewModels.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusTracking.BackendApi.Controllers
@@ -18,15 +19,15 @@ namespace BusTracking.BackendApi.Controllers
             _busService = busService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllPaging([FromQuery]GetBusPagingRequestDto request)
+        [HttpGet("GetAll")]
+        public async Task<PageResultDto<BusDto>> GetAllPaging([FromQuery]GetBusPagingRequestDto request)
         {
             var result = await _busService.GetAllPaging(request);
-            return Ok(result);
+            return result;
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        [HttpGet("Get")]
+        public async Task<IActionResult> GetById([FromQuery]int id)
         {
             var bus = await _busService.GetById(id);
             if (bus == null)
@@ -34,7 +35,7 @@ namespace BusTracking.BackendApi.Controllers
             return Ok(bus);
         }
 
-        [HttpPost]
+        [HttpPost("Create")]
         public async Task<IActionResult> Create([FromBody]CreateBusRequestDto requestDto)
         {
             if (!ModelState.IsValid)
@@ -46,7 +47,7 @@ namespace BusTracking.BackendApi.Controllers
             return CreatedAtAction(nameof(GetById), new { id = busId }, bus);
         }
 
-        [HttpPut]
+        [HttpPut("Update")]
         public async Task<IActionResult> Update([FromBody]UpdateBusRequestDto request)
         {
             int rowEffected = await _busService.Update(request);
@@ -55,8 +56,8 @@ namespace BusTracking.BackendApi.Controllers
             return Ok("Cập nhật thành công");
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> Delete([FromQuery]int id)
         {
             int rowEffected = await _busService.Delete(id);
             if (rowEffected == 0)

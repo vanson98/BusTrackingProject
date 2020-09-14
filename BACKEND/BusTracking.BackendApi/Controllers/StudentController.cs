@@ -18,14 +18,14 @@ namespace StudentTracking.BackendApi.Controllers
             _studentService = studentService;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllPaging([FromQuery]GetStudentPagingRequestDto request)
         {
             var result = await _studentService.GetAllPaging(request);
             return Ok(result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("Get/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var student = await _studentService.GetById(id);
@@ -34,7 +34,7 @@ namespace StudentTracking.BackendApi.Controllers
             return Ok(student);
         }
 
-        [HttpPost]
+        [HttpPost("Create")]
         public async Task<IActionResult> Create([FromBody]CreateStudentRequestDto requestDto)
         {
             if (!ModelState.IsValid)
@@ -46,7 +46,7 @@ namespace StudentTracking.BackendApi.Controllers
             return CreatedAtAction(nameof(GetById), new { id = StudentId }, Student);
         }
 
-        [HttpPut]
+        [HttpPut("Update")]
         public async Task<IActionResult> Update([FromBody] UpdateStudentRequestDto request)
         {
             int rowEffected = await _studentService.Update(request);
@@ -55,7 +55,7 @@ namespace StudentTracking.BackendApi.Controllers
             return Ok("Cập nhật thành công");
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             int rowEffected = await _studentService.Delete(id);

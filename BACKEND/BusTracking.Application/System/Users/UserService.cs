@@ -9,6 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using BusTracking.Data.Enum;
+using BusTracking.ViewModels.Common;
+using BusTracking.ViewModels.System.Auth;
 
 namespace BusTracking.Application.System.Users
 {

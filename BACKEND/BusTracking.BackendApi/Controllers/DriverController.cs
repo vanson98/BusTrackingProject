@@ -18,15 +18,15 @@ namespace BusTracking.BackendApi.Controllers
             _driverService = driverService;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllPaging([FromQuery]GetDriverPagingRequestDto request)
         {
             var result = await _driverService.GetAllPaging(request);
             return Ok(result);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult> GetById(int id)
+        [HttpGet("Get")]
+        public async Task<ActionResult> GetById([FromQuery]int id)
         {
             var driver = await _driverService.GetById(id);
             if (driver == null)
@@ -36,7 +36,7 @@ namespace BusTracking.BackendApi.Controllers
             return Ok(driver);
         }
 
-        [HttpPost]
+        [HttpPost("Create")]
         public async Task<IActionResult> Create([FromBody]CreateDriverRequestDto request)
         {
             if (!ModelState.IsValid)
@@ -52,7 +52,7 @@ namespace BusTracking.BackendApi.Controllers
             return CreatedAtAction(nameof(GetById), new { id = driverId }, driver);
         }
 
-        [HttpPut]
+        [HttpPut("Update")]
         public async Task<IActionResult> Update([FromBody]UpdateDriverRequestDto request)
         {
             if (!ModelState.IsValid)
@@ -65,7 +65,7 @@ namespace BusTracking.BackendApi.Controllers
             return Ok();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             int rowEffected = await _driverService.Delete(id);
