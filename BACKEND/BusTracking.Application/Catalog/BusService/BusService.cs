@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using BusTracking.Utilities;
 using BusTracking.Data.Entities;
 using BusTracking.Data.Enum;
+using BusTracking.Utilities.Constants;
 
 namespace BusTracking.Application.Catalog.BusService
 {
@@ -20,7 +21,7 @@ namespace BusTracking.Application.Catalog.BusService
             _context = context;
         }
 
-        public async Task<PageResultDto<BusDto>> GetAllPaging(GetBusPagingRequestDto request)
+        public async Task<PageResultDto<BusDto>> GetAllPagingAsync(GetBusPagingRequestDto request)
         {
             // Select and Join 
             var query = from b in _context.Buses
@@ -38,13 +39,13 @@ namespace BusTracking.Application.Catalog.BusService
             {
                 query = query.Where(x => (int)x.b.Status == request.Status);
             }
-            if (request.DriverId != null)
+            if (request.DriverName != null)
             {
-                query = query.Where(x => x.b.DriverId == request.DriverId);
+                query = query.Where(x => x.dr.Name.Contains(request.DriverName));
             }
-            if (request.RouteId != null)
+            if (request.RouteName != null)
             {
-                query = query.Where(x => x.b.RouteId == request.RouteId);
+                query = query.Where(x => x.r.Name.Contains(request.RouteName));
             }
             // Paging
             int totalRow = await query.CountAsync();
@@ -54,6 +55,7 @@ namespace BusTracking.Application.Catalog.BusService
                                   {
                                       Id = x.b.Id,
                                       LicenseCode = x.b.LicenseCode,
+                                      Name = x.b.Name,
                                       MaxSize = x.b.MaxSize,
                                       MaxSpeed = x.b.MaxSpeed,
                                       Description = x.b.Description,
@@ -69,14 +71,14 @@ namespace BusTracking.Application.Catalog.BusService
             // Return 
             var pageResutlDto = new PageResultDto<BusDto>()
             {
+                StatusCode = ResponseCode.Success,
                 Items = data,
-                Message = "Success",
                 TotalRecord = totalRow
             };
             return pageResutlDto;
         }
 
-        public async Task<BusDto> GetById(int busId)
+        public async Task<BusDto> GetByIdAsync(int busId)
         {
             // Select and Join 
             var query = from b in _context.Buses where b.Id == busId && b.IsDeleted == false
@@ -90,6 +92,7 @@ namespace BusTracking.Application.Catalog.BusService
             {
                 Id = x.b.Id,
                 LicenseCode = x.b.LicenseCode,
+                Name = x.b.Name,
                 MaxSize = x.b.MaxSize,
                 MaxSpeed = x.b.MaxSpeed,
                 Description = x.b.Description,
@@ -103,7 +106,7 @@ namespace BusTracking.Application.Catalog.BusService
             };
         }
 
-        public async Task<int> Create(CreateBusRequestDto request)
+        public async Task<int> CreateAsync(CreateBusRequestDto request)
         {
             var bus = new Bus()
             {
@@ -121,10 +124,10 @@ namespace BusTracking.Application.Catalog.BusService
             await _context.SaveChangesAsync();
             return bus.Id;
         }
-        public async Task<int> Update(UpdateBusRequestDto request)
+        public async Task<int> UpdateAsync(UpdateBusRequestDto request)
         {
             var bus = await _context.Buses.Where(x=>x.IsDeleted==false).FirstOrDefaultAsync(x => x.Id == request.Id);
-            if (bus == null) throw new BusTrackingException($"Can't not find any object with id is {request.Id}");
+            if (bus == null) return -1;
             bus.LicenseCode = request.LicenseCode;
             bus.Name = request.Name;
             bus.MaxSize = request.MaxSize;
@@ -138,18 +141,16 @@ namespace BusTracking.Application.Catalog.BusService
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<int> Delete(int Id)
+        public async Task<int> DeleteAsync(int Id)
         {
             var bus = await _context.Buses.Where(x => x.IsDeleted == false).FirstOrDefaultAsync(x => x.Id == Id);
             if (bus == null)
             {
-                throw new BusTrackingException($"Can't not find any object with id is {Id}");
+                return -1;
             }
             bus.IsDeleted = true;
             _context.Buses.Update(bus);
             return await _context.SaveChangesAsync();
         }
-
-
     }
 }

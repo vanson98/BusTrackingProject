@@ -31,6 +31,7 @@ namespace BusTracking.Data.EF
             modelBuilder.ApplyConfiguration(new RouteStopConfiguration());
             modelBuilder.ApplyConfiguration(new StopConfiguration());
             modelBuilder.ApplyConfiguration(new StudentConfiguration());
+            modelBuilder.ApplyConfiguration(new StudentCheckInConfiguration());
             // Phần Entity xác thực 
             modelBuilder.ApplyConfiguration(new AppUserConfiguration());
             modelBuilder.ApplyConfiguration(new AppRoleConfiguration());
@@ -53,5 +54,6 @@ namespace BusTracking.Data.EF
         public DbSet<RouteStop> RouteStops {get;set;}
         public DbSet<Stop> Stops  {get;set;}
         public DbSet<Student> Students  {get;set;}
+        public DbSet<StudentCheckIn> StudentCheckIns { get; set; }
     }
 }

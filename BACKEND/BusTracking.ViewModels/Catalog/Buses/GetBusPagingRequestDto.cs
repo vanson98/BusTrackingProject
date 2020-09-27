@@ -10,7 +10,7 @@ namespace BusTracking.ViewModels.Catalog.Buses
     {
         public string LicenseCode { get; set; }
         public int? Status { get; set; }
-        public int? DriverId { get; set; }
-        public int? RouteId { get; set; }
+        public string DriverName { get; set; }
+        public string RouteName { get; set; }
     }
 }

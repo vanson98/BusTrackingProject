@@ -1,5 +1,8 @@
 ﻿using BusTracking.Application.Catalog.StudentService;
+using BusTracking.Utilities.Constants;
+using BusTracking.ViewModels.Catalog.Stops;
 using BusTracking.ViewModels.Catalog.Students;
+using BusTracking.ViewModels.Common;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -18,50 +21,68 @@ namespace StudentTracking.BackendApi.Controllers
             _studentService = studentService;
         }
 
-        [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAllPaging([FromQuery]GetStudentPagingRequestDto request)
+        [HttpGet("GetAllPaging")]
+        public async Task<PageResultDto<StudentDto>> GetAllPaging([FromQuery]GetStudentPagingRequestDto request)
         {
             var result = await _studentService.GetAllPaging(request);
-            return Ok(result);
+            return result;
         }
 
         [HttpGet("Get/{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<ResultDto<StudentDto>> GetById(int id)
         {
             var student = await _studentService.GetById(id);
             if (student == null)
-                return BadRequest($"Không tìm thấy đối tượng nào");
-            return Ok(student);
+            {
+                return new ResultDto<StudentDto>()
+                {
+                    StatusCode = ResponseCode.NotFound,
+                    Message = "Không tìm thấy đối tượng",
+                    Result = null
+                };
+            }
+            return new ResultDto<StudentDto>(ResponseCode.Success, "Thực thi thành công", student);
         }
 
         [HttpPost("Create")]
-        public async Task<IActionResult> Create([FromBody]CreateStudentRequestDto requestDto)
+        public async Task<ResponseDto> Create([FromBody]CreateStudentRequestDto request)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
-            var StudentId = await _studentService.Create(requestDto);
-            if (StudentId == 0)
-                return BadRequest();
-            var Student = await _studentService.GetById(StudentId);
-            return CreatedAtAction(nameof(GetById), new { id = StudentId }, Student);
+            {
+                return new ResponseDto(ResponseCode.Validate, "Đầu vào không hợp lệ");
+            }
+            var studentId = await _studentService.Create(request);
+            if (studentId == 0)
+            {
+                return new ResponseDto(ResponseCode.LogicError, "Tạo mới không thành công");
+            }
+            return new ResponseDto(ResponseCode.Success, "Tạo mới thành công");
         }
 
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] UpdateStudentRequestDto request)
+        public async Task<ResponseDto> Update([FromBody] UpdateStudentRequestDto request)
         {
-            int rowEffected = await _studentService.Update(request);
-            if (rowEffected == 0)
-                return BadRequest();
-            return Ok("Cập nhật thành công");
+            if (!ModelState.IsValid)
+            {
+                return new ResponseDto(ResponseCode.Validate, "Đầu vào không hợp lệ");
+            }
+            var result = await _studentService.Update(request);
+            if (result == 0)
+                return new ResponseDto(ResponseCode.LogicError, "Cập nhật không thành công");
+            if (result == -1)
+                return new ResponseDto(ResponseCode.LogicError, "Không tìm thấy đối tượng cần cập nhật");
+            return new ResponseDto(ResponseCode.Success, "Cập nhật thành công");
         }
 
         [HttpDelete("Delete/{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<ResponseDto> Delete(int id)
         {
-            int rowEffected = await _studentService.Delete(id);
-            if (rowEffected == 0)
-                return BadRequest();
-            return Ok("Xóa thành công");
+            int result = await _studentService.Delete(id);
+            if (result == 0)
+                return new ResponseDto(ResponseCode.LogicError, "Xóa không thành công");
+            if (result == -1)
+                return new ResponseDto(ResponseCode.LogicError, "Không tìm thấy đối tượng cần xóa");
+            return new ResponseDto(ResponseCode.Success, "Xóa thành công");
         }
     }
 }

@@ -20,37 +20,25 @@ namespace BusTracking.Application.Catalog.RouteService
         {
             _context = dbContext;
         }
-
-        public async Task<int> Create(CreateRouteRequestDto request)
+        public async Task<List<RouteDto>> GetAllRouteUnAssignAsync()
         {
-            var route = new Route()
+            var query = from x in _context.Routes
+                        join b in _context.Buses on x.Id equals b.RouteId into gb
+                        from sub in gb.DefaultIfEmpty()
+                        where sub.RouteId == null
+                        select x;
+            var bus = await query.Select(x => new RouteDto()
             {
-               RouteCode = request.RouteCode,
-               Name = request.Name,
-               Distance = request.Distance,
-               TimePickUp = new TimeSpan(request.HourPickUp,request.MinutePickUp,0),
-               TimeDropOff = new TimeSpan(request.HourDropOff, request.MinuteDropOff, 0),
-               Desctiption = request.Desctiption,
-               Status = (Status)request.Status
-            };
-            await _context.Routes.AddAsync(route);
-            await _context.SaveChangesAsync();
-            return route.Id;
+                Id = x.Id,
+                RouteCode = x.RouteCode,
+                Distance = x.Distance,
+                Description = x.Desctiption,
+                Name = x.Name,
+                Status = (int)x.Status
+            }).ToListAsync();
+            return bus;
         }
-
-        public async Task<int> Delete(int id)
-        {
-            var route = await _context.Routes.Where(x => x.IsDeleted == false).FirstOrDefaultAsync(x => x.Id == id);
-            if (route == null)
-            {
-                throw new BusTrackingException($"Can't not find any object with id is {id}");
-            }
-            route.IsDeleted = true;
-            _context.Routes.Update(route);
-            return await _context.SaveChangesAsync();
-        }
-
-        public async Task<PageResultDto<RouteDto>> GetAllPaging(GetRoutePagingRequestDto request)
+        public async Task<PageResultDto<RouteDto>> GetAllPagingAsync(GetRoutePagingRequestDto request)
         {
             var query = _context.Routes.Where(x => x.IsDeleted == false).AsQueryable();
             // Filter
@@ -72,13 +60,11 @@ namespace BusTracking.Application.Catalog.RouteService
                                   .Take(request.PageSize)
                                   .Select(x => new RouteDto()
                                   {
-                                      Id= x.Id,
+                                      Id = x.Id,
                                       Name = x.Name,
                                       Distance = x.Distance,
                                       RouteCode = x.RouteCode,
-                                      Desctiption = x.Desctiption,
-                                      TimePickUp = x.TimePickUp,
-                                      TimeDropOff = x.TimeDropOff,
+                                      Description = x.Desctiption,
                                       Status = (int)x.Status
                                   }).ToListAsync();
             // Return 
@@ -90,8 +76,7 @@ namespace BusTracking.Application.Catalog.RouteService
             };
             return pageResult;
         }
-
-        public async Task<RouteDto> GetById(int id)
+        public async Task<RouteDto> GetByIdAsync(int id)
         {
             var x = await _context.Routes.Where(x => x.IsDeleted == false).FirstOrDefaultAsync(x => x.Id == id);
             if (x == null)
@@ -102,24 +87,47 @@ namespace BusTracking.Application.Catalog.RouteService
                 Name = x.Name,
                 Distance = x.Distance,
                 RouteCode = x.RouteCode,
-                Desctiption = x.Desctiption,
-                TimePickUp = x.TimePickUp,
-                TimeDropOff = x.TimeDropOff,
+                Description = x.Desctiption,
                 Status = (int)x.Status
             };
             return route;
         }
+        public async Task<int> CreateAsync(CreateRouteRequestDto request)
+        {
+            var route = new Route()
+            {
+               RouteCode = request.RouteCode,
+               Name = request.Name,
+               Distance = request.Distance,
+               Desctiption = request.Description,
+               Status = (Status)request.Status
+            };
+            await _context.Routes.AddAsync(route);
+            await _context.SaveChangesAsync();
+            return route.Id;
+        }
 
-        public async Task<int> Update(UpdateRouteRequestDto request)
+        public async Task<int> DeleteAsync(int id)
+        {
+            var route = await _context.Routes.Where(x => x.IsDeleted == false).FirstOrDefaultAsync(x => x.Id == id);
+            if (route == null)
+            {
+                throw new BusTrackingException($"Can't not find any object with id is {id}");
+            }
+            route.IsDeleted = true;
+            _context.Routes.Update(route);
+            return await _context.SaveChangesAsync();
+        }
+
+
+        public async Task<int> UpdateAsync(UpdateRouteRequestDto request)
         {
             var route = await _context.Routes.Where(x => x.IsDeleted == false).FirstOrDefaultAsync(x => x.Id == request.Id);
             if (route == null) throw new BusTrackingException($"Can't not find any object with id is {request.Id}");
             route.Name = request.Name;
-            route.Desctiption = request.Desctiption;
+            route.Desctiption = request.Description;
             route.RouteCode = request.RouteCode;
             route.Distance = request.Distance;
-            route.TimePickUp = new TimeSpan(request.HourPickUp, request.MinutePickUp, 0);
-            route.TimeDropOff = new TimeSpan(request.HourDropOff, request.MinuteDropOff, 0);
             route.Status = (Status)request.Status;
             _context.Routes.Update(route);
             return await _context.SaveChangesAsync();

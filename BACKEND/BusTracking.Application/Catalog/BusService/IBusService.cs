@@ -9,10 +9,10 @@ namespace BusTracking.Application.Catalog.BusService
 {
     public interface IBusService
     {
-        Task<PageResultDto<BusDto>> GetAllPaging(GetBusPagingRequestDto request);
-        Task<BusDto> GetById(int busId);
-        Task<int> Create(CreateBusRequestDto createBusRequestDto);
-        Task<int> Update(UpdateBusRequestDto updateBusRequestDto);
-        Task<int> Delete(int busId);
+        Task<PageResultDto<BusDto>> GetAllPagingAsync(GetBusPagingRequestDto request);
+        Task<BusDto> GetByIdAsync(int busId);
+        Task<int> CreateAsync(CreateBusRequestDto createBusRequestDto);
+        Task<int> UpdateAsync(UpdateBusRequestDto updateBusRequestDto);
+        Task<int> DeleteAsync(int busId);
     }
 }

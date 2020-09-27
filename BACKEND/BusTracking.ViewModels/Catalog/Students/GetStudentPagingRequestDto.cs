@@ -7,10 +7,9 @@ namespace BusTracking.ViewModels.Catalog.Students
 {
     public class GetStudentPagingRequestDto : PageRequestBaseDto
     {
-        public int BusId { get; set; }
-        public Guid ParentId { get; set; }
+        public string BusName { get; set; }
+        public string ParentName { get; set; }
+        public string StopName { get; set; }
         public string Name { get; set; }
-        public string PhoneNumber { get; set; }
-        public int Status { get; set; }
     }
 }

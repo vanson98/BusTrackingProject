@@ -1,16 +1,13 @@
 ﻿using BusTracking.Data.Entities;
 using BusTracking.ViewModels.System.Users;
 using Microsoft.AspNetCore.Identity;
-using System;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
+using System.Linq;
 using BusTracking.Data.Enum;
-using BusTracking.ViewModels.Common;
-using BusTracking.ViewModels.System.Auth;
+using System.Collections.Generic;
+using BusTracking.Data.EF;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusTracking.Application.System.Users
 {
@@ -18,39 +15,55 @@ namespace BusTracking.Application.System.Users
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
-        private readonly RoleManager<AppRole> _roleManager;
-        private readonly IConfiguration _config;
+        private readonly BusTrackingDbContext _context;
         
-        public UserService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, IConfiguration config)
+        public UserService(BusTrackingDbContext dbContext,UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, IConfiguration config)
         {
             this._userManager = userManager;
             this._signInManager = signInManager;
-            this._roleManager = roleManager;
-            this._config = config;
+            this._context = dbContext;
         }
-        public async Task<string> Authencate(LoginRequestDto request)
+
+        public async Task<List<UserDto>> GetAllMonitorUnAssignAsync()
         {
-            var user = await _userManager.FindByNameAsync(request.UserName);
-            if (user == null) return null;
-            var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, true);
-            if (!result.Succeeded) return null;
-            var roles = await _userManager.GetRolesAsync(user);
-            var claims = new[]
+            var query = from m in _context.AppUsers
+                        where m.TypeAccount == TypeAccount.MonitorAcc
+                        join b in _context.Buses on m.Id equals b.MonitorId into gb
+                        from sub in gb.DefaultIfEmpty()
+                        where sub.DriverId == null
+                        select m;
+
+            var monitor = await query.Select(x => new UserDto()
             {
-                new Claim(ClaimTypes.Email,user.Email),
-                new Claim(ClaimTypes.GivenName,user.FullName),
-                new Claim(ClaimTypes.Role, string.Join(';',roles))
-            };
-            // Mã hóa Claim
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var token = new JwtSecurityToken(_config["Tokens:Issuer"],
-                _config["Tokens:Issuer"],
-                claims,
-                expires: DateTime.Now.AddHours(3),
-                signingCredentials: creds
-                );
-            return new JwtSecurityTokenHandler().WriteToken(token);
+                Id = x.Id,
+                UserName = x.UserName,
+                FullName = x.FullName,
+                Dob = x.Dob,
+                Email = x.Email,
+                TypeAccount = (int)x.TypeAccount,
+                PhoneNumber = x.PhoneNumber,
+                Status = (int)x.Status
+            }).ToListAsync();
+            return monitor;
+        }
+
+        public async Task<List<UserDto>> GetAllByType(int type)
+        {
+            var query = from x in _context.AppUsers
+                        where x.TypeAccount == (TypeAccount)type
+                        select x;
+            var parents = await query.Select(x => new UserDto()
+            {
+                Id = x.Id,
+                Dob = x.Dob,
+                TypeAccount = (int)x.TypeAccount,
+                Email = x.Email,
+                FullName = x.FullName,
+                PhoneNumber = x.PhoneNumber,
+                Status = (int)x.Status,
+                UserName = x.UserName
+            }).ToListAsync();
+            return parents;
         }
 
         public async Task<bool> CreateUser(CreateUserRequestDto request)
@@ -69,7 +82,5 @@ namespace BusTracking.Application.System.Users
             if (result.Succeeded) return true;
             return false;
         }
-
-        
     }
 }

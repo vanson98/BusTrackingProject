@@ -4,10 +4,9 @@ using System.Text;
 
 namespace BusTracking.ViewModels.Common
 {
-    public class PageResultDto<T>
+    public class PageResultDto<T> : ResponseDto
     {
         public int TotalRecord { get; set; }
-        public string Message { get; set; }
         public List<T> Items { get; set; }
     }
 }

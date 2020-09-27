@@ -4,15 +4,15 @@ using System.Text;
 
 namespace BusTracking.ViewModels.Common
 {
-    public class ResultDto<T> : ResponseDto
+    public class ResponseDto
     {
-        public ResultDto(string code, string mess, T result)
+        public ResponseDto(string code, string mess)
         {
             this.StatusCode = code;
             this.Message = mess;
-            this.Result = result;
         }
-        public ResultDto() { }
-        public T Result { get; set; }
+        public ResponseDto() { }
+        public string StatusCode { get; set; }
+        public string Message { get; set; }
     }
 }

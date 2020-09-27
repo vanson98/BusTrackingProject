@@ -1,5 +1,7 @@
 ﻿using BusTracking.Application.Catalog.DriverService;
+using BusTracking.Utilities.Constants;
 using BusTracking.ViewModels.Catalog.Drivers;
+using BusTracking.ViewModels.Common;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -18,60 +20,80 @@ namespace BusTracking.BackendApi.Controllers
             _driverService = driverService;
         }
 
-        [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAllPaging([FromQuery]GetDriverPagingRequestDto request)
+        [HttpGet("GetAllDriverUnAssign")]
+        public async Task<ResultDto<List<DriverDto>>> GetAllDriverUnAssignAsync()
         {
-            var result = await _driverService.GetAllPaging(request);
-            return Ok(result);
+            var drivers = await this._driverService.GetAllDriverUnAssign();
+            return new ResultDto<List<DriverDto>>()
+            {
+                StatusCode = ResponseCode.Success,
+                Message = "Thực hiện thành công",
+                Result = drivers
+            };
+        }
+
+        [HttpGet("GetAllPaging")]
+        public async Task<PageResultDto<DriverDto>> GetAllPaging([FromQuery]GetDriverPagingRequestDto request)
+        {
+            var result = await _driverService.GetAllPagingAsync(request);
+            return result;
         }
 
         [HttpGet("Get")]
-        public async Task<ActionResult> GetById([FromQuery]int id)
+        public async Task<ResultDto<DriverDto>> GetById([FromQuery]int id)
         {
-            var driver = await _driverService.GetById(id);
+            var driver = await _driverService.GetByIdAsync(id);
             if (driver == null)
             {
-                return BadRequest("Can not find driver");
+                return new ResultDto<DriverDto>()
+                {
+                    StatusCode = ResponseCode.NotFound,
+                    Message = "Không tìm thấy đối tượng",
+                    Result = null
+                };
             }
-            return Ok(driver);
+            return new ResultDto<DriverDto>(ResponseCode.Success, "Thực thi thành công", driver);
         }
 
         [HttpPost("Create")]
-        public async Task<IActionResult> Create([FromBody]CreateDriverRequestDto request)
+        public async Task<ResponseDto> Create([FromBody]CreateDriverRequestDto request)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return new ResponseDto(ResponseCode.Validate, "Đầu vào không hợp lệ");
             }
-            var driverId = await _driverService.Create(request);
+            var driverId = await _driverService.CreateAsync(request);
             if (driverId == 0)
             {
-                return BadRequest();
+                return new ResponseDto(ResponseCode.LogicError, "Tạo mới không thành công");
             }
-            var driver = await _driverService.GetById(driverId);
-            return CreatedAtAction(nameof(GetById), new { id = driverId }, driver);
+            return new ResponseDto(ResponseCode.Success, "Tạo mới thành công");
         }
 
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody]UpdateDriverRequestDto request)
+        public async Task<ResponseDto> Update([FromBody]UpdateDriverRequestDto request)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) 
             {
-                return BadRequest();
+                return new ResponseDto(ResponseCode.Validate, "Đầu vào không hợp lệ");
             }
-            var rowEffect = await _driverService.Update(request);
-            if (rowEffect == 0)
-                return BadRequest();
-            return Ok();
+            var result = await _driverService.UpdateAsync(request);
+            if (result == 0)
+                return new ResponseDto(ResponseCode.LogicError, "Cập nhật không thành công");
+            if(result == -1)
+                return new ResponseDto(ResponseCode.LogicError, "Không tìm thấy đối tượng cần cập nhật");
+            return new ResponseDto(ResponseCode.Success, "Cập nhật thành công");
         }
 
         [HttpDelete("Delete/{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<ResponseDto> Delete(int id)
         {
-            int rowEffected = await _driverService.Delete(id);
-            if (rowEffected == 0)
-                return BadRequest();
-            return Ok();
+            int result = await _driverService.DeleteAsync(id);
+            if (result == 0)
+                return new ResponseDto(ResponseCode.LogicError, "Xóa không thành công");
+            if (result == -1)
+                return new ResponseDto(ResponseCode.LogicError, "Không tìm thấy đối tượng cần xóa");
+            return new ResponseDto(ResponseCode.Success, "Xóa thành công");
         }
     }
 }

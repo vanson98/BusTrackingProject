@@ -11,6 +11,8 @@ namespace BusTracking.ViewModels.Catalog.Students
         public string BusName { get; set; }
         public Guid ParentId { get; set; }
         public string ParentName { get; set; }
+        public int StopId { get; set; }
+        public string StopName { get; set; }
         public string Name { get; set; }
         public DateTime Dob { get; set; }
         public string Address { get; set; }

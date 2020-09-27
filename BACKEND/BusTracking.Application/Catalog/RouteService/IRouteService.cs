@@ -9,10 +9,11 @@ namespace BusTracking.Application.Catalog.RouteService
 {
     public interface IRouteService
     {
-        Task<PageResultDto<RouteDto>> GetAllPaging(GetRoutePagingRequestDto request);
-        Task<RouteDto> GetById(int busId);
-        Task<int> Create(CreateRouteRequestDto request);
-        Task<int> Update(UpdateRouteRequestDto request);
-        Task<int> Delete(int busId);
+        Task<List<RouteDto>> GetAllRouteUnAssignAsync();
+        Task<PageResultDto<RouteDto>> GetAllPagingAsync(GetRoutePagingRequestDto request);
+        Task<RouteDto> GetByIdAsync(int busId);
+        Task<int> CreateAsync(CreateRouteRequestDto request);
+        Task<int> UpdateAsync(UpdateRouteRequestDto request);
+        Task<int> DeleteAsync(int busId);
     }
 }

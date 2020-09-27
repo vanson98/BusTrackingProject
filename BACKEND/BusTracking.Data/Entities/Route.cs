@@ -12,8 +12,6 @@ namespace BusTracking.Data.Entities
         public string Name {get;set;}
         public decimal Distance {get;set;}
         public string Desctiption {get;set;}
-        public TimeSpan TimePickUp { get; set; }
-        public TimeSpan TimeDropOff { get; set; }
         public Status Status { get; set; }
         public Boolean IsDeleted { get; set; }
         public Bus Bus { get; set; }

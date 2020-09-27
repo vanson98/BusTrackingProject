@@ -1,5 +1,7 @@
 ﻿using BusTracking.Application.Catalog.RouteService;
+using BusTracking.Utilities.Constants;
 using BusTracking.ViewModels.Catalog.Routes;
+using BusTracking.ViewModels.Common;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -18,50 +20,80 @@ namespace RouteTracking.BackendApi.Controllers
             _routeService = routeService;
         }
 
-        [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAllPaging([FromQuery]GetRoutePagingRequestDto request)
+        [HttpGet("GetAllRouteUnAssign")]
+        public async Task<ResultDto<List<RouteDto>>> GetAllrouteUnAssignAsync()
         {
-            var result = await _routeService.GetAllPaging(request);
-            return Ok(result);
+            var routes = await this._routeService.GetAllRouteUnAssignAsync();
+            return new ResultDto<List<RouteDto>>()
+            {
+                StatusCode = ResponseCode.Success,
+                Message = "Thực hiện thành công",
+                Result = routes
+            };
+        }
+
+        [HttpGet("GetAllPaging")]
+        public async Task<PageResultDto<RouteDto>> GetAllPaging([FromQuery]GetRoutePagingRequestDto request)
+        {
+            var result = await _routeService.GetAllPagingAsync(request);
+            return result;
         }
 
         [HttpGet("Get/{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<ResultDto<RouteDto>> GetById(int id)
         {
-            var Route = await _routeService.GetById(id);
-            if (Route == null)
-                return BadRequest($"Không tìm thấy đối tượng nào có id = {id}");
-            return Ok(Route);
+            var route = await _routeService.GetByIdAsync(id);
+            if (route == null)
+            {
+                return new ResultDto<RouteDto>()
+                {
+                    StatusCode = ResponseCode.NotFound,
+                    Message = "Không tìm thấy đối tượng",
+                    Result = null
+                };
+            }
+            return new ResultDto<RouteDto>(ResponseCode.Success, "Thực thi thành công", route);
         }
 
         [HttpPost("Create")]
-        public async Task<IActionResult> Create([FromBody] CreateRouteRequestDto requestDto)
+        public async Task<ResponseDto> Create([FromBody] CreateRouteRequestDto request)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
-            var routeId = await _routeService.Create(requestDto);
+            {
+                return new ResultDto<RouteDto>(ResponseCode.Validate, "Đầu vào không hợp lệ", null);
+            }
+            var routeId = await _routeService.CreateAsync(request);
             if (routeId == 0)
-                return BadRequest();
-            var route = await _routeService.GetById(routeId);
-            return Ok(route);
+            {
+                return new ResultDto<RouteDto>(ResponseCode.LogicError, "Tạo không thành công", null);
+            }
+            return new ResponseDto(ResponseCode.Success, "Tạo mới thành công");
         }
 
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] UpdateRouteRequestDto request)
+        public async Task<ResponseDto> Update([FromBody] UpdateRouteRequestDto request)
         {
-            int rowEffected = await _routeService.Update(request);
-            if (rowEffected == 0)
-                return BadRequest();
-            return Ok("Cập nhật thành công");
+            if (!ModelState.IsValid)
+            {
+                return new ResponseDto(ResponseCode.Validate, "Đầu vào không hợp lệ");
+            }
+            var result = await _routeService.UpdateAsync(request);
+            if (result == 0)
+                return new ResponseDto(ResponseCode.LogicError, "Cập nhật không thành công");
+            if (result == -1)
+                return new ResponseDto(ResponseCode.LogicError, "Không tìm thấy đối tượng cần cập nhật");
+            return new ResponseDto(ResponseCode.Success, "Cập nhật thành công");
         }
 
         [HttpDelete("Delete/{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<ResponseDto> Delete(int id)
         {
-            int rowEffected = await _routeService.Delete(id);
-            if (rowEffected == 0)
-                return BadRequest();
-            return Ok("Xóa thành công");
+            int result = await _routeService.DeleteAsync(id);
+            if (result == 0)
+                return new ResponseDto(ResponseCode.LogicError, "Xóa không thành công");
+            if (result == -1)
+                return new ResponseDto(ResponseCode.LogicError, "Không tìm thấy đối tượng cần xóa");
+            return new ResponseDto(ResponseCode.Success, "Xóa thành công");
         }
     }
 }

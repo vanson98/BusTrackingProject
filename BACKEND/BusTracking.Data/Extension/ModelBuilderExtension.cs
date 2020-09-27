@@ -93,24 +93,18 @@ namespace BusTracking.Data.Extension
                     RouteCode="R001",
                     Name="Tuyến 01",
                     Distance=(decimal)12.34,
-                    TimePickUp=new TimeSpan(7,0,0),
-                    TimeDropOff = new TimeSpan(17,0,0),
                     Status=Status.Active},
                 new Route() { 
                     Id = 2,
                     RouteCode="R002",
                     Name="Tuyến 02",
                     Distance=(decimal)10.34,
-                    TimePickUp = new TimeSpan(7, 0, 0),
-                    TimeDropOff = new TimeSpan(17, 0, 0),
                     Status =Status.Active},
                 new Route() { 
                     Id = 3,
                     RouteCode="R003",
                     Name="Tuyến 03",
                     Distance=(decimal)77.15,
-                    TimePickUp = new TimeSpan(7, 0, 0),
-                    TimeDropOff = new TimeSpan(17, 0, 0),
                     Status =Status.Active
                 }
             );

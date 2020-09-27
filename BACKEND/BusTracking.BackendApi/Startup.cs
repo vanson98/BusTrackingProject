@@ -22,22 +22,25 @@ using BusTracking.Application.Catalog.BusService;
 using BusTracking.Application.Catalog.RouteService;
 using BusTracking.Application.Catalog.StudentService;
 using BusTracking.Application.Catalog.StopService;
+using BusTracking.Application.System.Auths;
 
 namespace BusTracking.BackendApi
 {
     public class Startup
     {
+        private const string _defaultCorsPolicyName = "localhost";
+        public IConfiguration _appConfiguration { get; }
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _appConfiguration = configuration;
         }
-        public IConfiguration Configuration { get; }
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
             // Config DbContext và DI cho DB context
             services.AddDbContext<BusTrackingDbContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString(SystemConstants.MainConnectionString)));
+                    options.UseSqlServer(_appConfiguration.GetConnectionString(SystemConstants.MainConnectionString)));
 
             // Cấu hình Identity 
             services.AddIdentity<AppUser, AppRole>()
@@ -49,11 +52,27 @@ namespace BusTracking.BackendApi
             services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
             services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IDriverService, DriverService>();
             services.AddTransient<IBusService, BusService>();
             services.AddTransient<IRouteService, RouteService>();
             services.AddTransient<IStopService, StopService>();
             services.AddTransient<IStudentService, StudentService>();
+
+            //Configure CORS for angular2 UI
+            services.AddCors(options => options.AddPolicy(
+                _defaultCorsPolicyName,
+                builder => builder
+                    .WithOrigins(
+                    _appConfiguration["App:CorsOrigins"]
+                        .Split(",", StringSplitOptions.RemoveEmptyEntries)
+                        .ToArray()
+                    )
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials()
+                )
+            ); ;
 
             // Cấu hình swagger
             services.AddSwaggerGen(c =>
@@ -107,7 +126,8 @@ namespace BusTracking.BackendApi
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+            app.UseCors(_defaultCorsPolicyName); // Enable CORS!
+
             app.UseRouting();
 
             app.UseAuthorization();

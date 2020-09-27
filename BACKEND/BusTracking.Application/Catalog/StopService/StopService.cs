@@ -2,6 +2,7 @@
 using BusTracking.Data.Entities;
 using BusTracking.Data.Enum;
 using BusTracking.Utilities;
+using BusTracking.Utilities.Constants;
 using BusTracking.ViewModels.Catalog.Stops;
 using BusTracking.ViewModels.Common;
 using Microsoft.EntityFrameworkCore;
@@ -20,35 +21,6 @@ namespace BusTracking.Application.Catalog.StopService
         {
             _context = dbContext;
         }
-
-        public async Task<int> Create(CreateStopRequestDto request)
-        {
-            var stop = new Stop()
-            {
-                Name = request.Name,
-                Address = request.Address,
-                NumberOfStudents = request.NumberOfStudents,
-                Longitude = request.Longitude,
-                Latitude = request.Latitude,
-                Status = (Status)request.Status
-            };
-            await _context.Stops.AddAsync(stop);
-            await _context.SaveChangesAsync();
-            return stop.Id;
-        }
-
-        public async Task<int> Delete(int id)
-        {
-            var stop = await _context.Stops.Where(x => x.IsDeleted == false).FirstOrDefaultAsync(x => x.Id == id);
-            if (stop == null)
-            {
-                throw new BusTrackingException($"Can't not find any object with id is {id}");
-            }
-            stop.IsDeleted = true;
-            _context.Stops.Update(stop);
-            return await _context.SaveChangesAsync();
-        }
-
         public async Task<PageResultDto<StopDto>> GetAllPaging(GetStopPagingReqestDto request)
         {
             var query = _context.Stops.Where(x => x.IsDeleted == false).AsQueryable();
@@ -76,12 +48,16 @@ namespace BusTracking.Application.Catalog.StopService
                                       Address = x.Address,
                                       Longitude = x.Longitude,
                                       Latitude = x.Latitude,
+                                      TimePickUp = x.TimePickUp,
+                                      TimeDropOff = x.TimeDropOff,
                                       NumberOfStudents = x.NumberOfStudents,
                                       Status = (int)x.Status
                                   }).ToListAsync();
             // Return 
             var pageResult = new PageResultDto<StopDto>()
             {
+                StatusCode= ResponseCode.Success,
+                Message = "Thành công",
                 TotalRecord = totalRow,
                 Items = data
             };
@@ -100,20 +76,56 @@ namespace BusTracking.Application.Catalog.StopService
                 Address = x.Address,
                 Longitude = x.Longitude,
                 Latitude = x.Latitude,
+                TimePickUp = x.TimePickUp,
+                TimeDropOff = x.TimeDropOff,
                 NumberOfStudents = x.NumberOfStudents,
                 Status = (int)x.Status
             };
             return stop;
         }
+        public async Task<int> Create(CreateStopRequestDto request)
+        {
+            var stop = new Stop()
+            {
+                Name = request.Name,
+                Address = request.Address,
+                NumberOfStudents = request.NumberOfStudents,
+                TimePickUp = new TimeSpan(request.HourPickUp, request.MinutePickUp, 0),
+                TimeDropOff = new TimeSpan(request.HourDropOff, request.MinuteDropOff, 0),
+                Longitude = request.Longitude,
+                Latitude = request.Latitude,
+                Status = (Status)request.Status
+            };
+            await _context.Stops.AddAsync(stop);
+            await _context.SaveChangesAsync();
+            return stop.Id;
+        }
+
+        public async Task<int> Delete(int id)
+        {
+            var stop = await _context.Stops.Where(x => x.IsDeleted == false).FirstOrDefaultAsync(x => x.Id == id);
+            if (stop == null)
+            {
+                throw new BusTrackingException($"Can't not find any object with id is {id}");
+            }
+            stop.IsDeleted = true;
+            _context.Stops.Update(stop);
+            return await _context.SaveChangesAsync();
+        }
+
+       
 
         public async Task<int> Update(UpdateStopRequestDto request)
         {
             var stop = await _context.Stops.Where(x => x.IsDeleted == false).FirstOrDefaultAsync(x => x.Id == request.Id);
-            if (stop == null) throw new BusTrackingException($"Can't not find any object with id is {request.Id}");
+            if (stop == null) return -1;
             stop.Name = request.Name;
+            stop.Address = request.Address;
+            stop.NumberOfStudents = request.NumberOfStudents;
             stop.Longitude = request.Longitude;
             stop.Latitude = request.Latitude;
-            stop.NumberOfStudents = request.NumberOfStudents;
+            stop.TimePickUp = new TimeSpan(request.HourPickUp, request.MinutePickUp, 0);
+            stop.TimeDropOff = new TimeSpan(request.HourDropOff, request.MinuteDropOff, 0);
             stop.Status = (Status)request.Status;
             _context.Stops.Update(stop);
             return await _context.SaveChangesAsync();

@@ -9,10 +9,11 @@ namespace BusTracking.Application.Catalog.DriverService
 {
     public interface IDriverService
     {
-        Task<PageResultDto<DriverDto>> GetAllPaging(GetDriverPagingRequestDto request);
-        Task<DriverDto> GetById(int busId);
-        Task<int> Create(CreateDriverRequestDto requestDto);
-        Task<int> Update(UpdateDriverRequestDto requestDto);
-        Task<int> Delete(int driverId);
+        Task<List<DriverDto>> GetAllDriverUnAssign();
+        Task<PageResultDto<DriverDto>> GetAllPagingAsync(GetDriverPagingRequestDto request);
+        Task<DriverDto> GetByIdAsync(int busId);
+        Task<int> CreateAsync(CreateDriverRequestDto requestDto);
+        Task<int> UpdateAsync(UpdateDriverRequestDto requestDto);
+        Task<int> DeleteAsync(int driverId);
     }
 }

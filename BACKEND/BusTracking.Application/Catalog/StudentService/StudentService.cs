@@ -2,6 +2,7 @@
 using BusTracking.Data.Entities;
 using BusTracking.Data.Enum;
 using BusTracking.Utilities;
+using BusTracking.Utilities.Constants;
 using BusTracking.ViewModels.Catalog.Students;
 using BusTracking.ViewModels.Common;
 using Microsoft.EntityFrameworkCore;
@@ -18,64 +19,30 @@ namespace BusTracking.Application.Catalog.StudentService
         {
             _context = dbContext;
         }
-        public async Task<int> Create(CreateStudentRequestDto request)
-        {
-            var student = new Student()
-            {
-                BusId = request.BusId,
-                ParentId = request.ParentId,
-                Name = request.Name,
-                Address = request.Address,
-                Dob = request.Dob,
-                Email = request.Email,
-                PhoneNumber = request.PhoneNumber,
-                Status = (StudentStatus)request.Status
-            };
-            await _context.Students.AddAsync(student);
-            await _context.SaveChangesAsync();
-            return student.Id;
-        }
-
-        public async Task<int> Delete(int id)
-        {
-            var student = await _context.Students.Where(x => x.IsDeleted == false).FirstOrDefaultAsync(x => x.Id == id);
-            if (student == null)
-            {
-                throw new BusTrackingException($"Can't not find any object with id is {id}");
-            }
-            student.IsDeleted = true;
-            _context.Students.Update(student);
-            return await _context.SaveChangesAsync();
-        }
-
         public async Task<PageResultDto<StudentDto>> GetAllPaging(GetStudentPagingRequestDto request)
         {
-            //var query = _context.Students.Where(x => x.IsDeleted == false).AsQueryable();
             var query = from s in _context.Students
                         where s.IsDeleted == false
                         join p in _context.AppUsers on s.ParentId equals p.Id
                         join b in _context.Buses on s.BusId equals b.Id
-                        select new { s, p, b };
+                        join st in _context.Stops on s.StopId equals st.Id
+                        select new { s, p, b,st };
             // Filter
             if (!string.IsNullOrEmpty(request.Name))
             {
-                query = query.Where(x => x.s.Name == request.Name);
+                query = query.Where(x => x.s.Name.Contains(request.Name));
             }
-            if (!string.IsNullOrEmpty(request.PhoneNumber))
+            if (!string.IsNullOrEmpty(request.StopName))
             {
-                query = query.Where(x => x.s.PhoneNumber == request.PhoneNumber);
+                query = query.Where(x => x.st.Name.Contains(request.StopName));
             }
-            if (request.ParentId != Guid.Empty)
+            if (!string.IsNullOrEmpty(request.ParentName))
             {
-                query = query.Where(x => x.s.ParentId == request.ParentId);
+                query = query.Where(x => x.p.FullName.Contains(request.ParentName));
             }
-            if (request.BusId > 0)
+            if (!string.IsNullOrEmpty(request.BusName))
             {
-                query = query.Where(x => x.s.BusId == request.BusId);
-            }
-            if(request.Status >= 0)
-            {
-                query = query.Where(x => (int)x.s.Status == request.Status);
+                query = query.Where(x => x.b.Name.Contains(request.BusName));
             }
             // Paging
             int totalRow = await query.CountAsync();
@@ -88,6 +55,8 @@ namespace BusTracking.Application.Catalog.StudentService
                                       BusName = x.b.Name,
                                       ParentId = x.p.Id,
                                       ParentName = x.p.FullName,
+                                      StopId = x.st.Id,
+                                      StopName = x.st.Name,
                                       Name = x.s.Name,
                                       Address = x.s.Address,
                                       Dob = x.s.Dob,
@@ -98,13 +67,13 @@ namespace BusTracking.Application.Catalog.StudentService
             // Return 
             var pageResult = new PageResultDto<StudentDto>()
             {
-                TotalRecord = totalRow,
+                StatusCode = ResponseCode.Success,
                 Message = "Thực hiện thành công",
+                TotalRecord = totalRow,
                 Items = data
             };
             return pageResult;
         }
-
         public async Task<StudentDto> GetById(int id)
         {
             // Select and Join 
@@ -130,13 +99,42 @@ namespace BusTracking.Application.Catalog.StudentService
                 Status = (int)x.s.Status
             };
         }
-
+        public async Task<int> Create(CreateStudentRequestDto request)
+        {
+            var student = new Student()
+            {
+                BusId = request.BusId,
+                ParentId = request.ParentId,
+                StopId = request.StopId,
+                Name = request.Name,
+                Address = request.Address,
+                Dob = request.Dob,
+                Email = request.Email,
+                PhoneNumber = request.PhoneNumber,
+                Status = (StudentStatus)request.Status
+            };
+            await _context.Students.AddAsync(student);
+            await _context.SaveChangesAsync();
+            return student.Id;
+        }
+        public async Task<int> Delete(int id)
+        {
+            var student = await _context.Students.Where(x => x.IsDeleted == false).FirstOrDefaultAsync(x => x.Id == id);
+            if (student == null)
+            {
+                return -1;
+            }
+            student.IsDeleted = true;
+            _context.Students.Update(student);
+            return await _context.SaveChangesAsync();
+        }
         public async Task<int> Update(UpdateStudentRequestDto request)
         {
             var student = await _context.Students.Where(x => x.IsDeleted == false).FirstOrDefaultAsync(x => x.Id == request.Id);
-            if (student == null) throw new BusTrackingException($"Can't not find any object with id is {request.Id}");
+            if (student == null) return -1;
             student.BusId = request.BusId;
             student.ParentId = request.ParentId;
+            student.StopId = request.StopId;
             student.Name = request.Name;
             student.Address = request.Address;
             student.Dob = request.Dob;

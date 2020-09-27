@@ -1,4 +1,6 @@
-﻿using BusTracking.Application.System.Users;
+﻿using BusTracking.Application.System.Auths;
+using BusTracking.Application.System.Users;
+using BusTracking.Utilities.Constants;
 using BusTracking.ViewModels.Common;
 using BusTracking.ViewModels.System.Auth;
 using BusTracking.ViewModels.System.Users;
@@ -14,22 +16,21 @@ namespace BusTracking.BackendApi.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly IUserService _userService;
-        public AuthController(IUserService userService)
+        private readonly IAuthService _authService;
+        public AuthController(IAuthService userService)
         {
-            _userService = userService;
+            _authService = userService;
         }
-
 
         [HttpPost("authenticate")]
         public async Task<ResultDto<string>> Authenticate([FromBody]LoginRequestDto request)
         {
             if (!ModelState.IsValid)
-                return new ResultDto<string>(400, "Dữ liệu truyền vào không đúng", null);
-            var resultToken = await _userService.Authencate(request);
+                return new ResultDto<string>(ResponseCode.Validate, "Dữ liệu truyền vào không đúng", null);
+            var resultToken = await _authService.Authencate(request);
             if (string.IsNullOrEmpty(resultToken))
-                return new ResultDto<string>(400, "Đăng nhập không thành công", null);
-            return new ResultDto<string>(200, "Đăng nhập thành công", resultToken); ;
+                return new ResultDto<string>(ResponseCode.AuthFail, "Đăng nhập không thành công", null);
+            return new ResultDto<string>(ResponseCode.Success, "Đăng nhập thành công", resultToken); ;
         }
     }
 }
