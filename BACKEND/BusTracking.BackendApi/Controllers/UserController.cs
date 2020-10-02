@@ -45,18 +45,56 @@ namespace BusTracking.BackendApi.Controllers
             };
         }
 
-        [HttpPost("CreateUser")]
-
-        public async Task<IActionResult> CreateUser([FromBody]CreateUserRequestDto request)
+        [HttpGet("GetAllPaging")]
+        public async Task<PageResultDto<UserDto>> GetAllPaging([FromQuery] GetUserPagingRequestDto request)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-            var result = await _userService.CreateUser(request);
-            if (!result)
-                return BadRequest("Create user fail!");
-            return Ok();
+            var result = await _userService.GetAllPaging(request);
+            return result;
+        }
+        
+        [HttpGet("GetById")]
+        public async Task<ResultDto<UserDto>> GetById([FromQuery] Guid id)
+        {
+            var result = await this._userService.GetById(id);
+            return result;
         }
 
-        
+        [HttpPost("CreateUser")]
+        public async Task<ResponseDto> CreateUser([FromBody]CreateUserRequestDto request)
+        {
+            if (!ModelState.IsValid)
+                return new ResponseDto(ResponseCode.Validate,"Đầu vào không hợp lệ");
+            var result = await _userService.Create(request);
+            return result;
+        }
+
+        [HttpPut("Update")]
+        public async Task<ResponseDto> Update([FromBody]UserDto request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return new ResponseDto(ResponseCode.Validate, "Đầu vào không hợp lệ");
+            }
+            var result = await _userService.Update(request);
+            return result;
+        }
+
+        [HttpDelete("Delete")]
+        public async Task<ResponseDto> Delete([FromQuery]Guid id)
+        {
+            var result = await _userService.Delete(id);
+            return result;
+        }
+
+        [HttpPut("AssignRole")]
+        public async Task<ResponseDto> AssignRole([FromBody] RoleAssignRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return new ResponseDto(ResponseCode.Validate, "Đầu vào không hợp lệ");
+            }
+            var result = await _userService.AssignRoles(request);
+            return result;
+        }
     }
 }

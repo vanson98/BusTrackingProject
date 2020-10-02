@@ -6,25 +6,17 @@ import { PlatformLocation, registerLocaleData } from '@angular/common';
 import { AbpModule } from '@abp/abp.module';
 import { AbpHttpInterceptor } from '@abp/abpHttpInterceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-
 import { SharedModule } from '@shared/shared.module';
 import { ServiceProxyModule } from '@shared/service-proxies/service-proxy.module';
 import { RootRoutingModule } from './root-routing.module';
-
 import { AppConsts } from '@shared/AppConsts';
 import { AppSessionService } from '@shared/session/app-session.service';
 import { API_BASE_URL } from '@shared/service-proxies/service-proxies';
-
 import { RootComponent } from './root.component';
 import { AppPreBootstrap } from './AppPreBootstrap';
 import { ModalModule } from 'ngx-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
-
-import { GestureConfig } from '@angular/material';
-
 import * as _ from 'lodash';
-
-
 
 export function appInitializerFactory(injector: Injector,
     platformLocation: PlatformLocation) {
@@ -34,7 +26,6 @@ export function appInitializerFactory(injector: Injector,
             AppConsts.appBaseHref = getBaseHref(platformLocation);
             const appBaseUrl = getDocumentOrigin() + AppConsts.appBaseHref;
             AppPreBootstrap.run(appBaseUrl, () => {
-                abp.event.trigger('abp.dynamicScriptsInitialized');
                 const appSessionService: AppSessionService = injector.get(AppSessionService);
                 appSessionService.init().then(
                     (result) => {

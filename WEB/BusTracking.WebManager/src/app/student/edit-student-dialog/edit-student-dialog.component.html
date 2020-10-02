@@ -1,0 +1,101 @@
+<form autocomplete="off" [formGroup]="editForm" (ngSubmit)="save()">
+    <h1 mat-dialog-title>Cập nhật thông tin học sinh</h1>
+    <mat-dialog-content style="width:700px;height:500px;">
+      <div class="row-fluid">
+        <div class="col-md-12">
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="name"
+              placeholder="Họ và tên"
+              [(ngModel)]="student.name"
+              required
+              minlength="2"
+              maxlength="64"
+            />
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Chọn xe</mat-label>
+            <mat-select required [(ngModel)]="student.busId" formControlName='bus'>
+              <mat-option *ngFor="let bus of buses" [value]="bus.id">
+                {{bus.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Chọn phụ huynh</mat-label>
+            <mat-select required [(ngModel)]="student.parentId" formControlName='parent'>
+              <mat-option *ngFor="let parent of parents" [value]="parent.id">
+                {{parent.fullName}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Chọn điểm dừng</mat-label>
+            <mat-select required [(ngModel)]="student.stopId" formControlName='stop'>
+              <mat-option *ngFor="let stop of stops" [value]="stop.id">
+                {{stop.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <input required placeholder="Ngày sinh" formControlName='dob' matInput [matDatepicker]="picker">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="address"
+              placeholder='Địa chỉ'
+              [(ngModel)]="student.address"
+              maxlength="1024"
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="email"
+              placeholder='Email'
+              [(ngModel)]="student.email"
+              type="email"
+              pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,})+$"
+              required
+              maxlength="256"
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="phone"
+              placeholder='Số điện thoại'
+              [(ngModel)]="student.phoneNumber"
+              type="text"
+              required
+              maxlength="20"
+            />
+          </mat-form-field>
+          <div class="checkbox-wrapper">
+            <mat-checkbox name="IsActive" [(ngModel)]="isActive" [ngModelOptions]="{standalone:true}">
+              Kích hoạt
+            </mat-checkbox>
+          </div>
+        </div>
+      </div>
+    </mat-dialog-content>
+    <div mat-dialog-actions align="end">
+      <button mat-button type="button" [disabled]="saving" (click)="close(false)">
+            Hủy
+      </button>
+      <button
+        mat-flat-button
+        type="submit"
+        flex="15"
+        color="primary"
+        [disabled]="!editForm.valid || saving"
+      >
+        Lưu
+      </button>
+    </div>
+  </form>
+  

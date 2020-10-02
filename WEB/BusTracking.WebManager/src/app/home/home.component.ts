@@ -6,7 +6,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
     templateUrl: './home.component.html',
     animations: [appModuleAnimation()]
 })
-export class HomeComponent extends AppComponentBase  {
+export class HomeComponent extends AppComponentBase{
 
     constructor(
         injector: Injector
@@ -14,5 +14,4 @@ export class HomeComponent extends AppComponentBase  {
         super(injector);
     }
 
-    
 }

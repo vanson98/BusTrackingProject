@@ -6,10 +6,12 @@ using BusTracking.Application.Catalog.BusService;
 using BusTracking.Utilities.Constants;
 using BusTracking.ViewModels.Catalog.Buses;
 using BusTracking.ViewModels.Common;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusTracking.BackendApi.Controllers
 {
+    [Authorize(Roles = "monitor")]
     [ApiController]
     [Route("api/[controller]")]
     public class BusController : ControllerBase

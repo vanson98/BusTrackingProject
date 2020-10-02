@@ -6,7 +6,7 @@
       #loginForm="ngForm"
       (ngSubmit)="login()"
     >
-      <h4 class="text-center">{{ "LogIn" | localize }}</h4>
+      <h4 class="text-center">Đăng nhập</h4>
       <div class="row clearfix">
         <div class="col-xs-12">
           <div class="input-group">
@@ -40,7 +40,7 @@
                   type="password"
                   name="password"
                   [(ngModel)]="loginService.authenticateModel.password"
-                  [placeholder]="'Mật khẩu' | localize"
+                  placeholder='Mật khẩu'
                   required
                   maxlength="32"
                 />
@@ -63,7 +63,7 @@
             color="accent"
             [disabled]="!loginForm.form.valid || submitting"
           >
-            {{ "Đăng nhập" | localize }}
+            Đăng nhập
           </button>
         </div>
       </div>

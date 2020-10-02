@@ -1,0 +1,70 @@
+<form autocomplete="off" [formGroup]="editForm" (ngSubmit)="save()">
+    <h1 mat-dialog-title>Cập nhật tuyến</h1>
+    <mat-dialog-content style="width:500px;height:300px;">
+      <div class="row-fluid">
+        <div class="col-md-12">
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="routeCode"
+              placeholder="Mã tuyến"
+              [(ngModel)]="route.routeCode"
+              required
+              minlength="2"
+              maxlength="32"
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="name"
+              placeholder="Tên tuyến"
+              [(ngModel)]="route.name"
+              required
+              maxlength="255"
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="distance"
+              placeholder="Khoảng cách (Km)"
+              [(ngModel)]="route.distance"
+              type="number"
+              required
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <textarea
+              matInput
+              [ngModelOptions]="{standalone:true}"
+              placeholder="Miêu tả"
+              [(ngModel)]="route.description"
+              type="text"
+              maxlength="500"
+            ></textarea>
+          </mat-form-field>
+          <div class="checkbox-wrapper">
+            <mat-checkbox [ngModelOptions]="{standalone:true}" [(ngModel)]="isActive">
+              Kích hoạt
+            </mat-checkbox>
+          </div>
+        </div>
+      </div>
+    </mat-dialog-content>
+    <div mat-dialog-actions align="end">
+      <button mat-button type="button" [disabled]="saving" (click)="close(false)">
+            Hủy
+      </button>
+      <button
+        mat-flat-button
+        type="submit"
+        flex="15"
+        color="primary"
+        [disabled]="!editForm.valid || saving"
+      >
+        Lưu
+      </button>
+    </div>
+  </form>
+  

@@ -10,15 +10,13 @@ import { MenuItem } from '@shared/layout/menu-item';
 export class SideBarNavComponent extends AppComponentBase {
 
     menuItems: MenuItem[] = [
-        new MenuItem(this.l('HomePage'), '', 'home', '/app/home'),
-        new MenuItem(this.l('Tenants'), 'Pages.Tenants', 'business', '/app/tenants'),
-        new MenuItem(this.l('Users'), 'Pages.Users', 'people', '/app/users'),
-        new MenuItem(this.l('Roles'), 'Pages.Roles', 'local_offer', '/app/roles'),
-        new MenuItem(this.l('Devices'), 'Pages.Devices', 'local_offer', '/app/devices'),
-        new MenuItem(this.l('Branches'), 'Pages.Branches', 'local_offer', '/app/branches'),
-        new MenuItem(this.l('Transactions'),'' , 'local_offer', '/app/transactions'),
-        new MenuItem(this.l('About'), '', 'info', '/app/about'),
-        new MenuItem(this.l('MultiLevelMenu'), '', 'menu', '', [
+        new MenuItem('HomePage', '', 'home', '/app/home'),
+        new MenuItem('Quản lý tài xế','','home','/app/driver'),
+        new MenuItem('Quản lý xe đưa đón','','home','/app/bus'),
+        new MenuItem('Quản lý tuyến','','home','/app/route'),
+        new MenuItem('Quản lý điểm dừng','','home','/app/stop'),
+        new MenuItem('Quản lý học sinh','','home','/app/student'),
+        new MenuItem('MultiLevelMenu', '', 'menu', '', [
             new MenuItem('ASP.NET Boilerplate', '', '', '', [
                 new MenuItem('Home', '', '', 'https://aspnetboilerplate.com/?ref=abptmpl'),
                 new MenuItem('Templates', '', '', 'https://aspnetboilerplate.com/Templates?ref=abptmpl'),
@@ -43,9 +41,9 @@ export class SideBarNavComponent extends AppComponentBase {
     }
 
     showMenuItem(menuItem): boolean {
-        if (menuItem.permissionName) {
-            return this.permission.isGranted(menuItem.permissionName);
-        }
+        // if (menuItem.permissionName) {
+        //     return this.permission.isGranted(menuItem.permissionName);
+        // }
 
         return true;
     }

@@ -1,12 +1,13 @@
 import { Component, ViewContainerRef, Injector, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-//import { SignalRAspNetCoreHelper } from '@shared/helpers/SignalRAspNetCoreHelper';
+
 
 @Component({
     templateUrl: './app.component.html'
 })
 export class AppComponent extends AppComponentBase implements OnInit {
 
+    private viewContainerRef: ViewContainerRef;
 
     constructor(
         injector: Injector
@@ -15,11 +16,13 @@ export class AppComponent extends AppComponentBase implements OnInit {
     }
 
     ngOnInit(): void {
-        this.onResize();
+
       
     }
 
-    onResize() {
+    
+
+    onResize(event) {
         // exported from $.AdminBSB.activateAll
         $.AdminBSB.leftSideBar.setMenuHeight();
         $.AdminBSB.leftSideBar.checkStatuForResize(false);

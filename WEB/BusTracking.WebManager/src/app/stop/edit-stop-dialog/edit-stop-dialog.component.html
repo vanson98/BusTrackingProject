@@ -1,0 +1,126 @@
+<form  #createForm="ngForm" (ngSubmit)="save()">
+  <h1 mat-dialog-title>Cập nhật điểm dừng</h1>
+  <mat-dialog-content style="width:1000px;height:1000px;">
+    <div class="row-fluid">
+      <div class="col-md-12" style="padding:0; margin-bottom: 20px;">
+        <label>Chọn tọa độ trên bản đồ (Bằng cách di chấm đỏ trên màn hình)</label>
+        <agm-map 
+          [longitude]="longitude" 
+          [latitude]="latitude" 
+          [zoom]="zoom">
+            <agm-marker 
+            [latitude]="latitude" 
+            [longitude]="longitude"
+            [markerDraggable]="true"
+            (dragEnd)="markerDragEnd($event)"></agm-marker>
+        </agm-map>
+      </div>
+      <div class="col-md-12">
+        <mat-form-field>
+          <input
+            matInput
+            type="text" 
+            (keydown.enter)="$event.preventDefault()" 
+            placeholder="Tìm kiếm địa điểm" 
+            autocorrect="off" autocapitalize="off" spellcheck="off" #search>
+        </mat-form-field>
+      </div>
+      <div class="col-md-12">
+        <mat-form-field>
+          <input
+            matInput
+            name="address"
+            [placeholder]="'Địa chỉ điểm dừng'"
+            [(ngModel)]="address"
+            disabled
+            maxlength="1024"
+            required
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-md-3">
+        <mat-form-field>
+          <input
+            matInput
+            name="latInput"
+            placeholder="Kinh độ"
+            [(ngModel)]="latitude"
+            required
+            disabled
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-md-3">
+        <mat-form-field>
+          <input
+            matInput
+            name="longInput"
+            placeholder="Vĩ độ"
+            [(ngModel)]="longitude"
+            required
+            disabled
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-md-3">
+        <mat-form-field>
+          <input matInput [(ngModel)]="timePickUp" name="timepick" [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1" placeholder="Chọn thời gian đón">
+          <owl-date-time #dt1 [pickerType]="'timer'"></owl-date-time>
+        </mat-form-field>
+      </div>
+      <div class="col-md-3">
+        <mat-form-field>
+          <input matInput [(ngModel)]="timeDropOff" name="timedrop"  [owlDateTime]="dt2" [owlDateTimeTrigger]="dt2" placeholder="Chọn thời trả">
+          <owl-date-time #dt2 [pickerType]="'timer'"></owl-date-time>
+        </mat-form-field>
+      </div>
+      <div class="col-md-3">
+        <mat-form-field>
+          <input
+            matInput
+            name="name"
+            placeholder="Tên điểm dừng"
+            [(ngModel)]="stop.name"
+            required
+            minlength="2"
+            maxlength="255"
+          />
+        </mat-form-field>
+      </div>
+      
+      <div class="col-md-3">
+        <mat-form-field>
+          <input
+          matInput
+          name="numberOffStudent"
+          placeholder="Số lượng học sinh"
+          [(ngModel)]="stop.numberOfStudents"
+          type="number"
+          required
+        />  
+        </mat-form-field>
+      </div>
+      <div class="col-md-3">
+        <div class="checkbox-wrapper">
+          <mat-checkbox name="IsActive" [(ngModel)]="isActive">
+            Kích hoạt
+          </mat-checkbox>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <div mat-dialog-actions align="end">
+    <button mat-button type="button" [disabled]="saving" (click)="close(false)">
+          Hủy
+    </button>
+    <button
+      mat-flat-button
+      type="submit"
+      flex="15"
+      color="primary"
+      [disabled]="!createForm.form.valid || saving"
+    >
+      Lưu
+    </button>
+  </div>
+</form>

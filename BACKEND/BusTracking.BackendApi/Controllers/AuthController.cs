@@ -28,9 +28,15 @@ namespace BusTracking.BackendApi.Controllers
             if (!ModelState.IsValid)
                 return new ResultDto<string>(ResponseCode.Validate, "Dữ liệu truyền vào không đúng", null);
             var resultToken = await _authService.Authencate(request);
-            if (string.IsNullOrEmpty(resultToken))
-                return new ResultDto<string>(ResponseCode.AuthFail, "Đăng nhập không thành công", null);
-            return new ResultDto<string>(ResponseCode.Success, "Đăng nhập thành công", resultToken); ;
+            return resultToken;
         }
+        
+        [HttpGet("GetAllRole")]
+        public async Task<ResultDto<List<RoleDto>>> GetAll()
+        {
+            var result = await _authService.GetAllRole();
+            return result;
+        }
+
     }
 }

@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+"@agm/core@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@agm/core/-/core-1.1.0.tgz#6f8dcbac068f681fe4fa9b0a0cbf660588025911"
+  integrity sha512-cMvmm3+3/uuVFurLv1FKhE0/6ssIlDvYBjQFCi8ELg7h0OY2MkIU1MXWr7z+f/xZ08E936I4eeddni6k4yUTIA==
+  dependencies:
+    tslib "^1.9.0"
+
 "@angular-devkit/architect@0.803.2":
   version "0.803.2"
   resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.803.2.tgz#493813fed3c493d77e974c9e2dadf18e153c5cd8"
@@ -978,6 +985,11 @@
     "@types/events" "*"
     "@types/minimatch" "*"
     "@types/node" "*"
+
+"@types/googlemaps@^3.39.13":
+  version "3.39.13"
+  resolved "https://registry.yarnpkg.com/@types/googlemaps/-/googlemaps-3.39.13.tgz#a2649ac618cb15bd04ad8700c41693c8c1f90e21"
+  integrity sha512-R/k5WKe8zQHo9oFRINuX/1haKYRkKEfItnBGrSjspbXXITakRdsj6daQIdL1+Pt84lnzduWurxNA5k0fgPMQUg==
 
 "@types/jasmine@^3.4.0":
   version "3.4.0"
@@ -5265,6 +5277,11 @@ neo-async@^2.6.1:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
+
+ng-pick-datetime@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/ng-pick-datetime/-/ng-pick-datetime-7.0.0.tgz#c78d1cfaee183691a4a44cd4f39c98f9c1d1595f"
+  integrity sha512-SbS+zKX6gOlYpgH8zDSx2EL32ak0Z0y1Ksu1ECP/FiwVBM2mHgbzdfyDYhMmKFB0GKn5yCwXTandR1FCQXe62w==
 
 ngx-bootstrap@^5.1.1:
   version "5.1.1"

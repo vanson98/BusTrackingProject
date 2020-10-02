@@ -42,7 +42,8 @@
               "src/bsb-theme/css/materialize.css",
               "src/bsb-theme/css/style.css",
               "src/bsb-theme/css/themes/all-themes.css",
-              "src/shared/core.less"
+              "src/shared/core.less",
+              "node_modules/ng-pick-datetime/assets/style/picker.min.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",

@@ -23,6 +23,9 @@ using BusTracking.Application.Catalog.RouteService;
 using BusTracking.Application.Catalog.StudentService;
 using BusTracking.Application.Catalog.StopService;
 using BusTracking.Application.System.Auths;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace BusTracking.BackendApi
 {
@@ -38,16 +41,16 @@ namespace BusTracking.BackendApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            // Config DbContext và DI cho DB context
+            // 1. Config DbContext và DI cho DB context
             services.AddDbContext<BusTrackingDbContext>(options =>
                     options.UseSqlServer(_appConfiguration.GetConnectionString(SystemConstants.MainConnectionString)));
 
-            // Cấu hình Identity 
+            // 2. Đăng kí và cấu hình Identity sử dụng các service của BusTrackingDbContext
             services.AddIdentity<AppUser, AppRole>()
                     .AddEntityFrameworkStores<BusTrackingDbContext>()
                     .AddDefaultTokenProviders();
 
-            // DI Services
+            //3. DI Services
             services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
             services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
             services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();
@@ -59,7 +62,28 @@ namespace BusTracking.BackendApi
             services.AddTransient<IStopService, StopService>();
             services.AddTransient<IStudentService, StudentService>();
 
-            //Configure CORS for angular2 UI
+            // 4. Cấu hình Authentication và  Authorization 
+            services
+                .AddAuthorization()
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidIssuer = _appConfiguration["Tokens:Issuer"],
+                        ValidAudience = _appConfiguration["Tokens:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appConfiguration["Tokens:Key"])),
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+
+            // 5. Configure CORS for angular2 UI
             services.AddCors(options => options.AddPolicy(
                 _defaultCorsPolicyName,
                 builder => builder
@@ -72,9 +96,9 @@ namespace BusTracking.BackendApi
                     .AllowAnyMethod()
                     .AllowCredentials()
                 )
-            ); ;
+            ); 
 
-            // Cấu hình swagger
+            // 6. Cấu hình swagger
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger Bus Tracking", Version = "v1" });
@@ -93,7 +117,7 @@ namespace BusTracking.BackendApi
 
                 // Yêu cầu khi gọi swagger phải truyền vào header một bearer
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-                  {
+                {
                     {
                       new OpenApiSecurityScheme
                       {
@@ -115,7 +139,6 @@ namespace BusTracking.BackendApi
                 //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 //c.IncludeXmlComments(xmlPath);
             });
-
         }
         
 
@@ -126,10 +149,14 @@ namespace BusTracking.BackendApi
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors(_defaultCorsPolicyName); // Enable CORS!
+            // Enable CORS!
+            app.UseCors(_defaultCorsPolicyName); 
 
+            // Route
             app.UseRouting();
 
+            // Auth
+            app.UseAuthentication();
             app.UseAuthorization();
 
             // Middleware của swagger
@@ -139,6 +166,7 @@ namespace BusTracking.BackendApi
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger BusTracking V1");
             });
 
+            //Endpoint
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute( 

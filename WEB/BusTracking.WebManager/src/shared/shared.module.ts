@@ -3,12 +3,10 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { AbpModule } from '@abp/abp.module';
 import { RouterModule } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
-
 import { AppSessionService } from './session/app-session.service';
 import { AppAuthService } from './auth/app-auth.service';
 import { AppRouteGuard } from './auth/auth-route-guard';
 import { AbpPaginationControlsComponent } from './pagination/abp-pagination-controls.component';
-import { LocalizePipe } from '@shared/pipes/localize.pipe';
 import { AppDatePipe } from '@shared/pipes/date.pipe';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ScrollingModule } from '@angular/cdk/scrolling';
@@ -99,7 +97,6 @@ import { EqualValidator } from './directives/equal-validator.directive';
     ],
     declarations: [
         AbpPaginationControlsComponent,
-        LocalizePipe,
         AppDatePipe,
         BlockDirective,
         BusyDirective,
@@ -107,7 +104,7 @@ import { EqualValidator } from './directives/equal-validator.directive';
     ],
     exports: [
         AbpPaginationControlsComponent,
-        LocalizePipe,
+        NgxPaginationModule,
         AppDatePipe,
         BlockDirective,
         BusyDirective,

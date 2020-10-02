@@ -9,6 +9,7 @@ namespace BusTracking.ViewModels.System.Users
         public string FullName { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
+        public DateTime Dob { get; set; }
         public string PhoneNumber { get; set; }
         public int TypeAccount { get; set; }
         public int Status { get; set; }

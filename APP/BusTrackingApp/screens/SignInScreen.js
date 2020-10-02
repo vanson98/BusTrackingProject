@@ -17,7 +17,6 @@ import {AuthContext} from '../components/context';
 
 const SignInScreen = ({navigation}) => {
   // State
-
   const [data, setData] = useState({
     username: '',
     password: '',
@@ -25,8 +24,10 @@ const SignInScreen = ({navigation}) => {
     secureTextEntry: true,
   });
 
+  //============= get context =============
   const {signIn} = React.useContext(AuthContext);
 
+  //============= function =============
   const textInputChange = (val) => {
     if (val.length !== 0) {
       setData({
@@ -56,6 +57,10 @@ const SignInScreen = ({navigation}) => {
       secureTextEntry: !data.secureTextEntry,
     });
   };
+
+  const loginHandle = (username,password) => {
+    signIn(username,password);
+  }
 
   return (
     <View style={styles.container}>
@@ -100,7 +105,7 @@ const SignInScreen = ({navigation}) => {
           </TouchableOpacity>
         </View>
         <View style={styles.button}>
-          <TouchableOpacity onPress={()=>{signIn()}} style={styles.signIn}>
+          <TouchableOpacity onPress={()=>{loginHandle(data.username,data.password)}} style={styles.signIn}>
             <LinearGradient
               colors={['#FFA000', '#FFC107']}
               style={styles.signIn}

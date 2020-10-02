@@ -8,9 +8,6 @@ import { finalize } from 'rxjs/operators';
 
 @Injectable()
 export class LoginService {
-
-    static readonly twoFactorRememberClientTokenName = 'TwoFactorRememberClientToken';
-
     authenticateModel: LoginRequestDto;
     authenticateResult: StringResultDto;
 
@@ -24,25 +21,19 @@ export class LoginService {
 
     authenticate(finallyCallback?: () => void): void {
         finallyCallback = finallyCallback || (() => { });
-
         this._authService
             .authenticate(this.authenticateModel)
             .pipe(finalize(() => { finallyCallback(); }))
-            .subscribe((result: StringResultDto) => {
+            .subscribe((result) => {
                 this.processAuthenticateResult(result);
             });
     }
 
-    private processAuthenticateResult(authenticateResult: StringResultDto) {
+    private processAuthenticateResult(authenticateResult) {
         this.authenticateResult = authenticateResult;
-
         if (authenticateResult.result) {
-            // Successfully logged in
-            this.login(
-                authenticateResult.result);
-
+            this.login(authenticateResult.result);
         } else {
-            // Unexpected result!
             this._messageService.error("Tên đăng nhập hoặc mật khẩu không đúng!");
             this._router.navigate(['account/login']);
         }

@@ -14,5 +14,6 @@ namespace BusTracking.ViewModels.System.Users
         public DateTime Dob { get; set; }
         public int TypeAccount { get; set; }
         public int Status { get; set; }
+        public IList<string> Roles { get; set; }
     }
 }
