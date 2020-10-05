@@ -1,8 +1,7 @@
 import React from 'react';
 import {View,Text,Button} from 'react-native';
 
-
-const RoundsScreen = (props)=>{
+const RouteComponent = (props)=>{
     const navigation = props.navigation;
     return (
         <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
@@ -14,4 +13,4 @@ const RoundsScreen = (props)=>{
         )
 }
 
-export default RoundsScreen
+export default RouteComponent
