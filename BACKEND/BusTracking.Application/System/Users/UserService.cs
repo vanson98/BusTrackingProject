@@ -167,12 +167,25 @@ namespace BusTracking.Application.System.Users
                 Status = (Status)request.Status,
             };
             var result = await _userManager.CreateAsync(createUser, request.Password);
-            if (result.Succeeded) 
-                return new ResponseDto(ResponseCode.Success,"Tạo mới thành công");
-            return new ResponseDto(ResponseCode.LogicError,"Tạo mới thất bại");
+            if (result.Succeeded)
+            {
+                foreach (var item in request.RolesName)
+                {
+                    var kq = await _userManager.AddToRoleAsync(createUser,item);
+                    if (!kq.Succeeded)
+                    {
+                        return new ResponseDto(ResponseCode.LogicError, "Tạo mới thất bại");
+                    }
+                }
+            }
+            else
+            {
+                return new ResponseDto(ResponseCode.LogicError, "Tạo mới thất bại");
+            }
+            return new ResponseDto(ResponseCode.Success,"Tạo mới thành công");
         }
 
-        public async Task<ResponseDto> Update(UserDto request)
+        public async Task<ResponseDto> Update(UpdateUserRequestDto request)
         {
             var user = await _userManager.FindByIdAsync(request.Id.ToString());
             if (user == null)
@@ -183,7 +196,7 @@ namespace BusTracking.Application.System.Users
             {
                 return new ResponseDto(ResponseCode.Validate,"Emai đã tồn tại");
             }
-
+            
             user.FullName = request.FullName;
             user.PhoneNumber = request.PhoneNumber;
             user.TypeAccount = (TypeAccount)request.TypeAccount;
@@ -192,11 +205,38 @@ namespace BusTracking.Application.System.Users
             user.Email = request.Email;
 
             var result = await _userManager.UpdateAsync(user);
+
             if (result.Succeeded)
             {
-                return new ResponseDto(ResponseCode.LogicError, "Cập nhật thất bại");
+                foreach (var item in request.RemovedRoles)
+                {
+                    if (await _userManager.IsInRoleAsync(user, item) == true)
+                    {
+                        var kq = await _userManager.RemoveFromRoleAsync(user, item);
+                        if (!kq.Succeeded)
+                        {
+                            return new ResponseDto(ResponseCode.LogicError, "Cập nhật thất bại do thêm role thất bại");
+                        }
+                    }
+                }
+                foreach (var roleName in request.AddedRoles)
+                {
+                    if (await _userManager.IsInRoleAsync(user, roleName) == false)
+                    {
+                        var kq = await _userManager.AddToRoleAsync(user, roleName);
+                        if (!kq.Succeeded)
+                        {
+                            return new ResponseDto(ResponseCode.LogicError, "Cập nhật thất bại do thêm role thất bại");
+                        }
+                    }
+                }
             }
-            return new ResponseDto(ResponseCode.Success, "Cập nhật thành công");
+            else
+            {
+                return new ResponseDto(ResponseCode.LogicError, "Cập nhật người dùng thất bại");
+            }
+            return new ResponseDto(ResponseCode.Success, "Cập nhật người dùng thành công");
+           
         }
 
         public async Task<ResponseDto> Delete(Guid id)
@@ -215,7 +255,7 @@ namespace BusTracking.Application.System.Users
 
         public async Task<ResponseDto> AssignRoles(RoleAssignRequest request)
         {
-            var user = await _userManager.Users.Where(x => x.IsDeleted == false && x.Id == request.Id).FirstOrDefaultAsync();
+            var user = await _userManager.Users.Where(x => x.IsDeleted == false && x.Id == request.UserId).FirstOrDefaultAsync();
             if (user == null)
             {
                 return new ResponseDto(ResponseCode.Validate,"Tài khoản không tồn tại");

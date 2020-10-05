@@ -4,6 +4,7 @@ using BusTracking.Utilities.Constants;
 using BusTracking.ViewModels.Common;
 using BusTracking.ViewModels.System.Auth;
 using BusTracking.ViewModels.System.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,7 @@ namespace BusTracking.BackendApi.Controllers
         }
 
         [HttpPost("authenticate")]
+        [AllowAnonymous]
         public async Task<ResultDto<string>> Authenticate([FromBody]LoginRequestDto request)
         {
             if (!ModelState.IsValid)
@@ -32,6 +34,7 @@ namespace BusTracking.BackendApi.Controllers
         }
         
         [HttpGet("GetAllRole")]
+        [AllowAnonymous]
         public async Task<ResultDto<List<RoleDto>>> GetAll()
         {
             var result = await _authService.GetAllRole();

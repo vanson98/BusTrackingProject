@@ -10,9 +10,9 @@ import { AppResCode } from '@shared/const/AppResCode';
 
 @Component({
   selector: 'app-Student',
-  templateUrl: './Student.component.html',
+  templateUrl: './student.component.html',
   animations: [appModuleAnimation()],
-  styleUrls: ['./Student.component.css']
+  styleUrls: ['./student.component.css']
 })
 
 export class StudentComponent extends PagedListingComponentBase<StudentDto> {

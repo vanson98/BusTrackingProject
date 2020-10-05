@@ -9,6 +9,7 @@ import { BusComponent } from './bus/bus.component';
 import { RouteComponent } from './route/route.component';
 import { StopComponent } from './stop/stop.component';
 import { StudentComponent } from './student/student.component';
+import { UserComponent } from './user/user.component';
 
 @NgModule({
     imports: [
@@ -23,7 +24,7 @@ import { StudentComponent } from './student/student.component';
                     { path: 'route', component: RouteComponent,  canActivate: [AppRouteGuard] },
                     { path: 'stop', component: StopComponent,  canActivate: [AppRouteGuard] },
                     { path: 'student', component: StudentComponent,  canActivate: [AppRouteGuard] },
-                    { path: 'about', component: AboutComponent }
+                    { path: 'user', component: UserComponent,  canActivate: [AppRouteGuard] },
                 ]
             }
         ])

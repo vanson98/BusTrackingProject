@@ -69,7 +69,7 @@ namespace BusTracking.BackendApi.Controllers
         }
 
         [HttpPut("Update")]
-        public async Task<ResponseDto> Update([FromBody]UserDto request)
+        public async Task<ResponseDto> Update([FromBody]UpdateUserRequestDto request)
         {
             if (!ModelState.IsValid)
             {

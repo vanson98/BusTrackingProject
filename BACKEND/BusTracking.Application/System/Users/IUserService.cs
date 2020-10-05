@@ -14,7 +14,7 @@ namespace BusTracking.Application.System.Users
         Task<PageResultDto<UserDto>> GetAllPaging(GetUserPagingRequestDto request);
         Task<ResultDto<UserDto>> GetById(Guid id);
         Task<ResponseDto> Create(CreateUserRequestDto createUserRequestDto);
-        Task<ResponseDto> Update(UserDto request);
+        Task<ResponseDto> Update(UpdateUserRequestDto request);
         Task<ResponseDto> Delete(Guid id);
         Task<ResponseDto> AssignRoles(RoleAssignRequest request);
     }

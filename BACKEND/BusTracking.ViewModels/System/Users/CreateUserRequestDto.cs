@@ -15,5 +15,6 @@ namespace BusTracking.ViewModels.System.Users
         public int Status { get; set; }
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
+        public string[] RolesName { get; set; }
     }
 }

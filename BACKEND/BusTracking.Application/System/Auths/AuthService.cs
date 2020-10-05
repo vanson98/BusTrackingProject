@@ -93,6 +93,7 @@ namespace BusTracking.Application.System.Auths
                 {
                     Id = x.Id,
                     Name = x.Name,
+                    NormalizedName = x.NormalizedName,
                     Description = x.Description
                 }).ToListAsync();
 

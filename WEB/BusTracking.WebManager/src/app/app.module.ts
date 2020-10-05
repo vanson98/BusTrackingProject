@@ -38,6 +38,9 @@ import { AgmCoreModule } from '@agm/core';
 import { StudentComponent } from './student/student.component';
 import { CreateStudentDialogComponent } from './student/create-student-dialog/create-student-dialog.component';
 import { EditStudentDialogComponent } from './student/edit-student-dialog/edit-student-dialog.component';
+import { UserComponent } from './user/user.component';
+import { CreateUserDialogComponent } from './user/create-user-dialog/create-user-dialog.component';
+import { EditUserDialogComponent } from './user/edit-user-dialog/edit-user-dialog.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +66,9 @@ import { EditStudentDialogComponent } from './student/edit-student-dialog/edit-s
     StudentComponent,
     CreateStudentDialogComponent,
     EditStudentDialogComponent,
+    UserComponent,
+    CreateUserDialogComponent,
+    EditUserDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -75,7 +81,7 @@ import { EditStudentDialogComponent } from './student/edit-student-dialog/edit-s
     AppRoutingModule,
     ServiceProxyModule,
     SharedModule,
-    //NgxPaginationModule
+    //Google Map Api
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAlXj3gfNdc17yhMJQ06BoE14Lz8NsbWl0',
       libraries: ['geometry', 'places']
@@ -97,6 +103,8 @@ import { EditStudentDialogComponent } from './student/edit-student-dialog/edit-s
     EditStopDialogComponent,
     CreateStudentDialogComponent,
     EditStudentDialogComponent,
+    CreateUserDialogComponent,
+    EditUserDialogComponent
   ]
 })
 export class AppModule {}
