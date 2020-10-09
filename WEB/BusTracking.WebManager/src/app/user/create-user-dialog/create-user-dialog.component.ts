@@ -110,7 +110,7 @@ export class CreateUserDialogComponent extends AppComponentBase implements OnIni
         .subscribe((result) => {
           if (result.statusCode === AppResCode.Success) {
             this.close(true);
-            this.notify.error("Tạo người dùng thành công!");
+            this.notify.success("Tạo người dùng thành công!");
           } else {
             this.close(false);
             this.notify.error("Tạo người dùng thất bại!");

@@ -1,10 +1,7 @@
 import React,{useEffect} from 'react';
-import {View, ActivityIndicator} from 'react-native';
 import {Provider} from 'react-redux';
-import {useSelector} from 'react-redux';
 import AppNavigation from './navigation';
 import RNBootSplash from 'react-native-bootsplash';
-import getUser from './selector/UserSelector';
 import { persistor,store } from './store';
 
 function App() {

@@ -67,11 +67,11 @@ const LoginComponent = ({navigation}) => {
       dispatch(signIn(username,password))
     }
   
-  
+    
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor="#FFC107" barStyle="light-content"></StatusBar>
-        
+          
         <View style={styles.header}>
           <Text style={styles.text_header}>Xin chào!</Text>
         </View>

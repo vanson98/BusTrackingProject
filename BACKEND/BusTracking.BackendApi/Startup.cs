@@ -87,14 +87,9 @@ namespace BusTracking.BackendApi
             services.AddCors(options => options.AddPolicy(
                 _defaultCorsPolicyName,
                 builder => builder
-                    .WithOrigins(
-                    _appConfiguration["App:CorsOrigins"]
-                        .Split(",", StringSplitOptions.RemoveEmptyEntries)
-                        .ToArray()
-                    )
+                    .AllowAnyOrigin()
                     .AllowAnyHeader()
                     .AllowAnyMethod()
-                    .AllowCredentials()
                 )
             ); 
 

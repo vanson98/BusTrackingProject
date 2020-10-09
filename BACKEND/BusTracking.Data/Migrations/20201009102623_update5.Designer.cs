@@ -4,14 +4,16 @@ using BusTracking.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BusTracking.Data.Migrations
 {
     [DbContext(typeof(BusTrackingDbContext))]
-    partial class BusTrackingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201009102623_update5")]
+    partial class update5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

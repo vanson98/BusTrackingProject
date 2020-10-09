@@ -8,7 +8,7 @@
                     <div class="col-md-6">
                         <mat-form-field>
                             <input matInput name="Name" formControlName='name' [placeholder]="'Họ và tên'"
-                                [(ngModel)]="user.fullName" required minlength="3" maxlength="32" tabindex="5" />
+                                [(ngModel)]="user.fullName" required minlength="3" maxlength="32" tabindex="1" />
                             <mat-error *ngIf="name.errors?.containSpecial">
                                 Tên chứa kí tự đặc biệt
                             </mat-error>
@@ -20,7 +20,7 @@
                             <input matInput formControlName='email' [placeholder]="'Địa chỉ Email'"
                                 [(ngModel)]="user.email" type="email" required maxlength="256" readonly
                                 onfocus="this.removeAttribute('readonly');"
-                                pattern="^\w+([\.\-\+]?\w+)*@\w+([\-]?\w+)+([\.-]?\w+){1,2}$" tabindex="4" />
+                                pattern="^\w+([\.\-\+]?\w+)*@\w+([\-]?\w+)+([\.-]?\w+){1,2}$" tabindex="3" />
                             <mat-error *ngIf="email.errors?.pattern">
                                 Email sai định dạng!
                             </mat-error>
@@ -33,7 +33,7 @@
                         </mat-form-field>
                         <mat-form-field>
                             <input matInput formControlName='userName' placeholder='Tên tài khoản'
-                                [(ngModel)]="user.userName" required minlength="2" maxlength="32" tabindex="3" />
+                                [(ngModel)]="user.userName" required minlength="2" maxlength="32" tabindex="5" />
                             <mat-error *ngIf="userName.errors?.pattern">
                                 Tên tài khoản viết liền ko dấu, không chứa kí tự đặc biệt
                             </mat-error>
@@ -55,7 +55,7 @@
                     </div>
                     <div class='col-md-6'>
                         <mat-form-field>
-                            <input required placeholder="Ngày sinh" formControlName='dob' matInput name="Dob"
+                            <input required placeholder="Ngày sinh" formControlName='dob' matInput name="Dob" tabindex="2"
                                 [(ngModel)]="user.dob" [matDatepicker]="picker">
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                             <mat-datepicker #picker></mat-datepicker>
@@ -63,7 +63,7 @@
                         <mat-form-field>
                             <input matInput formControlName="phone" [placeholder]="'Số điện thoại'"
                                 [(ngModel)]="user.phoneNumber" required pattern='^((\\+91-?)|0)?[0-9]{10}$'
-                                tabindex="6" />
+                                tabindex="4" />
                             <mat-error *ngIf="phone.errors?.pattern">
                                 Số điện thoại sai định dạng!
                             </mat-error>
@@ -73,7 +73,7 @@
                         </mat-form-field>
                         <mat-form-field>
                             <mat-select formControlName='typeUser' required placeholder="Loại người dùng"
-                                [(ngModel)]='user.typeAccount' tabindex="2">
+                                [(ngModel)]='user.typeAccount' tabindex="6">
                                 <mat-option [value]='0'>Phụ huynh</mat-option>
                                 <mat-option [value]='1'>Giám sát xe</mat-option>
                                 <mat-option [value]='2'>Quản trị</mat-option>
@@ -98,7 +98,7 @@
                     </div>
                 </div>
             </mat-tab>
-            <mat-tab [label]="'Phân quyền'" tabindex="12">
+            <mat-tab [label]="'Phân quyền'">
                 <br />
                 <div class="row-fluid">
                     <ng-template ngFor let-role [ngForOf]="roles">
@@ -119,7 +119,6 @@
         <button mat-button type="button" [disabled]="saving" (click)="close(false)" tabindex="10">
             Hủy
             <i class="fa fa-times app-icon" aria-hidden="true"></i>
-
         </button>
         <button mat-flat-button type="submit" flex="15" color="primary" [disabled]="!formCreateUser.valid || saving"
             tabindex="11">

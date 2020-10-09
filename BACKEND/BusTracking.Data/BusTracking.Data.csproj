@@ -11,6 +11,8 @@
     <Compile Remove="Migrations\20200920175405_update3.Designer.cs" />
     <Compile Remove="Migrations\20200920175846_update3.cs" />
     <Compile Remove="Migrations\20200920175846_update3.Designer.cs" />
+    <Compile Remove="Migrations\20201006170116_update4.cs" />
+    <Compile Remove="Migrations\20201006170116_update4.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +29,10 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.7" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Extension\" />
   </ItemGroup>
 
 </Project>

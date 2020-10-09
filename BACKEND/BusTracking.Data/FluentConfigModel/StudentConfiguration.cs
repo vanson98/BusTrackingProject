@@ -30,6 +30,7 @@ namespace BusTracking.Data.FluentConfigModel
                    .HasForeignKey(x => x.StopId);
             builder.Property(s => s.StopId).IsRequired(false);
 
+            builder.Property(s => s.TypeTransport).IsRequired();
             builder.Property(d => d.Name).IsRequired();
             builder.Property(d => d.Address).HasMaxLength(255);
             builder.Property(d => d.Email).IsUnicode(false);

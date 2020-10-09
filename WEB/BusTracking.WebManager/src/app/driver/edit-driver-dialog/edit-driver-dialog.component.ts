@@ -18,7 +18,7 @@ implements OnInit {
   saving = false;
   isActive : boolean;
   driver: UpdateDriverRequestDto = new UpdateDriverRequestDto();
-  
+
   editForm: FormGroup;
   name : FormControl;
   dob : FormControl;

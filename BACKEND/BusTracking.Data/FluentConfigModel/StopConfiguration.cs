@@ -15,7 +15,7 @@ namespace BusTracking.Data.FluentConfigModel
             builder.Property(s => s.Id).UseIdentityColumn();
 
             builder.Property(s => s.Name).IsRequired().HasMaxLength(50);
-            builder.Property(s => s.Address).IsRequired().HasMaxLength(255);
+            builder.Property(s => s.Address).IsRequired();
             builder.Property(s => s.NumberOfStudents).IsRequired();
             builder.Property(s => s.TimePickUp).IsRequired();
             builder.Property(s => s.TimeDropOff).IsRequired();

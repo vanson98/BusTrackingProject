@@ -19,5 +19,6 @@ namespace BusTracking.Data.Entities
         public decimal Latitude { get; set; }
         public List<RouteStop> RouteStops { get; set; }
         public List<Student> Students { get; set; }
+        public List<StudentCheckIn> StudentCheckIns { get; set; }
     }
 }

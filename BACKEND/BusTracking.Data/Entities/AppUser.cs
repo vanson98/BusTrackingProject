@@ -15,6 +15,7 @@ namespace BusTracking.Data.Entities
         public Boolean IsDeleted { get; set; }
         public Status Status { get; set; }
         public List<Student> Students { get; set; }
+        public List<StudentCheckIn> StudentCheckIns { get; set; }
         public Bus Bus { get; set; }
        
     }

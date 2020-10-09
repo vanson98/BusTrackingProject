@@ -21,7 +21,7 @@ import { DriverComponent } from './driver/driver.component';
 import { CreateDriverDialogComponent } from './driver/create-driver-dialog/create-driver-dialog.component';
 import { EditDriverDialogComponent } from './driver/edit-driver-dialog/edit-driver-dialog.component';
 import { MY_FORMATS } from '@shared/const/datepicker-format';
-import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
 import { BusComponent } from './bus/bus.component';
 import { CreateBusDialogComponent } from './bus/create-bus-dialog/create-bus-dialog.component';
 import { EditBusDialogComponent } from './bus/edit-bus-dialog/edit-bus-dialog.component';
@@ -91,6 +91,7 @@ import { EditUserDialogComponent } from './user/edit-user-dialog/edit-user-dialo
     OwlNativeDateTimeModule,
   ],
   providers: [
+    {provide: MAT_DATE_LOCALE, useValue: 'vi-vn'}
   ],
   entryComponents: [
     CreateDriverDialogComponent,

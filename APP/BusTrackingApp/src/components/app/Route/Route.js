@@ -8,7 +8,7 @@ const RouteComponent = (props)=>{
             <Text>Các lượt đi</Text>
             <Button 
                 title="Go to Details Round"
-                onPress={()=>navigation.navigate("DetailRound")}/>
+                onPress={()=>navigation.navigate("RouteMap")}/>
         </View> 
         )
 }

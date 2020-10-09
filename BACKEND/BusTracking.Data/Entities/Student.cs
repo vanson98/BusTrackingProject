@@ -17,9 +17,14 @@ namespace BusTracking.Data.Entities
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public StudentStatus Status { get; set; }
+        public string ClassOfStudent { get; set; }
+        public TypeTransport TypeTransport { get; set; }
+        public DateTime TimePickUp { get; set; }
+        public DateTime TimeDropOff { get; set; }
         public Boolean IsDeleted { get; set; }
         public Bus Bus { get; set; }
         public AppUser Parent { get; set; }
         public Stop Stop { get; set; }
+        public List<StudentCheckIn> StudentCheckIns { get; set; }
     }
 }

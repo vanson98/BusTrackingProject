@@ -37,7 +37,7 @@ namespace BusTracking.Application.System.Users
         public async Task<List<UserDto>> GetAllMonitorUnAssignAsync()
         {
             var query = from m in _context.AppUsers
-                        where m.TypeAccount == TypeAccount.MonitorAcc
+                        where m.TypeAccount == TypeAccount.MonitorAcc && m.IsDeleted == false
                         join b in _context.Buses on m.Id equals b.MonitorId into gb
                         from sub in gb.DefaultIfEmpty()
                         where sub.MonitorId == null
@@ -61,6 +61,7 @@ namespace BusTracking.Application.System.Users
         {
             var query = from x in _context.AppUsers
                         where x.TypeAccount == (TypeAccount)type
+                        where x.IsDeleted == false
                         select x;
             var parents = await query.Select(x => new UserDto()
             {
@@ -78,7 +79,7 @@ namespace BusTracking.Application.System.Users
 
         public async Task<PageResultDto<UserDto>> GetAllPaging(GetUserPagingRequestDto request)
         {
-            var query = _userManager.Users;
+            var query = _userManager.Users.Where(x=>x.IsDeleted==false).AsQueryable();
             if (!string.IsNullOrEmpty(request.UserName))
             {
                 query = query.Where(x => x.UserName.Contains(request.UserName));

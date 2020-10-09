@@ -14,6 +14,21 @@ namespace BusTracking.Data.FluentConfigModel
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).UseIdentityColumn();
+            builder.HasOne(x => x.Student)
+                .WithMany(s => s.StudentCheckIns)
+                .HasForeignKey(x => x.StudentId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasOne(x => x.Monitor)
+                .WithMany(s => s.StudentCheckIns)
+                .HasForeignKey(x => x.MonitorId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasOne(x => x.Stop)
+                .WithMany(s => s.StudentCheckIns)
+                .HasForeignKey(x => x.StopId)
+                .OnDelete(DeleteBehavior.NoAction);
+
             builder.Property(x => x.CheckInType).IsRequired();
             builder.Property(x => x.CheckInTime).IsRequired();
             builder.Property(x => x.CheckInResult).IsRequired();

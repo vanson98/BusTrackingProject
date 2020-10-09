@@ -11,12 +11,12 @@ export class SideBarNavComponent extends AppComponentBase {
 
     menuItems: MenuItem[] = [
         new MenuItem('HomePage', '', 'home', '/app/home'),
-        new MenuItem('Quản lý tài xế','','home','/app/driver'),
-        new MenuItem('Quản lý xe đưa đón','','home','/app/bus'),
-        new MenuItem('Quản lý tuyến','','home','/app/route'),
-        new MenuItem('Quản lý điểm dừng','','home','/app/stop'),
-        new MenuItem('Quản lý học sinh','','home','/app/student'),
-        new MenuItem('Quản lý người dùng','','home','/app/user')
+        new MenuItem('Quản lý tài xế','','perm_contact_calendar','/app/driver'),
+        new MenuItem('Quản lý xe đưa đón','','directions_bus','/app/bus'),
+        new MenuItem('Quản lý tuyến','','alt_route','/app/route'),
+        new MenuItem('Quản lý điểm dừng','','location_on','/app/stop'),
+        new MenuItem('Quản lý học sinh','','face','/app/student'),
+        new MenuItem('Quản lý người dùng','','supervisor_account','/app/user')
     ];
 
     constructor(

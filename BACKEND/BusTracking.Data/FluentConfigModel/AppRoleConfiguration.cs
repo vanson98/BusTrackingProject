@@ -1,6 +1,7 @@
 ﻿using BusTracking.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Security.Cryptography.X509Certificates;
 
 namespace BusTracking.Data.FluentConfigModel
 {
@@ -11,7 +12,6 @@ namespace BusTracking.Data.FluentConfigModel
             builder.ToTable("AppRoles");
 
             builder.Property(x => x.Description).HasMaxLength(255).IsRequired();
-
         }
     }
 }
