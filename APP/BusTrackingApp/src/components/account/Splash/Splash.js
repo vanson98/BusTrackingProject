@@ -14,7 +14,7 @@ const SplashComponent = ({navigation})=>{
                 <Animatable.Image 
                     animation="bounceIn"
                     duraton="1500"
-                    source={require('../../../share/assets/logo.png') }
+                    source={require('../../../share/assets/image/logo.png') }
                     style={styles.logo}
                     resizeMode="stretch"
                 />

@@ -1,21 +1,16 @@
 import React, {useState} from 'react';
 import {
   View,
-  Dimensions,
-  StyleSheet,
   Text,
   TextInput,
-  Image,
   StatusBar,
-  TouchableOpacity,
-  Platform,
-  Alert
+  TouchableOpacity
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as Animatable from 'react-native-animatable';
 import { styles } from './style';
-import { shallowEqual, useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { signIn} from '../../../actions/UserActions';
  
 const LoginComponent = ({navigation}) => {

@@ -20,7 +20,7 @@ export const signIn = (userName, password) => async (dispatch) => {
   try {
     responseObj = await userService.login(userName,password);
   } catch (error) {
-    console.log(error);
+    Alert.alert('Thông báo','Đã có lỗi xảy ra');
   }
   if(responseObj.statusCode=='B002'){
     dispatch(login({ id: userName, userToken: responseObj.result}));
