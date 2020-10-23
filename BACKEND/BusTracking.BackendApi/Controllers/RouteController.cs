@@ -2,6 +2,7 @@
 using BusTracking.Utilities.Constants;
 using BusTracking.ViewModels.Catalog.Routes;
 using BusTracking.ViewModels.Common;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace RouteTracking.BackendApi.Controllers
 {
+    [Authorize(Roles = "admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class RouteController : ControllerBase

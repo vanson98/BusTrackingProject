@@ -4,7 +4,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { signOut } from '../../../actions/UserActions';
 
-const ProfileComponent = ({navigation})=>{
+const ProfileComponent = (props)=>{
+    const navigation = props.navigation;
     const dispatch = useDispatch();
 
     const logOut = () => {
@@ -23,8 +24,8 @@ const ProfileComponent = ({navigation})=>{
                 <Text style={styles.label}>TÀI KHOẢN CỦA TÔI</Text>
             </View>   
             <View style={styles.ct_action}>
-                <TouchableOpacity style={styles.action}>
-                    <Text style={{fontSize:15,fontWeight:'bold'}}>Cập nhật thông tin</Text>
+                <TouchableOpacity style={styles.action} >
+                    <Text style={{fontSize:15,fontWeight:'bold'}} onPress={()=>navigation.navigate('UpdateProfile')}>Cập nhật thông tin</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.action}>
                     <Text style={{fontSize:15,fontWeight:'bold'}}>Đổi mật khẩu</Text>

@@ -26,6 +26,9 @@ using BusTracking.Application.System.Auths;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Runtime.InteropServices.ComTypes;
+using BusTracking.BackendApi.HubConfig;
+using Microsoft.AspNetCore.SignalR;
 
 namespace BusTracking.BackendApi
 {
@@ -39,8 +42,9 @@ namespace BusTracking.BackendApi
         }
         
         public void ConfigureServices(IServiceCollection services)
-        {
+        {   
             services.AddControllers();
+
             // 1. Config DbContext và DI cho DB context
             services.AddDbContext<BusTrackingDbContext>(options =>
                     options.UseSqlServer(_appConfiguration.GetConnectionString(SystemConstants.MainConnectionString)));
@@ -81,15 +85,33 @@ namespace BusTracking.BackendApi
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appConfiguration["Tokens:Key"])),
                         ClockSkew = TimeSpan.Zero
                     };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+
+                            // If the request is for our hub...
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) &&
+                                (path.StartsWithSegments("/bushub")))
+                            {
+                                // Read the token out of the query string
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
 
             // 5. Configure CORS for angular2 UI
             services.AddCors(options => options.AddPolicy(
                 _defaultCorsPolicyName,
                 builder => builder
-                    .AllowAnyOrigin()
+                    .WithOrigins("http://localhost:3500")
                     .AllowAnyHeader()
                     .AllowAnyMethod()
+                    .AllowCredentials()
                 )
             ); 
 
@@ -134,6 +156,12 @@ namespace BusTracking.BackendApi
                 //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 //c.IncludeXmlComments(xmlPath);
             });
+
+            // 7. SignalR Hub
+            services.AddSignalR();
+
+            // DI for SignalR
+            services.AddSingleton<IUserIdProvider, CustomIdProvider>();
         }
         
 
@@ -161,6 +189,10 @@ namespace BusTracking.BackendApi
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger BusTracking V1");
             });
 
+            //var idProvider = new CustomIdProvider();
+
+            //GlobalHost.DependencyResolver.Register(typeof(IUserIdProvider), () => idProvider);
+
             //Endpoint
             app.UseEndpoints(endpoints =>
             {
@@ -168,6 +200,7 @@ namespace BusTracking.BackendApi
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}"
                 );
+                endpoints.MapHub<BusTrackingHub>("/bushub");
             });
         }
     }

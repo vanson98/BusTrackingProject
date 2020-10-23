@@ -25,7 +25,7 @@ namespace BusTracking.Data.EF
             // Apply config fluent api for entity
             modelBuilder.ApplyConfiguration(new BusConfiguration());
             modelBuilder.ApplyConfiguration(new DriverConfiguration());
-            modelBuilder.ApplyConfiguration(new NotifyConfiguration());
+            modelBuilder.ApplyConfiguration(new NotificationConfiguration());
             modelBuilder.ApplyConfiguration(new PointConfiguration());
             modelBuilder.ApplyConfiguration(new RouteConfiguration());
             modelBuilder.ApplyConfiguration(new RouteStopConfiguration());
@@ -48,7 +48,7 @@ namespace BusTracking.Data.EF
         public DbSet<AppRole> AppRoles { get; set; }
         public DbSet<Bus> Buses { get; set; }
         public DbSet<Driver> Drivers { get; set; }
-        public DbSet<Notify> Notifies { get; set; }
+        public DbSet<Notification> Notification { get; set; }
         public DbSet<Point> Points { get; set; }
         public DbSet<Route> Routes { get; set; }
         public DbSet<RouteStop> RouteStops {get;set;}

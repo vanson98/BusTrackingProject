@@ -29,10 +29,9 @@ namespace BusTracking.Data.FluentConfigModel
                 .HasForeignKey(x => x.StopId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.Property(x => x.CheckInType).IsRequired();
             builder.Property(x => x.CheckInTime).IsRequired();
             builder.Property(x => x.CheckInResult).IsRequired();
-            builder.Property(x => x.ParentConfirm).HasDefaultValue(false);
+            builder.Property(x => x.StudentId).IsRequired();
         }
     }
 }

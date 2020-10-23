@@ -1,47 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import StudentItem from '../Layout/StudentItem';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import StudentService from '../../../controllers/StudentService';
+import { useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
 
 const RouteComponent = (props)=>{
+    //======================== Property =========================
     const navigation = props.navigation;
     var typeCheck = props.typeCheck;
-    const [students, setStudent]=useState(
-        
-            [
-                {
-                    id: 1,
-                    name: "Vương Xuân Vinh",
-                    class: "16A04"
-                },
-                {
-                    id: 2,
-                    name: "Nguyễn Văn Sơn",
-                    class: "12A2"
-                },
-                {
-                    id: 3,
-                    name: "Nguyễn Thu Huyền",
-                    class: "12A4"
-                },
-                {
-                    id: 4,
-                    name: "Vương Xuân Vinh",
-                    class: "16A04"
-                },
-                {
-                    id: 5,
-                    name: "Nguyễn Văn Sơn",
-                    class: "12A2"
-                },
-                {
-                    id: 6,
-                    name: "Nguyễn Thu Huyền",
-                    class: "12A4"
-                }
-            ]
-    )
+    var user = useSelector((state)=>state.user);
+    var listStudent = [];
+   
+    //=========================  State ==========================
+    const [students, setListStudent]=useState(listStudent)
+
+    // Lấy tất cả danh sách học sinh trên tuyến đi
+    useEffect(()=>{
+        const unsubscribe = navigation.addListener('focus', () => {
+            // Lấy lại list student mới khi focus tab
+            async function getListStudent(){
+                var response = await StudentService.getAllStudentByMonitor(user.userId,user.userToken);
+                setListStudent(response.result)
+            }
+            getListStudent();
+          });
+          // Gắn sự kiện khi kết thúc navigation 
+          return unsubscribe;
+    },[navigation])
 
     React.useLayoutEffect(()=>{
         navigation.setOptions({
@@ -52,7 +40,6 @@ const RouteComponent = (props)=>{
             ),
             title: typeCheck==0? "Lượt đi" : "Lượt về"
         },[navigation])
-
     })
 
     return (
@@ -60,7 +47,7 @@ const RouteComponent = (props)=>{
             style={styles.container}
             data={students}
             renderItem={({item})=>
-                <StudentItem student={item} router={navigation} typeCheck={typeCheck}/>
+                <StudentItem studentData={item} router={navigation} typeCheck={typeCheck}/>
             }
             keyExtractor={item=>item.id.toString()}
         >

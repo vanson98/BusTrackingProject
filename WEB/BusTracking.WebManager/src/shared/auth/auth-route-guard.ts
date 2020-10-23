@@ -24,7 +24,7 @@ export class AppRouteGuard implements CanActivate {
     }
 
     canActivate(route: ActivatedRouteSnapshot): boolean {
-        if(this._authService.isTokenExpired()){
+        if(this._authService.checkHaveToken()){
             this._router.navigate(['/account/login']);
             return false;
         }else {

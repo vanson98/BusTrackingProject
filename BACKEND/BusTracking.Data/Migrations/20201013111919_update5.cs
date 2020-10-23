@@ -7,28 +7,36 @@ namespace BusTracking.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Students_Stops_StopId",
+                table: "Students");
+
+            migrationBuilder.DropColumn(
+                name: "ParentConfirm",
+                table: "StudentCheckIns");
+
+            migrationBuilder.AlterColumn<int>(
+                name: "StopId",
+                table: "Students",
+                nullable: false,
+                oldClrType: typeof(int),
+                oldType: "int",
+                oldNullable: true);
+
             migrationBuilder.AddColumn<string>(
                 name: "ClassOfStudent",
                 table: "Students",
                 nullable: true);
 
-            migrationBuilder.AddColumn<DateTime>(
-                name: "TimeDropOff",
+            migrationBuilder.AddColumn<string>(
+                name: "PhoneTeacher",
                 table: "Students",
-                nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+                nullable: true);
 
-            migrationBuilder.AddColumn<DateTime>(
-                name: "TimePickUp",
+            migrationBuilder.AddColumn<string>(
+                name: "TeacherName",
                 table: "Students",
-                nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
-
-            migrationBuilder.AddColumn<int>(
-                name: "TypeTransport",
-                table: "Students",
-                nullable: false,
-                defaultValue: 0);
+                nullable: true);
 
             migrationBuilder.AlterColumn<string>(
                 name: "Address",
@@ -38,61 +46,103 @@ namespace BusTracking.Data.Migrations
                 oldType: "nvarchar(255)",
                 oldMaxLength: 255);
 
+            migrationBuilder.AddColumn<int>(
+                name: "Id",
+                table: "Notifies",
+                nullable: false,
+                defaultValue: 0)
+                .Annotation("SqlServer:Identity", "1, 1");
+
             migrationBuilder.AddColumn<string>(
                 name: "DisplayName",
                 table: "AppRoles",
                 nullable: true);
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_Notifies",
+                table: "Notifies",
+                column: "Id");
 
             migrationBuilder.UpdateData(
                 table: "AppRoles",
                 keyColumn: "Id",
                 keyValue: new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"),
                 column: "ConcurrencyStamp",
-                value: "27366908-83c8-49cc-a2e1-74f2d287073b");
+                value: "ea55278d-0727-4fc4-9cb1-d0beb4f39a31");
 
             migrationBuilder.UpdateData(
                 table: "AppUsers",
                 keyColumn: "Id",
                 keyValue: new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"),
                 columns: new[] { "ConcurrencyStamp", "PasswordHash" },
-                values: new object[] { "feac3e7a-c08b-400a-922c-7f589f500ae6", "AQAAAAEAACcQAAAAEH/VzvuA2/CRzh1MlvYaeghHkFT7RhUrEAmj1Qflzgw64q+7DJdOaFMxvz22SFXYwg==" });
+                values: new object[] { "ace59943-9ce6-4052-aab3-1eb887e1bdd2", "AQAAAAEAACcQAAAAEAE0m8Eoygeyyi9PhAfl83XBXGtpP67Hse/0Vgti/BnO6ds7hoSlOiNByp9ZLulkWw==" });
 
             migrationBuilder.UpdateData(
                 table: "AppUsers",
                 keyColumn: "Id",
                 keyValue: new Guid("d5b139c2-3764-431f-900f-ecc01adf5b91"),
                 columns: new[] { "ConcurrencyStamp", "PasswordHash" },
-                values: new object[] { "ee997a56-d46b-4152-9e0f-7d45b5c3ea54", "AQAAAAEAACcQAAAAEFuSrh/CEl8T7NW1JQzzHF6IeC098ncdVr1mtIQlLzrJMxrDk1RfxVA5hnCBD/d9TA==" });
+                values: new object[] { "bbcd63e9-22e5-4a76-a151-7e72045bca73", "AQAAAAEAACcQAAAAEL4Gy9kcu5cOzO80qvVXj34yRazk6IeSHCzvSwE+VVbYgsmi7xK8yQvY6RAOqDjSfQ==" });
 
             migrationBuilder.UpdateData(
                 table: "AppUsers",
                 keyColumn: "Id",
                 keyValue: new Guid("da5ac2ab-0346-416a-b640-d5915dad85ed"),
                 columns: new[] { "ConcurrencyStamp", "PasswordHash" },
-                values: new object[] { "53cb6401-eb7f-4c46-bc77-fdcb146c1693", "AQAAAAEAACcQAAAAELkompfWJ33pehnzz/mMNA8eNuZJgcwXUvnCFtPMfLI16lIQWAHt4gXJ9rDiilbJpQ==" });
+                values: new object[] { "cd2f8bfa-020e-4aa8-b92f-1f2cf3dffb69", "AQAAAAEAACcQAAAAEN13aRHIB0NaFGLn0CJgV7GictejKqP8WcCIEWDfhSFbmpUVljBo9sXjb/rQGphdSQ==" });
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Students_Stops_StopId",
+                table: "Students",
+                column: "StopId",
+                principalTable: "Stops",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Students_Stops_StopId",
+                table: "Students");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_Notifies",
+                table: "Notifies");
+
             migrationBuilder.DropColumn(
                 name: "ClassOfStudent",
                 table: "Students");
 
             migrationBuilder.DropColumn(
-                name: "TimeDropOff",
+                name: "PhoneTeacher",
                 table: "Students");
 
             migrationBuilder.DropColumn(
-                name: "TimePickUp",
+                name: "TeacherName",
                 table: "Students");
 
             migrationBuilder.DropColumn(
-                name: "TypeTransport",
-                table: "Students");
+                name: "Id",
+                table: "Notifies");
 
             migrationBuilder.DropColumn(
                 name: "DisplayName",
                 table: "AppRoles");
+
+            migrationBuilder.AlterColumn<int>(
+                name: "StopId",
+                table: "Students",
+                type: "int",
+                nullable: true,
+                oldClrType: typeof(int));
+
+            migrationBuilder.AddColumn<bool>(
+                name: "ParentConfirm",
+                table: "StudentCheckIns",
+                type: "bit",
+                nullable: false,
+                defaultValue: false);
 
             migrationBuilder.AlterColumn<string>(
                 name: "Address",
@@ -129,6 +179,14 @@ namespace BusTracking.Data.Migrations
                 keyValue: new Guid("da5ac2ab-0346-416a-b640-d5915dad85ed"),
                 columns: new[] { "ConcurrencyStamp", "PasswordHash" },
                 values: new object[] { "d5bf9b5b-22e4-4b9c-82e5-8c5b6d70fb3a", "AQAAAAEAACcQAAAAEL+Lq6QnTq3qTWKNHjA0ZyMWdm6X3Qf0AsWGCpcgQC/m5XZgIXHYEF3e/SLzDPt1HA==" });
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Students_Stops_StopId",
+                table: "Students",
+                column: "StopId",
+                principalTable: "Stops",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
         }
     }
 }

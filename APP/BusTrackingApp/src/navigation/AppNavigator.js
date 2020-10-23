@@ -5,7 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import RouteComponent from '../components/app/Route';
 import RouteMapComponent from '../components/app/Route/RouteMap';
 import DetailStudentComponent from '../components/app/Route/DetailStudent';
-import NotificationComponent from '../components/app/Notification';
+import NotificationsComponent from '../components/app/Notifications';
 import ProfileComponent from '../components/app/Profile';
 import UpdateAccount from '../components/app/Profile/UpdateAccount/UpdateAccount';
 import UpdatePassword from '../components/app/Profile/UpdatePassword/UpdatePassword';
@@ -13,7 +13,8 @@ import UpdatePassword from '../components/app/Profile/UpdatePassword/UpdatePassw
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const MainTabScreen = () => {
+const MainTabScreen = (props) => {
+  const {userRole}=props;
   return (
     <Tab.Navigator
       initialRouteName="PickUpRoute"
@@ -22,7 +23,8 @@ const MainTabScreen = () => {
         activeTintColor: '#FF9800',
         labelStyle: {fontSize: 13},
       }}>
-      <Tab.Screen
+        
+          <Tab.Screen
         name="PickUpRoute"
         component={PickUpRouteNavigator}
         options={{
@@ -31,7 +33,9 @@ const MainTabScreen = () => {
             <Ionicons name="person-add" color={color} size={size} />
           ),
         }}
-      />
+      /> 
+      
+      
       <Tab.Screen
         name="DropOffRoute"
         component={DropOffRouteNavigator}
@@ -138,7 +142,7 @@ const NotifyStackNavigator = () =>(
   <Stack.Navigator
     screenOptions={{
       headerStyle: {
-        backgroundColor: '#FF9800',
+        backgroundColor: '#FFA000',
       },
       headerTitleStyle: {
         color: '#fff',
@@ -149,7 +153,7 @@ const NotifyStackNavigator = () =>(
     }}>
     <Stack.Screen
       name="Notification"
-      component={NotificationComponent}
+      component={NotificationsComponent}
       options={{
         title: 'Thông báo'
       }}>
@@ -195,5 +199,3 @@ const AccountStackNavigator = ()=>(
 )
 
 export default MainTabScreen;
-
-//options={{ headerShown: false }}

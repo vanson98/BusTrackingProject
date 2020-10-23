@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BusTracking.Data.Migrations
 {
     [DbContext(typeof(BusTrackingDbContext))]
-    [Migration("20201009102623_update5")]
+    [Migration("20201013111919_update5")]
     partial class update5
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,7 +52,7 @@ namespace BusTracking.Data.Migrations
                         new
                         {
                             Id = new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"),
-                            ConcurrencyStamp = "27366908-83c8-49cc-a2e1-74f2d287073b",
+                            ConcurrencyStamp = "ea55278d-0727-4fc4-9cb1-d0beb4f39a31",
                             Description = "Administrator role",
                             Name = "admin",
                             NormalizedName = "admin"
@@ -137,7 +137,7 @@ namespace BusTracking.Data.Migrations
                         {
                             Id = new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "feac3e7a-c08b-400a-922c-7f589f500ae6",
+                            ConcurrencyStamp = "ace59943-9ce6-4052-aab3-1eb887e1bdd2",
                             Dob = new DateTime(1998, 8, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "vansonnguyen@gmail.com",
                             EmailConfirmed = true,
@@ -146,7 +146,7 @@ namespace BusTracking.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "vansonnguyen@gmail.com",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEH/VzvuA2/CRzh1MlvYaeghHkFT7RhUrEAmj1Qflzgw64q+7DJdOaFMxvz22SFXYwg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAE0m8Eoygeyyi9PhAfl83XBXGtpP67Hse/0Vgti/BnO6ds7hoSlOiNByp9ZLulkWw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             Status = 0,
@@ -158,7 +158,7 @@ namespace BusTracking.Data.Migrations
                         {
                             Id = new Guid("da5ac2ab-0346-416a-b640-d5915dad85ed"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "53cb6401-eb7f-4c46-bc77-fdcb146c1693",
+                            ConcurrencyStamp = "cd2f8bfa-020e-4aa8-b92f-1f2cf3dffb69",
                             Dob = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "vansonnguyen1@gmail.com",
                             EmailConfirmed = true,
@@ -167,7 +167,7 @@ namespace BusTracking.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "vansonnguyen1@gmail.com",
                             NormalizedUserName = "admin1",
-                            PasswordHash = "AQAAAAEAACcQAAAAELkompfWJ33pehnzz/mMNA8eNuZJgcwXUvnCFtPMfLI16lIQWAHt4gXJ9rDiilbJpQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEN13aRHIB0NaFGLn0CJgV7GictejKqP8WcCIEWDfhSFbmpUVljBo9sXjb/rQGphdSQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             Status = 0,
@@ -179,7 +179,7 @@ namespace BusTracking.Data.Migrations
                         {
                             Id = new Guid("d5b139c2-3764-431f-900f-ecc01adf5b91"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ee997a56-d46b-4152-9e0f-7d45b5c3ea54",
+                            ConcurrencyStamp = "bbcd63e9-22e5-4a76-a151-7e72045bca73",
                             Dob = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "vansonnguyen2@gmail.com",
                             EmailConfirmed = true,
@@ -188,7 +188,7 @@ namespace BusTracking.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "vansonnguyen2@gmail.com",
                             NormalizedUserName = "admin2",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFuSrh/CEl8T7NW1JQzzHF6IeC098ncdVr1mtIQlLzrJMxrDk1RfxVA5hnCBD/d9TA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEL4Gy9kcu5cOzO80qvVXj34yRazk6IeSHCzvSwE+VVbYgsmi7xK8yQvY6RAOqDjSfQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             Status = 0,
@@ -379,6 +379,13 @@ namespace BusTracking.Data.Migrations
 
             modelBuilder.Entity("BusTracking.Data.Entities.Notify", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(500)")
@@ -389,6 +396,8 @@ namespace BusTracking.Data.Migrations
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Notifies");
                 });
@@ -592,20 +601,17 @@ namespace BusTracking.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PhoneTeacher")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int?>("StopId")
+                    b.Property<int>("StopId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("TimeDropOff")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("TimePickUp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("TypeTransport")
-                        .HasColumnType("int");
+                    b.Property<string>("TeacherName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -638,11 +644,6 @@ namespace BusTracking.Data.Migrations
 
                     b.Property<Guid>("MonitorId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("ParentConfirm")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
 
                     b.Property<int>("StopId")
                         .HasColumnType("int");
@@ -812,7 +813,9 @@ namespace BusTracking.Data.Migrations
 
                     b.HasOne("BusTracking.Data.Entities.Stop", "Stop")
                         .WithMany("Students")
-                        .HasForeignKey("StopId");
+                        .HasForeignKey("StopId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BusTracking.Data.Entities.StudentCheckIn", b =>

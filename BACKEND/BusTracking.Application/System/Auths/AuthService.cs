@@ -23,32 +23,35 @@ namespace BusTracking.Application.System.Auths
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<AppRole> _roleManager;
+        private readonly BusTrackingDbContext _context;
         private readonly IConfiguration _config;
 
         public AuthService(BusTrackingDbContext dbContext, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, IConfiguration config)
         {
+            this._context = dbContext;
             this._userManager = userManager;
             this._signInManager = signInManager;
             this._roleManager = roleManager;
             this._config = config;
         }
-        public async Task<ResultDto<string>> Authencate(LoginRequestDto request)
+        public async Task<ResultDto<AuthenticateResultModel>> Authencate(LoginRequestDto request)
         {
-            var user = await _userManager.FindByNameAsync(request.UserName);
+            var user = await _context.AppUsers.Where(x=>x.Status!=0 && x.IsDeleted==false && x.UserName==request.UserName).FirstOrDefaultAsync();
             if (user == null) 
-                return new ResultDto<string>(ResponseCode.Validate,"Người dùng không tồn tại",null);
+                return new ResultDto<AuthenticateResultModel>(ResponseCode.Validate,"Người dùng không tồn tại hoặc đã bị khóa",null);
 
             var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, true);
             if (!result.Succeeded) 
-                return new ResultDto<string>(ResponseCode.LogicError, "Đăng nhập thất bại", null); 
+                return new ResultDto<AuthenticateResultModel>(ResponseCode.LogicError, "Đăng nhập thất bại", null); 
 
             var roles = await _userManager.GetRolesAsync(user);
             // Phải chỉ định claim để authorize ở api có thể detect 
             var claims = new[]
             {
-                new Claim(ClaimTypes.Email,user.Email),
-                new Claim(ClaimTypes.GivenName,user.FullName),
-                new Claim(ClaimTypes.Role, string.Join(';',roles))
+                new Claim("email",user.Email),
+                new Claim("userId",user.Id.ToString()),
+                new Claim("roles", string.Join(';',roles)),
+
             };
             // Mã hóa Claim
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
@@ -57,11 +60,20 @@ namespace BusTracking.Application.System.Auths
                 _config["Tokens:Issuer"],
                 _config["Tokens:Issuer"],
                 claims,
-                expires: DateTime.Now.AddHours(3),
+                expires: DateTime.Now.AddDays(30),
                 signingCredentials: creds
                 );
             var stringToken = new JwtSecurityTokenHandler().WriteToken(token);
-            return new ResultDto<string>(ResponseCode.Success,"Thành công", stringToken);
+            var authResultModel = new AuthenticateResultModel()
+            {
+                UserId = user.Id.ToString(),
+                FullName = user.FullName,
+                TypeAccount = (int)user.TypeAccount,
+                Email = user.Email,
+                Roles = roles,
+                AccessToken = stringToken
+            };
+            return new ResultDto<AuthenticateResultModel>(ResponseCode.Success,"Thành công",authResultModel);
         }
 
         public async Task<ResponseDto> CreateRole(string roleName)
@@ -94,10 +106,28 @@ namespace BusTracking.Application.System.Auths
                     Id = x.Id,
                     Name = x.Name,
                     NormalizedName = x.NormalizedName,
+                    DisplayName = x.DisplayName,
                     Description = x.Description
                 }).ToListAsync();
 
             return new ResultDto<List<RoleDto>>(ResponseCode.Success,"Thành công",roles);
+        }
+
+        public async Task<ResultDto<UserSessionDto>> GetUserSession(string userId)
+        {
+            var id = Guid.Parse(userId);
+            var user = await _context.AppUsers.FindAsync(id);
+            if (user == null)
+                return new ResultDto<UserSessionDto>(ResponseCode.Validate, "Người dùng không tồn tại hoặc đã bị khóa", null);
+            var roles = await _userManager.GetRolesAsync(user);
+            var session = new UserSessionDto()
+            {
+                UserId = user.Id.ToString(),
+                FullName = user.FullName,
+                Roles = roles,
+                Email = user.Email
+            };
+            return new ResultDto<UserSessionDto>(ResponseCode.Success, "Thành công", session);
         }
     }
 }

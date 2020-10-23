@@ -10,6 +10,7 @@ import { RouteComponent } from './route/route.component';
 import { StopComponent } from './stop/stop.component';
 import { StudentComponent } from './student/student.component';
 import { UserComponent } from './user/user.component';
+import { CheckinLogComponent } from './checkin-log/checkin-log.component';
 
 @NgModule({
     imports: [
@@ -25,6 +26,7 @@ import { UserComponent } from './user/user.component';
                     { path: 'stop', component: StopComponent,  canActivate: [AppRouteGuard] },
                     { path: 'student', component: StudentComponent,  canActivate: [AppRouteGuard] },
                     { path: 'user', component: UserComponent,  canActivate: [AppRouteGuard] },
+                    { path: 'log', component: CheckinLogComponent,  canActivate: [AppRouteGuard] },
                 ]
             }
         ])

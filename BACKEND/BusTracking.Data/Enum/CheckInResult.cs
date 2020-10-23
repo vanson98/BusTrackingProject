@@ -6,8 +6,12 @@ namespace BusTracking.Data.Enum
 {
     public enum CheckInResult
     {
-        PickedUp,
-        DropedOff,
-        Absent
+        //AbsentOnPick,
+        //PickedUp,
+        //AtScholl,
+        //AbsentOnDrop,
+        //OnHome,
+        //DropedOff,
+        //OnLeave                   
     }
 }

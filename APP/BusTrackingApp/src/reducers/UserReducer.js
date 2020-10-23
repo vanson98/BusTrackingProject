@@ -1,15 +1,18 @@
 import { actionTypes } from "../actions/UserActions";
 
-export const initialLoginState = {
+export const initialUserSession = {
     isLoading: true,
-    userName: null,
+    userId: null,
+    fullName: null,
+    email: null,
+    roles: null,
     userToken: null
 }
 
 // Reducer chỉ là cái mẫu, khuân để update state
-const userReducer = (state=initialLoginState, {type,payload}) => {
+const userReducer = (state=initialUserSession, {type,payload}) => {
   switch (type) {
-    case actionTypes.RETRIEVE_TOKEN:
+    case actionTypes.RETRIEVE_SESSION:
       return {
         ...state,
         ...payload.user,

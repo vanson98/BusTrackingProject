@@ -35,12 +35,21 @@
                                 </div>
                                 <div class="col-md-3">
                                     <mat-form-field>
-                                        <input matInput placeholder="Tên phụ huynh" [(ngModel)]="parentName" name="parentName">
+                                        <input matInput placeholder="Tên điểm dừng" [(ngModel)]="stopName" name="stopName">
                                     </mat-form-field>
                                 </div>
                                 <div class="col-md-3">
                                     <mat-form-field>
-                                        <input matInput placeholder="Tên điểm dừng" [(ngModel)]="stopName" name="stopName">
+                                        <mat-select [(ngModel)]="studentStatus" name="status" placeholder="Trạng thái">
+                                            <mat-option value="">Tất cả</mat-option>
+                                            <mat-option value="0">Tại nhà</mat-option>
+                                            <mat-option value="1">Đợi đến trường</mat-option>
+                                            <mat-option value="2">Đang đến trường</mat-option>
+                                            <mat-option value="3">Tại trường</mat-option>
+                                            <mat-option value="4">Đợi về nhà</mat-option>
+                                            <mat-option value="5">Trên đường về</mat-option>
+                                            <mat-option value="6">Nghỉ học</mat-option>
+                                        </mat-select>
                                     </mat-form-field>
                                 </div>
                                 <div class="col-md-12 text-right p-r-25">
@@ -88,13 +97,14 @@
                             <td>{{ student.busName }}</td>
                             <td>{{ student.parentName }}</td>
                             <td>{{ student.stopName }}</td>
-                            <td align="center">
-                                <i class="material-icons check_box" *ngIf="student.status">
-                                    check_box
-                                </i>
-                                <i class="material-icons indeterminate_check_box" *ngIf="!student.status">
-                                    indeterminate_check_box
-                                </i>
+                            <td>
+                                <span *ngIf="student.status==0">Vắng mặt (chiều đi)</span>
+                                <span *ngIf="student.status==1">Đã đón (chiều đi)</span>
+                                <span *ngIf="student.status==2">Đã tới trường</span>
+                                <span *ngIf="student.status==3">Vắng mặt (chiều về)</span>
+                                <span *ngIf="student.status==4">Đã đón (chiều về)</span>
+                                <span *ngIf="student.status==5">Đã trả</span>
+                                <span *ngIf="student.status==6">Nghỉ học</span>
                             </td>
                             <td>
                                 <button class="action-button" mat-icon-button [matMenuTriggerFor]="actionsMenu">

@@ -2,9 +2,7 @@ import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser'
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, Injector, APP_INITIALIZER, LOCALE_ID } from '@angular/core';
 import { PlatformLocation, registerLocaleData } from '@angular/common';
-
 import { AbpModule } from '@abp/abp.module';
-import { AbpHttpInterceptor } from '@abp/abpHttpInterceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SharedModule } from '@shared/shared.module';
 import { ServiceProxyModule } from '@shared/service-proxies/service-proxy.module';
@@ -17,6 +15,7 @@ import { AppPreBootstrap } from './AppPreBootstrap';
 import { ModalModule } from 'ngx-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import * as _ from 'lodash';
+import { TokenInterceptorService } from '@shared/auth/token-intercepter.service';
 
 export function appInitializerFactory(injector: Injector,
     platformLocation: PlatformLocation) {
@@ -54,7 +53,7 @@ export function getRemoteServiceBaseUrl(): string {
         BrowserModule,
         BrowserAnimationsModule,
         SharedModule.forRoot(),
-        ModalModule.forRoot(),
+        //ModalModule.forRoot(),
         AbpModule,
         ServiceProxyModule,
         RootRoutingModule,
@@ -64,7 +63,6 @@ export function getRemoteServiceBaseUrl(): string {
         RootComponent
     ],
     providers: [
-        //{ provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true },
         { provide: API_BASE_URL, useFactory: getRemoteServiceBaseUrl },
         {
             provide: APP_INITIALIZER,

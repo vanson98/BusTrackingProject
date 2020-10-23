@@ -6,11 +6,13 @@ using BusTracking.Application.System.Users;
 using BusTracking.Utilities.Constants;
 using BusTracking.ViewModels.Common;
 using BusTracking.ViewModels.System.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusTracking.BackendApi.Controllers
 {
+    [Authorize(Roles = "admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase

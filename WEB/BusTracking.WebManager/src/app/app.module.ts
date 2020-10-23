@@ -41,6 +41,7 @@ import { EditStudentDialogComponent } from './student/edit-student-dialog/edit-s
 import { UserComponent } from './user/user.component';
 import { CreateUserDialogComponent } from './user/create-user-dialog/create-user-dialog.component';
 import { EditUserDialogComponent } from './user/edit-user-dialog/edit-user-dialog.component';
+import { CheckinLogComponent } from './checkin-log/checkin-log.component';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import { EditUserDialogComponent } from './user/edit-user-dialog/edit-user-dialo
     UserComponent,
     CreateUserDialogComponent,
     EditUserDialogComponent,
+    CheckinLogComponent,
   ],
   imports: [
     CommonModule,

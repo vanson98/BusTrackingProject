@@ -1,4 +1,4 @@
-import { AuthServiceProxy, LoginRequestDto, StringResultDto } from './../../shared/service-proxies/service-proxies';
+import { AuthServiceProxy, LoginRequestDto, AuthenticateResultModelResultDto } from './../../shared/service-proxies/service-proxies';
 import { MessageService } from '@abp/message/message.service';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -9,7 +9,7 @@ import { finalize } from 'rxjs/operators';
 @Injectable()
 export class LoginService {
     authenticateModel: LoginRequestDto;
-    authenticateResult: StringResultDto;
+    authenticateResult: AuthenticateResultModelResultDto;
 
     constructor(
         private _authService: AuthServiceProxy,
@@ -22,7 +22,7 @@ export class LoginService {
     authenticate(finallyCallback?: () => void): void {
         finallyCallback = finallyCallback || (() => { });
         this._authService
-            .authenticate(this.authenticateModel)
+            .webAuthenticate(this.authenticateModel)
             .pipe(finalize(() => { finallyCallback(); }))
             .subscribe((result) => {
                 this.processAuthenticateResult(result);
@@ -32,7 +32,7 @@ export class LoginService {
     private processAuthenticateResult(authenticateResult) {
         this.authenticateResult = authenticateResult;
         if (authenticateResult.result) {
-            this.login(authenticateResult.result);
+            this.login(authenticateResult.result.accessToken);
         } else {
             this._messageService.error("Tên đăng nhập hoặc mật khẩu không đúng!");
             this._router.navigate(['account/login']);

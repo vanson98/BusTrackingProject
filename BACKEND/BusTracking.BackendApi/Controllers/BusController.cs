@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BusTracking.BackendApi.Controllers
 {
-    
+    [Authorize(Roles ="admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class BusController : ControllerBase

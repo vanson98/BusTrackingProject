@@ -1,10 +1,35 @@
-import React from 'react';
-import {View,Text,Image,StyleSheet,TouchableOpacity, Button} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {View,Text,Image,StyleSheet,TouchableOpacity, Button, Alert} from 'react-native';
+import { color } from 'react-native-reanimated';
+import { useSelector } from 'react-redux';
+import StudentService from '../../../controllers/StudentService';
 
-const StudentItem = (props) =>{
-    const { student }= props;
+function StudentItem (props) {
+    const { studentData }= props;
     const router = props.router;
     const { typeCheck } = props;
+    const monitor = useSelector((state)=>state.user);
+    // State
+    const [student,setStudent] = useState(studentData);
+    // Effect - Render lại component khi prop change
+    useEffect(()=>{
+        setStudent(studentData);
+    },[studentData])
+    
+    // CheckIn Function
+    const checkIn = async (checkInResult) =>{
+        var dateCheck = new Date();
+        var res = await StudentService.checkIn(student.id,monitor.userId,2,typeCheck,dateCheck.toISOString(),checkInResult,monitor.userToken)
+        if(res.statusCode=='B002'){
+            setStudent({
+                ...student,
+                status: res.result.checkInResult
+            })
+        }else{
+            Alert.show('Đã có lỗi xảy ra');
+        }
+    }
+
     return (
         <View style={styles.container}>
             <Image 
@@ -18,19 +43,57 @@ const StudentItem = (props) =>{
                             {student.name}
                         </Text>
                     </TouchableOpacity>
-                    <Text>{student.class}</Text>
+                    <Text>{student.classOfStudent}</Text>
+                    <Text>{ ( student.status == 1  ) ? 'Vắng mặt lúc đón' : 
+                            ( student.status == 2 && typeCheck==0 ) ? 'Đã đón' : 
+                            ((student.status == 3 |student.status == 4 | student.status ==5 | student.status ==6 | student.status ==7 ) && typeCheck==0) ? 'Đã tới trường' :
+                            (student.status == 4 && typeCheck!=0 ) ? 'Vắng mặt lúc về' :
+                            (student.status == 5 && typeCheck!=0 ) ? 'Đang trên đường về' :
+                            (student.status == 6 && typeCheck!=0 ) ? 'Đã trả' :
+                            (student.status == 7 && typeCheck!=0 ) ? 'Đã về nhà' :
+                            student.status == 8 ? 'Nghỉ học' : ''
+                        }
+                    </Text>
                 </View>
                 <View style={styles.action}>
-                    {   typeCheck==0?
-                        <Button title="Đã đón" color="#FF9800"></Button> :
-                        <Button title="Đã trả" color="#FF9800"></Button>
-                    }
-                       <Button title="Vắng mặt" color="#F44336"></Button>
+                    <TouchableOpacity 
+                        style={[(typeCheck==0 && student.status==0) ? styles.show : styles.hide, {}]}
+                        onPress={()=>{checkIn(2)}}
+                        >
+                        <Text style={{color: '#FFF',fontSize:16}}>Đã đón</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        style={[(typeCheck==0 && student.status==0) ? styles.show2 : styles.hide]}
+                        onPress={()=>{checkIn(1)}}>
+                        <Text style={{color: '#FFF',fontSize:16}}>Vắng mặt</Text>
+                    </TouchableOpacity> 
+                    <TouchableOpacity 
+                        style={[(typeCheck==0 && student.status==2) ? styles.show3 : styles.hide]}
+                        onPress={()=>{checkIn(3)}}>
+                        <Text style={{color: '#FFF',fontSize:16}}>Đã tới trường</Text>
+                    </TouchableOpacity> 
+                    
+                    <TouchableOpacity 
+                        style={[(typeCheck!=0 && student.status==5) ? styles.show : styles.hide]}
+                        onPress={()=>{checkIn(6)}}>
+                        <Text style={{color: '#FFF',fontSize:16}}>Đã trả</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        style={[(typeCheck!=0 && student.status==3) ? styles.show3 : styles.hide]}
+                        onPress={()=>{checkIn(5)}}>
+                        <Text style={{color: '#FFF',fontSize:16}}>Đã lên xe</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        style={[(typeCheck!=0 && student.status==3) ? styles.show2 : styles.hide]}
+                        onPress={()=>{checkIn(4)}}>
+                        <Text style={{color: '#FFF',fontSize:16}}>Vắng mặt</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </View>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -58,7 +121,8 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: 'column',
         width:100,
-        justifyContent: "space-around"
+        justifyContent: "space-around",
+        
     },
     avartar: {
         width: 50,
@@ -71,6 +135,36 @@ const styles = StyleSheet.create({
         overflow: "hidden",
         borderColor: "#9c9c9c",
     },
+    hide: {
+        display: 'none'
+    },
+    show: {
+        width: 100,
+        height: 35,
+        display: 'flex',
+        backgroundColor: '#FF9800',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10
+    },
+    show2: {
+        width: 100,
+        height: 35,
+        display: 'flex',
+        backgroundColor: '#F44336',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10
+    },
+    show3: {
+        width: 100,
+        height: 35,
+        display: 'flex',
+        backgroundColor: '#FF9800',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10
+    }
     
 })
 

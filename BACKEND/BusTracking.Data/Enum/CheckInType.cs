@@ -8,5 +8,6 @@ namespace BusTracking.Data.Enum
     {
         PickUp,
         DropOff,
+        ParentCheckIn
     }
 }

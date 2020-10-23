@@ -60,7 +60,6 @@ implements OnInit {
 
   save(): void {
     this.saving = true;
-    this.student.status = this.isActive == true ? 1 : 0;
     this._studentService
       .create(this.student)
       .pipe(

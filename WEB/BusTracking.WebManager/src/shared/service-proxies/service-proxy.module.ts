@@ -4,6 +4,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AbpHttpInterceptor } from '@abp/abpHttpInterceptor';
 
 import * as ApiServiceProxies from './service-proxies';
+import { TokenInterceptorService } from '@shared/auth/token-intercepter.service';
 
 @NgModule({
     providers: [
@@ -14,7 +15,7 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.StopServiceProxy,
         ApiServiceProxies.StudentServiceProxy,
         ApiServiceProxies.AuthServiceProxy,
-        { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
+        { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true }
     ]
 })
 export class ServiceProxyModule { }

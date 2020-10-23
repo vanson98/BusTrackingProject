@@ -10,9 +10,10 @@ namespace BusTracking.Application.System.Auths
 {
     public interface IAuthService
     {
-        Task<ResultDto<string>> Authencate(LoginRequestDto loginRequest);
+        Task<ResultDto<AuthenticateResultModel>> Authencate(LoginRequestDto loginRequest);
         Task<ResponseDto> CreateRole(string roleName);
-
         Task<ResultDto<List<RoleDto>>> GetAllRole();
+
+        Task<ResultDto<UserSessionDto>> GetUserSession(string userId);
     }
 }

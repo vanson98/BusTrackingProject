@@ -47,7 +47,6 @@ implements OnInit {
 
   ngOnInit() {
     this.student.init(this._data['studentEdit']);
-    this.isActive = this.student.status == 1 ? true : false;
     this.initSelect();
     this.initForm();
   }
@@ -99,7 +98,6 @@ implements OnInit {
 
   save(): void {
     this.saving = true;
-    this.student.status = this.isActive == true ? 1 : 0;
     this.student.dob = moment(this.dob.value).add(1, 'days');
     this._studentService
       .update(this.student)

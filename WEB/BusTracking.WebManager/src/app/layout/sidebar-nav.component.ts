@@ -16,7 +16,8 @@ export class SideBarNavComponent extends AppComponentBase {
         new MenuItem('Quản lý tuyến','','alt_route','/app/route'),
         new MenuItem('Quản lý điểm dừng','','location_on','/app/stop'),
         new MenuItem('Quản lý học sinh','','face','/app/student'),
-        new MenuItem('Quản lý người dùng','','supervisor_account','/app/user')
+        new MenuItem('Quản lý người dùng','','supervisor_account','/app/user'),
+        new MenuItem('Tra cứu điểm danh','','supervisor_account','/app/log')
     ];
 
     constructor(

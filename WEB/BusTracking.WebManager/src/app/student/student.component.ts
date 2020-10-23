@@ -1,12 +1,14 @@
 import { PagedListingComponentBase, PagedRequestDto } from './../../shared/paged-listing-component-base';
 import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { StudentDto, StudentDtoPageResultDto, StudentServiceProxy } from '@shared/service-proxies/service-proxies';
+import { StudentCheckInDto, StudentCheckInDtoResultDto, StudentDto, StudentDtoPageResultDto, StudentServiceProxy } from '@shared/service-proxies/service-proxies';
 import { MatDialog } from '@angular/material';
 import { finalize } from 'rxjs/operators';
 import { CreateStudentDialogComponent } from './create-student-dialog/create-student-dialog.component';
 import { EditStudentDialogComponent } from './edit-student-dialog/edit-student-dialog.component';
 import { AppResCode } from '@shared/const/AppResCode';
+import { SignalRService } from '@shared/signalr-service/signal-r.service';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-Student',
@@ -17,22 +19,40 @@ import { AppResCode } from '@shared/const/AppResCode';
 
 export class StudentComponent extends PagedListingComponentBase<StudentDto> {
   students: StudentDto[] = [];
+  dataHub: StudentCheckInDto = new StudentCheckInDto();
   // Search Field
   name: string = '';
-  parentName: string = '';
+  studentStatus: string = '';
   busName: string = '';
   stopName: string = '';
 
   constructor(
     injector: Injector,
     private _studentService: StudentServiceProxy,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    private _signalRService: SignalRService 
   ) {
     super(injector);
   }
 
   ngOnInit() {
     this.refresh();
+    this.trackingStudentCheckIn();
+  }
+
+  trackingStudentCheckIn(){
+    this._signalRService.startConnection();
+    this._signalRService.hubConnection.on('ReceiveCheckIn',(data: StudentCheckInDtoResultDto)=>{
+      if(data.result!=null){
+        var studentCheckIn : StudentCheckInDto = new StudentCheckInDto();
+        studentCheckIn.init(data.result);
+        _.forEach(this.students,(item,index)=>{
+          if(item.id == studentCheckIn.studentId){
+            item.status = studentCheckIn.checkInResult;
+          };
+        })
+      }
+    })
   }
 
   editStudent(Student: StudentDto) {
@@ -44,8 +64,9 @@ export class StudentComponent extends PagedListingComponentBase<StudentDto> {
   }
   
   protected list(request: PagedRequestDto, pageNumber: number, finishedCallback: Function): void {
+    var studentStatus = this.studentStatus == "" ? undefined : parseInt(this.studentStatus);
     this._studentService
-          .getAllPaging(this.busName.trim(),this.parentName.trim(),this.stopName.trim(),this.name.trim(),pageNumber,request.maxResultCount)
+          .getAllPaging(this.busName.trim(),this.stopName.trim(),studentStatus,this.name.trim(),pageNumber,request.maxResultCount)
           .pipe(
             finalize(() => {
                 finishedCallback();

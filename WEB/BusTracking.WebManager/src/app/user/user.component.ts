@@ -83,7 +83,7 @@ export class UserComponent extends PagedListingComponentBase<UserDto> {
 
   private showCreateOrEditStudentDialog(userDto?: UserDto){
     let createOrEditStudent; 
-    if (UserDto === undefined || UserDto == null) {
+    if (userDto === undefined || userDto == null) {
       createOrEditStudent = this._dialog.open(CreateUserDialogComponent);
     } else {
       createOrEditStudent = this._dialog.open(EditUserDialogComponent,{
