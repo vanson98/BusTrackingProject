@@ -108,7 +108,7 @@ namespace StudentTracking.BackendApi.Controllers
             var res = await _studentService.CheckIn(request);
             if (res.StatusCode==ResponseCode.Success)
             {
-                // Message to web manager
+                // Message to All
                 await _hubContext.Clients.All.SendAsync("ReceiveCheckIn", res);
                 var notification = await _studentService.AddNotification(res.Result);
                 if (notification.TypeNotification != 7 && notification.TypeNotification != 8 )

@@ -3,6 +3,8 @@ import {View,Text,Image,StyleSheet,TouchableOpacity, Button, Alert} from 'react-
 import { color } from 'react-native-reanimated';
 import { useSelector } from 'react-redux';
 import StudentService from '../../../controllers/StudentService';
+import moment from 'moment';
+
 
 function StudentItem (props) {
     const { studentData }= props;
@@ -18,8 +20,8 @@ function StudentItem (props) {
     
     // CheckIn Function
     const checkIn = async (checkInResult) =>{
-        var dateCheck = new Date();
-        var res = await StudentService.checkIn(student.id,monitor.userId,2,typeCheck,dateCheck.toISOString(),checkInResult,monitor.userToken)
+        var dateCheck = moment().subtract(10,'second').format("YYYY-MM-DDTHH:mm:ss");
+        var res = await StudentService.checkIn(student.id,monitor.userId,2,typeCheck,dateCheck,checkInResult,monitor.userToken)
         if(res.statusCode=='B002'){
             setStudent({
                 ...student,
@@ -32,20 +34,28 @@ function StudentItem (props) {
 
     return (
         <View style={styles.container}>
-            <Image 
-                source={require("../../../share/assets/image/student.png")} 
-                style={styles.avartar}
-            />
+            <TouchableOpacity onPress={()=>router.navigate('DetailStudent',{
+                        studentData: studentData
+            })}>
+                <Image 
+                    source={require("../../../share/assets/image/student.png")} 
+                    style={styles.avartar}
+                />
+            </TouchableOpacity>
             <View style={styles.content}>
                 <View style={styles.profile}>
-                    <TouchableOpacity onPress={()=>router.navigate('DetailStudent')}>
-                        <Text style={{fontSize:16,fontWeight:'bold'}}>
+                    <TouchableOpacity onPress={()=>router.navigate('DetailStudent',{
+                        studentData: studentData
+                    })}>
+                        <Text style={{fontSize:18,fontWeight:'bold'}}>
                             {student.name}
                         </Text>
                     </TouchableOpacity>
-                    <Text>{student.classOfStudent}</Text>
-                    <Text>{ ( student.status == 1  ) ? 'Vắng mặt lúc đón' : 
-                            ( student.status == 2 && typeCheck==0 ) ? 'Đã đón' : 
+                    <Text style={{fontSize: 16}}>{student.classOfStudent}</Text>
+                    <Text style={{marginTop:10,fontSize:16}}>
+                        {   
+                            (student.status == 1  ) ? 'Vắng mặt lúc đón' : 
+                            (student.status == 2 && typeCheck==0 ) ? 'Đã đón' : 
                             ((student.status == 3 |student.status == 4 | student.status ==5 | student.status ==6 | student.status ==7 ) && typeCheck==0) ? 'Đã tới trường' :
                             (student.status == 4 && typeCheck!=0 ) ? 'Vắng mặt lúc về' :
                             (student.status == 5 && typeCheck!=0 ) ? 'Đang trên đường về' :
@@ -102,7 +112,8 @@ const styles = StyleSheet.create({
         width: "100%",
         backgroundColor: "#FFF",
         marginBottom: 8,
-        alignItems: "center"
+        alignItems: "center",
+
     },
     content: {
         flexDirection:'row',

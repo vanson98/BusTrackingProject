@@ -50,19 +50,20 @@
                                     <mat-form-field>
                                         <mat-select [(ngModel)]="studentStatus" name="studentStatus" placeholder="Trạng thái học sinh">
                                             <mat-option value="">Tất cả</mat-option>
-                                            <mat-option value="0">Vắng mặt lúc đón</mat-option>
-                                            <mat-option value="1">Đã lên xe (lúc đón)</mat-option>
-                                            <mat-option value="2">Đã tới trường</mat-option>
-                                            <mat-option value="3">Vắng mặt lúc về</mat-option>
-                                            <mat-option value="4">Đã lên xe (lúc về)</mat-option>
-                                            <mat-option value="5">Đã trả</mat-option>
-                                            <mat-option value="6">Nghỉ học</mat-option>
+                                            <mat-option value="1">Vắng mặt lúc đón</mat-option>
+                                            <mat-option value="2">Đã lên xe (lúc đón)</mat-option>
+                                            <mat-option value="3">Đã tới trường</mat-option>
+                                            <mat-option value="4">Vắng mặt lúc về</mat-option>
+                                            <mat-option value="5">Đã lên xe (lúc về)</mat-option>
+                                            <mat-option value="6">Đã trả</mat-option>
+                                            <mat-option value="7">Tại nhà</mat-option>
+                                            <mat-option value="8">Nghỉ học</mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
                                 <div class="col-md-3">
                                     <mat-form-field>
-                                        <mat-select required [(ngModel)]="busId" name='bu' aria-placeholder="Chọn xe">
+                                        <mat-select required [(ngModel)]="busId" name='bu' placeholder="Chọn xe">
                                             <mat-option value="">Tất cả</mat-option>
                                             <mat-option *ngFor="let bus of buses" [value]="bus.id">
                                                 {{bus.name}}
@@ -72,7 +73,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <mat-form-field>
-                                        <mat-select required [(ngModel)]="stopId" name='stop'>
+                                        <mat-select required [(ngModel)]="stopId" name='stop' placeholder="Chọn điểm dừng">
                                             <mat-option value="">Tất cả</mat-option>
                                             <mat-option *ngFor="let stop of stops" [value]="stop.id">
                                                 {{stop.name}}
@@ -107,9 +108,9 @@
                             <th>Điểm dừng</th>
                             <th>Giám sát xe</th>
                             <th>Chiều xe</th>
-                            <th>Thời gian điểm danh</th>
+                            <th>Thời gian</th>
                             <th>
-                                <div style="text-align:center">Trạng thái HS</div>
+                                <div>Trạng thái HS</div>
                             </th>
                         </tr>
                     </thead>
@@ -132,13 +133,15 @@
                             <td>{{ log.checkInType == 0 ? "Chiều đi" : "Chiều về" }}</td>
                             <td>{{ log.checkInTime.format('DD/MM/YYYY HH:mm:ss')  }}</td>
                             <td>
-                               <span *ngIf="log.checkInResult==0">Vắng mặt (chiều đi)</span>
-                               <span *ngIf="log.checkInResult==1">Đã đón (chiều đi)</span>
-                               <span *ngIf="log.checkInResult==2">Đã tới trường</span>
-                               <span *ngIf="log.checkInResult==3">Vắng mặt (chiều về)</span>
-                               <span *ngIf="log.checkInResult==4">Đã đón (chiều về)</span>
-                               <span *ngIf="log.checkInResult==5">Đã trả</span>
-                               <span *ngIf="log.checkInResult==6">Nghỉ học</span>
+                                <span class="label label-default" *ngIf="log.checkInResult==0">Mặc định</span>
+                                <span class="label label-danger" *ngIf="log.checkInResult==1">Vắng mặt</span>
+                                <span class="label label-success" *ngIf="log.checkInResult==2">Đã đón </span>
+                                <span class="label label-success" *ngIf="log.checkInResult==3">Đã tới trường</span>
+                                <span class="label label-danger" *ngIf="log.checkInResult==4">Vắng mặt</span>
+                                <span class="label label-success" *ngIf="log.checkInResult==5">Đã đón</span>
+                                <span class="label label-info" *ngIf="log.checkInResult==6">Đã trả</span>
+                                <span class="label label-primary" *ngIf="log.checkInResult==7">Tại nhà</span>
+                                <span class="label label-warning" *ngIf="log.checkInResult==8">Nghỉ học</span>
                             </td>
                         </tr>
                     </tbody>

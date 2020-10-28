@@ -1,45 +1,33 @@
 import React, { useEffect, useState,useRef } from 'react';
-import {StyleSheet, TouchableOpacity,Text} from 'react-native';
+import {StyleSheet} from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
-import StudentItem from '../Layout/StudentItem';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import MyChildrenItem from '../Layout/MyChildrenItem';
 import StudentService from '../../../controllers/StudentService';
 import { useSelector } from 'react-redux';
 import SignalRService from '../../../controllers/SignalRService';
-import moment from 'moment';
 import * as _ from 'lodash';
 
-const RouteComponent = (props)=>{
+const MyChildrenComponent = (props)=>{
     //======================== Property =========================
     const navigation = props.navigation;
-    var typeCheck = props.typeCheck;
     var user = useSelector((state)=>state.user);
     var listStudent = [];
     const stateRef = useRef();
-    var today = moment().format('DD/MM/YYYY');
 
     //=========================  State ==========================
     const [students, setListStudent]=useState(listStudent)
     stateRef.current = students;
-    const [busName, setBusName] = useState(null);
-    
-    // ======================= Function =====================
-    // Lấy tất cả danh sách học sinh trên tuyến đi
-    useEffect(()=>{
-        const unsubscribe = navigation.addListener('focus', () => {
-            // Lấy lại list student mới khi focus tab
-            async function getListStudent(){
-                var response = await StudentService.getAllStudentOfMonitor(user.userId,user.userToken);
-                setListStudent(response.result);
-                setBusName(response.result[0].busName)
-            }
-            getListStudent();
-          });
-          // Gắn sự kiện khi kết thúc navigation 
-          return unsubscribe;
-    },[navigation])
 
-    // Kết nối tới hub theo dõi trạng thái HS
+    // Lấy tất cả danh sách học sinh
+    useEffect(()=>{
+        async function getListStudent(){
+            var response = await StudentService.getAllChildOfParent(user.userId,user.userToken);
+            setListStudent(response.result)
+        }
+        getListStudent();
+    },[])
+
+    // Kết nối tới hub khi khởi tạo component
     useEffect(()=>{
         var signalRService = SignalRService(user.userToken);
         signalRService.start()
@@ -61,28 +49,14 @@ const RouteComponent = (props)=>{
             }
         })
     },[])
-
-    // Config header component
-    React.useLayoutEffect(()=>{
-        navigation.setOptions({
-            headerRight: ()=>(
-                <TouchableOpacity style={styles.headerRight}>
-                    <Ionicons name="map" color={'#FFF'} size={26} />
-                </TouchableOpacity>
-            ),
-            headerLeft: ()=>(
-                <Text style={styles.headerLeft}>{busName}</Text>
-            ),
-            title: typeCheck==0? "Lượt đi" : "Lượt về"
-        },[navigation])
-    })
+    
 
     return (
         <FlatList 
             style={styles.container}
             data={students}
             renderItem={({item})=>
-                <StudentItem studentData={item} router={navigation} typeCheck={typeCheck}/>
+                <MyChildrenItem studentData={item} router={navigation}/>
             }
             keyExtractor={item=>item.id.toString()}
         >
@@ -92,6 +66,8 @@ const RouteComponent = (props)=>{
 
 const styles = StyleSheet.create({
     container: {
+        paddingTop: 10,
+        padding: 10,
         width: "100%",
         height: 500,
         backgroundColor: '#e3dfde'
@@ -102,13 +78,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center'
-    },
-    headerLeft: {
-        marginLeft: 8,
-        color: '#FFF',
-        fontSize: 16,
-        fontWeight: "bold"
     }
 })
 
-export default RouteComponent
+export default MyChildrenComponent

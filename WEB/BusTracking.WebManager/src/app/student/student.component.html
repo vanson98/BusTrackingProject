@@ -42,13 +42,15 @@
                                     <mat-form-field>
                                         <mat-select [(ngModel)]="studentStatus" name="status" placeholder="Trạng thái">
                                             <mat-option value="">Tất cả</mat-option>
-                                            <mat-option value="0">Tại nhà</mat-option>
-                                            <mat-option value="1">Đợi đến trường</mat-option>
-                                            <mat-option value="2">Đang đến trường</mat-option>
+                                            <mat-option value="0">Mặc định</mat-option>
+                                            <mat-option value="1">Vắng mặt (Chiều đi)</mat-option>
+                                            <mat-option value="2">Đã đón (Chiều đi)</mat-option>
                                             <mat-option value="3">Tại trường</mat-option>
-                                            <mat-option value="4">Đợi về nhà</mat-option>
-                                            <mat-option value="5">Trên đường về</mat-option>
-                                            <mat-option value="6">Nghỉ học</mat-option>
+                                            <mat-option value="4">Vắng mặt (Chiều về)</mat-option>
+                                            <mat-option value="5">Đã đón (Chiều về)</mat-option>
+                                            <mat-option value="6">Đã trả (Chiều về)</mat-option>
+                                            <mat-option value="7">Tại nhà</mat-option>
+                                            <mat-option value="8">Nghỉ học</mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
@@ -67,7 +69,6 @@
                             <th>STT</th>
                             <th>Họ và tên</th>
                             <th>Ngày sinh</th>
-                            <th>Email</th>
                             <th>SDT</th>
                             <th>Xe</th>
                             <th>Phụ huynh</th>
@@ -92,19 +93,20 @@
                             <td>{{((pageSize*pageNumber)-pageSize)+i+1}}</td>
                             <td>{{ student.name }}</td>
                             <td>{{ student.dob | mydate }}</td>
-                            <td>{{ student.email }}</td>
                             <td>{{ student.phoneNumber }}</td>
                             <td>{{ student.busName }}</td>
                             <td>{{ student.parentName }}</td>
                             <td>{{ student.stopName }}</td>
                             <td>
-                                <span *ngIf="student.status==0">Vắng mặt (chiều đi)</span>
-                                <span *ngIf="student.status==1">Đã đón (chiều đi)</span>
-                                <span *ngIf="student.status==2">Đã tới trường</span>
-                                <span *ngIf="student.status==3">Vắng mặt (chiều về)</span>
-                                <span *ngIf="student.status==4">Đã đón (chiều về)</span>
-                                <span *ngIf="student.status==5">Đã trả</span>
-                                <span *ngIf="student.status==6">Nghỉ học</span>
+                                <span class="label label-default" *ngIf="student.status==0">Mặc định</span>
+                                <span class="label label-danger" *ngIf="student.status==1">Vắng mặt</span>
+                                <span class="label label-success" *ngIf="student.status==2">Đã đón </span>
+                                <span class="label label-success" *ngIf="student.status==3">Đã tới trường</span>
+                                <span class="label label-danger" *ngIf="student.status==4">Vắng mặt</span>
+                                <span class="label label-success" *ngIf="student.status==5">Đã đón</span>
+                                <span class="label label-info" *ngIf="student.status==6">Đã trả</span>
+                                <span class="label label-primary" *ngIf="student.status==7">Tại nhà</span>
+                                <span class="label label-warning" *ngIf="student.status==8">Nghỉ học</span>
                             </td>
                             <td>
                                 <button class="action-button" mat-icon-button [matMenuTriggerFor]="actionsMenu">

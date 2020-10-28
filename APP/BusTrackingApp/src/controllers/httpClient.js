@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { Alert } from 'react-native';
 
 const client = axios.create({
-  baseURL: 'http://192.168.1.101:5005/api',
+  baseURL: 'http://192.168.0.103:5005/api',
   headers: {
     'content-type': 'application/json',
   },
@@ -25,9 +25,7 @@ client.interceptors.response.use(
       Alert.alert('Lỗi','Đã có lỗi xảy ra');
       throw new Error(error);
     }
-
     console.warn('Request got response with error:', error);
-
     return Promise.reject(error);
   },
 );

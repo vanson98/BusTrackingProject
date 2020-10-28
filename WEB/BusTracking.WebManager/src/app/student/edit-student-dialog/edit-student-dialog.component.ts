@@ -26,6 +26,9 @@ implements OnInit {
   name : FormControl;
   bus : FormControl;
   parent: FormControl;
+  class: FormControl;
+  teacher: FormControl;
+  phoneTeacher: FormControl;
   stop: FormControl;
   dob: FormControl;
   address: FormControl;
@@ -55,6 +58,9 @@ implements OnInit {
     this.name = new FormControl();
     this.dob = new FormControl(this.student.dob.toISOString(),Validators.required);
     this.address = new FormControl();
+    this.class = new FormControl();
+    this.teacher = new FormControl();
+    this.phoneTeacher = new FormControl();
     this.email = new FormControl();
     this.phone = new FormControl();
     this.bus = new FormControl();
@@ -64,6 +70,9 @@ implements OnInit {
       'name': this.name,
       'dob': this.dob,
       'address': this.address,
+      'class': this.class,
+      'teacher': this.teacher,
+      'phoneTeacher': this.phoneTeacher,
       'email': this.email,
       'phone': this.phone,
       'bus': this.bus,

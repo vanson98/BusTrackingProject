@@ -24,3 +24,9 @@ export default function UpdateAccount(props){
         
     );
 }
+
+const styles = StyleSheet.create({
+    textInput: {
+        
+    }
+})

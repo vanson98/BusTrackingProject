@@ -46,6 +46,36 @@
           <mat-form-field>
             <input
               matInput
+              formControlName="class"
+              placeholder='Lớp'
+              [(ngModel)]="student.classOfStudent"
+              required
+              maxlength="20"
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="teacher"
+              placeholder='Giáo viên chủ nhiệm'
+              [(ngModel)]="student.teacherName"
+              required
+              maxlength="255"
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="phoneTeacher"
+              placeholder='Số điện thoại GVCN'
+              [(ngModel)]="student.phoneTeacher"
+              required
+              maxlength="20"
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
               formControlName="address"
               placeholder='Địa chỉ'
               [(ngModel)]="student.address"

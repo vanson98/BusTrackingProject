@@ -11,6 +11,7 @@ namespace BusTracking.ViewModels.Catalog.Students
         public string BusName { get; set; }
         public Guid MonitorId { get; set; }
         public string MonitorName { get; set; }
+        public string PhoneMonitor { get; set; }
         public Guid ParentId { get; set; }
         public string ParentName { get; set; }
         public string PhoneParent { get; set; }

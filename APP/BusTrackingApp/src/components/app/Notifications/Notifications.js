@@ -8,18 +8,22 @@ import StudentService from '../../../controllers/StudentService';
 import NotificationItem from '../Layout/NotificationItem';
 import moment from 'moment';
 import SignalRService from '../../../controllers/SignalRService';
-const NotificationsComponent = () => {
+const NotificationsComponent = (props) => {
   // ================= prop =================
   var user = useSelector((state)=>state.user);
+  const navigation = props.navigation;
   const currentDate = new Date();
   const fiveDayAgo = new Date(); 
   fiveDayAgo.setDate(currentDate.getDate()-5);
   const stateRef = useRef();
 
   // ================== State ===============
+
+  // Giá trị khởi tạo cho state chỉ được gán lần đầu tiên, từ lần load thứ 2 thì sẽ bị bỏ qua
   const [notications,setNotify] = useState({
     listNotify: []
   });
+
   stateRef.current = notications.listNotify;
 
   const [date,setDate]=useState({
@@ -36,16 +40,32 @@ const NotificationsComponent = () => {
   const getNotification = async ()=>{
     var fromDate = date.fromDate.toISOString();
     var toDate = date.toDate.toISOString();
-    var res = await StudentService.getAllNotificationByMonitor(user.userId,fromDate,toDate,user.userToken)
+    var res;
+    if(user.roles[0]=='monitor'){
+      res = await StudentService.getAllNotificationOfMonitor(user.userId,fromDate,toDate,user.userToken)
+    }else{
+      res = await StudentService.getAllNotificationOfParent(user.userId,fromDate,toDate,user.userToken)
+    }
     setNotify({
       listNotify: res.result
     })
   }
 
+  // Lấy lại danh sách thông báo khi thời gian thay đổi
   useEffect(()=>{
     getNotification();
   },[date])
 
+  // Lấy tất cả danh sách học sinh trên tuyến đi
+  useEffect(()=>{
+    const unsubscribe = navigation.addListener('focus', () => {
+        getNotification();
+      });
+      // Gắn sự kiện khi kết thúc navigation 
+      return unsubscribe;
+},[navigation])
+
+  // Kết nối tới hub khi khởi tạo component
   useEffect(()=>{
     var signalRService = SignalRService(user.userToken);
     signalRService.start()
@@ -111,7 +131,7 @@ const NotificationsComponent = () => {
               onCancel={hideDatePicker}
             />
           </View>
-          <Ionicons></Ionicons>
+          <Ionicons name='arrow-forward-outline' style={{fontSize:25,color:"#FFF"}}></Ionicons>
           <View style={styles.time_box}>
             <Ionicons style={styles.time_icon} name='calendar-outline' onPress={()=>{showDatePicker(1)}}></Ionicons>
             <TextInput style={styles.date_input} placeholder="Đến ngày" 

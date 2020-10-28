@@ -1,8 +1,16 @@
 import httpClient from './httpClient';
 
 const StudentService =  {
-    getAllStudentByMonitor: (monitorId,jwt)=>{
+    getAllStudentOfMonitor: (monitorId,jwt)=>{
         const url = "/Student/GetByMonitorId?monitorId="+monitorId;
+        return httpClient.get(url,{
+            headers:{
+                'Authorization': "Bearer " + jwt
+            }
+        });
+    },
+    getAllChildOfParent: (parentId,jwt)=>{
+        const url = "/Student/GetByParentId?parentId="+parentId;
         return httpClient.get(url,{
             headers:{
                 'Authorization': "Bearer " + jwt
@@ -24,8 +32,16 @@ const StudentService =  {
             }
         })
     },
-    getAllNotificationByMonitor: (monitorId,fromDate,toDate,jwt)=>{
-        const url = "Student/GetNotificationOfMonitor?monitorId="+monitorId+"&fromDate="+fromDate+"&toDate="+toDate
+    getAllNotificationOfMonitor: (monitorId,fromDate,toDate,jwt)=>{
+        const url = "Student/GetNotificationOfMonitor?monitorId="+monitorId+"&fromDate="+fromDate+"&toDate="+toDate;
+        return httpClient.get(url,{
+            headers: {
+                'Authorization': "Bearer " + jwt
+            }
+        })
+    },
+    getAllNotificationOfParent: (parentId,fromDate,toDate,jwt)=>{
+        const url = "Student/GetNotificationOfParent?parentId="+parentId+"&fromDate="+fromDate+"&toDate="+toDate;
         console.log(url);
         return httpClient.get(url,{
             headers: {

@@ -36,7 +36,7 @@ export default function NotificationItem(props){
                 }
             </View>
             <View style={styles.mess_container}>
-                <Text>{message.content}</Text>
+                <Text style={{}}>{message.content}</Text>
             </View>
             <View style={styles.time_container}>
                 <Text>{moment(message.timeSent).fromNow()}</Text>
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
         height: 'auto',
         paddingLeft: 10,
         paddingRight: 10,
-        marginTop: 10,
+        marginTop: 10, 
     },
     icon_container: {
         height: 45,
@@ -66,12 +66,13 @@ const styles = StyleSheet.create({
         borderColor: '#FF9800',
         borderRadius: 50
     },
-    mess_container: {
-        width: '65%',
+    mess_container: {  
         height: 'auto',
+        flexGrow: 1,
+        width: 0
     },
     time_container: {
-        width: '20%',
+        width: 70,
         marginLeft: 3
     }
 })

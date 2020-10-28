@@ -217,6 +217,9 @@ namespace BusTracking.Application.Catalog.StudentService
                                       BusName = x.b.Name,
                                       ParentId = x.p.Id,
                                       ParentName = x.p.FullName,
+                                      ClassOfStudent = x.s.ClassOfStudent,
+                                      TeacherName = x.s.TeacherName,
+                                      PhoneTeacher = x.s.PhoneTeacher,
                                       StopId = x.st.Id,
                                       StopName = x.st.Name,
                                       Name = x.s.Name,
@@ -307,6 +310,7 @@ namespace BusTracking.Application.Catalog.StudentService
                                     BusName = x.b.Name,
                                     MonitorId = x.m.Id,
                                     MonitorName = x.m.FullName,
+                                    PhoneMonitor = x.m.PhoneNumber,
                                     ParentId = x.p.Id,
                                     ParentName = x.p.FullName,
                                     PhoneParent = x.p.PhoneNumber,
@@ -401,12 +405,11 @@ namespace BusTracking.Application.Catalog.StudentService
             var query = from s in _context.Students
                         where s.ParentId == parentId
                         join n in _context.Notification on s.Id equals n.StudentId
+                        where n.Type != TypeMessage.OnLeave && n.Type != TypeMessage.AtHome
+                        where n.TimeSent.Date >= fromDate.Date && n.TimeSent.Date <= toDate.Date
                         select n;
-            if (fromDate < toDate)
-            {
-                query.Where(x => x.TimeSent >= fromDate && x.TimeSent <= toDate);
-            }
-            var notifications = await query.Select(x => new NotificationDto()
+            
+            var notifications = await query.OrderByDescending(x=>x.TimeSent).Select(x => new NotificationDto()
             {
                 Id = x.Id,
                 TypeNotification = (int)x.Type,

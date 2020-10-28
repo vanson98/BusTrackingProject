@@ -1898,6 +1898,138 @@ export class StudentServiceProxy {
     }
 
     /**
+     * @param monitorId (optional) 
+     * @param fromDate (optional) 
+     * @param toDate (optional) 
+     * @return Success
+     */
+    getNotificationOfMonitor(monitorId: string | undefined, fromDate: moment.Moment | undefined, toDate: moment.Moment | undefined): Observable<NotificationDtoListResultDto> {
+        let url_ = this.baseUrl + "/api/Student/GetNotificationOfMonitor?";
+        if (monitorId === null)
+            throw new Error("The parameter 'monitorId' cannot be null.");
+        else if (monitorId !== undefined)
+            url_ += "monitorId=" + encodeURIComponent("" + monitorId) + "&"; 
+        if (fromDate === null)
+            throw new Error("The parameter 'fromDate' cannot be null.");
+        else if (fromDate !== undefined)
+            url_ += "fromDate=" + encodeURIComponent(fromDate ? "" + fromDate.toJSON() : "") + "&"; 
+        if (toDate === null)
+            throw new Error("The parameter 'toDate' cannot be null.");
+        else if (toDate !== undefined)
+            url_ += "toDate=" + encodeURIComponent(toDate ? "" + toDate.toJSON() : "") + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetNotificationOfMonitor(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetNotificationOfMonitor(<any>response_);
+                } catch (e) {
+                    return <Observable<NotificationDtoListResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<NotificationDtoListResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetNotificationOfMonitor(response: HttpResponseBase): Observable<NotificationDtoListResultDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = NotificationDtoListResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<NotificationDtoListResultDto>(<any>null);
+    }
+
+    /**
+     * @param parentId (optional) 
+     * @param fromDate (optional) 
+     * @param toDate (optional) 
+     * @return Success
+     */
+    getNotificationOfParent(parentId: string | undefined, fromDate: moment.Moment | undefined, toDate: moment.Moment | undefined): Observable<NotificationDtoListResultDto> {
+        let url_ = this.baseUrl + "/api/Student/GetNotificationOfParent?";
+        if (parentId === null)
+            throw new Error("The parameter 'parentId' cannot be null.");
+        else if (parentId !== undefined)
+            url_ += "parentId=" + encodeURIComponent("" + parentId) + "&"; 
+        if (fromDate === null)
+            throw new Error("The parameter 'fromDate' cannot be null.");
+        else if (fromDate !== undefined)
+            url_ += "fromDate=" + encodeURIComponent(fromDate ? "" + fromDate.toJSON() : "") + "&"; 
+        if (toDate === null)
+            throw new Error("The parameter 'toDate' cannot be null.");
+        else if (toDate !== undefined)
+            url_ += "toDate=" + encodeURIComponent(toDate ? "" + toDate.toJSON() : "") + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetNotificationOfParent(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetNotificationOfParent(<any>response_);
+                } catch (e) {
+                    return <Observable<NotificationDtoListResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<NotificationDtoListResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetNotificationOfParent(response: HttpResponseBase): Observable<NotificationDtoListResultDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = NotificationDtoListResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<NotificationDtoListResultDto>(<any>null);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
@@ -4627,6 +4759,7 @@ export class StudentDto implements IStudentDto {
     busName: string | undefined;
     monitorId: string;
     monitorName: string | undefined;
+    phoneMonitor: string | undefined;
     parentId: string;
     parentName: string | undefined;
     phoneParent: string | undefined;
@@ -4659,6 +4792,7 @@ export class StudentDto implements IStudentDto {
             this.busName = data["busName"];
             this.monitorId = data["monitorId"];
             this.monitorName = data["monitorName"];
+            this.phoneMonitor = data["phoneMonitor"];
             this.parentId = data["parentId"];
             this.parentName = data["parentName"];
             this.phoneParent = data["phoneParent"];
@@ -4691,6 +4825,7 @@ export class StudentDto implements IStudentDto {
         data["busName"] = this.busName;
         data["monitorId"] = this.monitorId;
         data["monitorName"] = this.monitorName;
+        data["phoneMonitor"] = this.phoneMonitor;
         data["parentId"] = this.parentId;
         data["parentName"] = this.parentName;
         data["phoneParent"] = this.phoneParent;
@@ -4723,6 +4858,7 @@ export interface IStudentDto {
     busName: string | undefined;
     monitorId: string;
     monitorName: string | undefined;
+    phoneMonitor: string | undefined;
     parentId: string;
     parentName: string | undefined;
     phoneParent: string | undefined;
@@ -5055,6 +5191,132 @@ export class StudentCheckInDtoPageResultDto implements IStudentCheckInDtoPageRes
 export interface IStudentCheckInDtoPageResultDto {
     totalRecord: number;
     items: StudentCheckInDto[] | undefined;
+    statusCode: string | undefined;
+    message: string | undefined;
+}
+
+export class NotificationDto implements INotificationDto {
+    id: number;
+    typeNotification: number;
+    studentId: number;
+    parentId: string;
+    monitorId: string | undefined;
+    content: string | undefined;
+    timeSent: moment.Moment;
+
+    constructor(data?: INotificationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+            this.typeNotification = data["typeNotification"];
+            this.studentId = data["studentId"];
+            this.parentId = data["parentId"];
+            this.monitorId = data["monitorId"];
+            this.content = data["content"];
+            this.timeSent = data["timeSent"] ? moment(data["timeSent"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): NotificationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new NotificationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["typeNotification"] = this.typeNotification;
+        data["studentId"] = this.studentId;
+        data["parentId"] = this.parentId;
+        data["monitorId"] = this.monitorId;
+        data["content"] = this.content;
+        data["timeSent"] = this.timeSent ? this.timeSent.toISOString() : <any>undefined;
+        return data; 
+    }
+
+    clone(): NotificationDto {
+        const json = this.toJSON();
+        let result = new NotificationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface INotificationDto {
+    id: number;
+    typeNotification: number;
+    studentId: number;
+    parentId: string;
+    monitorId: string | undefined;
+    content: string | undefined;
+    timeSent: moment.Moment;
+}
+
+export class NotificationDtoListResultDto implements INotificationDtoListResultDto {
+    result: NotificationDto[] | undefined;
+    statusCode: string | undefined;
+    message: string | undefined;
+
+    constructor(data?: INotificationDtoListResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            if (Array.isArray(data["result"])) {
+                this.result = [] as any;
+                for (let item of data["result"])
+                    this.result.push(NotificationDto.fromJS(item));
+            }
+            this.statusCode = data["statusCode"];
+            this.message = data["message"];
+        }
+    }
+
+    static fromJS(data: any): NotificationDtoListResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new NotificationDtoListResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.result)) {
+            data["result"] = [];
+            for (let item of this.result)
+                data["result"].push(item.toJSON());
+        }
+        data["statusCode"] = this.statusCode;
+        data["message"] = this.message;
+        return data; 
+    }
+
+    clone(): NotificationDtoListResultDto {
+        const json = this.toJSON();
+        let result = new NotificationDtoListResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface INotificationDtoListResultDto {
+    result: NotificationDto[] | undefined;
     statusCode: string | undefined;
     message: string | undefined;
 }
