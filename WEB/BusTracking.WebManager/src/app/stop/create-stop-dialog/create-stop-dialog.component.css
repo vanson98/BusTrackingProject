@@ -2,3 +2,9 @@ agm-map {
     height: 350px;
     width:100%;
 }
+.radio-container{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    margin-top: 13px;
+}

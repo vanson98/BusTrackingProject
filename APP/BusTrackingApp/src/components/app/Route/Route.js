@@ -16,28 +16,34 @@ const RouteComponent = (props)=>{
     var user = useSelector((state)=>state.user);
     var listStudent = [];
     const stateRef = useRef();
-    var today = moment().format('DD/MM/YYYY');
 
     //=========================  State ==========================
     const [students, setListStudent]=useState(listStudent)
     stateRef.current = students;
-    const [busName, setBusName] = useState(null);
+    const [bus, setBus] = useState({
+        busId: null,
+        busName: null
+    });
     
     // ======================= Function =====================
     // Lấy tất cả danh sách học sinh trên tuyến đi
     useEffect(()=>{
-        const unsubscribe = navigation.addListener('focus', () => {
-            // Lấy lại list student mới khi focus tab
-            async function getListStudent(){
-                var response = await StudentService.getAllStudentOfMonitor(user.userId,user.userToken);
-                setListStudent(response.result);
-                setBusName(response.result[0].busName)
-            }
-            getListStudent();
-          });
-          // Gắn sự kiện khi kết thúc navigation 
-          return unsubscribe;
-    },[navigation])
+        async function getListStudent(){
+            var response = await StudentService.getAllStudentOfMonitor(user.userId,user.userToken);
+            setListStudent(response.result);
+            setBus({
+                busId: response.result[0].busId,
+                busName: response.result[0].busName
+            })
+        }
+        getListStudent();
+        // const unsubscribe = navigation.addListener('focus', () => {
+        //     // Lấy lại list student mới khi focus tab
+            
+        //   });
+        //   // Gắn sự kiện khi unmount
+        //   return unsubscribe;
+    },[])
 
     // Kết nối tới hub theo dõi trạng thái HS
     useEffect(()=>{
@@ -60,18 +66,27 @@ const RouteComponent = (props)=>{
                 setListStudent(newListStudent);
             }
         })
+
+        return ()=>{
+            signalRService.stop().then(()=>{console.log("Đã ngắt kết nối hub")})
+        }
     },[])
 
     // Config header component
     React.useLayoutEffect(()=>{
         navigation.setOptions({
             headerRight: ()=>(
-                <TouchableOpacity style={styles.headerRight}>
+                <TouchableOpacity 
+                    style={styles.headerRight} 
+                    onPress={()=>navigation.navigate('RouteMap',{
+                        busId: bus.busId
+                    })}
+                >
                     <Ionicons name="map" color={'#FFF'} size={26} />
                 </TouchableOpacity>
             ),
             headerLeft: ()=>(
-                <Text style={styles.headerLeft}>{busName}</Text>
+                <Text style={styles.headerLeft}>{bus.busName}</Text>
             ),
             title: typeCheck==0? "Lượt đi" : "Lượt về"
         },[navigation])

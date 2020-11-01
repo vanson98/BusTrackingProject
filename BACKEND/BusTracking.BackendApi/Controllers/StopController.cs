@@ -29,6 +29,13 @@ namespace StopTracking.BackendApi.Controllers
             return result;
         }
 
+        [HttpGet("GetAllByBus")]
+        public async Task<ResultDto<List<StopDto>>> GetAllByBus([FromQuery]int busId, int typeStop)
+        {
+            var result = await _stopService.GetAllByBus(busId,typeStop);
+            return result;
+        }
+
         [HttpGet("Get/{id}")]
         public async Task<ResultDto<StopDto>> GetById(int id)
         {

@@ -85,12 +85,13 @@ namespace BusTracking.BackendApi
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appConfiguration["Tokens:Key"])),
                         ClockSkew = TimeSpan.Zero
                     };
+
+                    // Authen của SignalR
                     options.Events = new JwtBearerEvents
                     {
                         OnMessageReceived = context =>
                         {
                             var accessToken = context.Request.Query["access_token"];
-
                             // If the request is for our hub...
                             var path = context.HttpContext.Request.Path;
                             if (!string.IsNullOrEmpty(accessToken) &&
@@ -104,7 +105,7 @@ namespace BusTracking.BackendApi
                     };
                 });
 
-            // 5. Configure CORS for angular2 UI
+            // 5. Configure CORS for angular web (Chỉ cho web)
             services.AddCors(options => options.AddPolicy(
                 _defaultCorsPolicyName,
                 builder => builder
@@ -160,7 +161,7 @@ namespace BusTracking.BackendApi
             // 7. SignalR Hub
             services.AddSignalR();
 
-            // DI for SignalR
+            // DI Provider for SignalR
             services.AddSingleton<IUserIdProvider, CustomIdProvider>();
         }
         

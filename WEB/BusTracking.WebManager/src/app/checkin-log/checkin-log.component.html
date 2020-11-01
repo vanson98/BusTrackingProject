@@ -73,16 +73,6 @@
                                 </div>
                                 <div class="col-md-3">
                                     <mat-form-field>
-                                        <mat-select required [(ngModel)]="stopId" name='stop' placeholder="Chọn điểm dừng">
-                                            <mat-option value="">Tất cả</mat-option>
-                                            <mat-option *ngFor="let stop of stops" [value]="stop.id">
-                                                {{stop.name}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-md-3">
-                                    <mat-form-field>
                                         <mat-select [(ngModel)]="checkInType" name="checkInType" placeholder="Chiều xe">
                                             <mat-option value="">Tất cả</mat-option>
                                             <mat-option value="0">Chiều đi</mat-option>

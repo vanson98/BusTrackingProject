@@ -23,19 +23,26 @@ namespace BusTracking.Application.Catalog.StopService
         }
         public async Task<PageResultDto<StopDto>> GetAllPaging(GetStopPagingReqestDto request)
         {
-            var query = _context.Stops.Where(x => x.IsDeleted == false).AsQueryable();
+            var query = from s in _context.Stops
+                        where s.IsDeleted == false
+                        join r in _context.Routes on s.RouteId equals r.Id
+                        select new { s, r };
             // Filter
             if (!string.IsNullOrEmpty(request.Name))
             {
-                query = query.Where(x => x.Name.Contains(request.Name));
+                query = query.Where(x => x.s.Name.Contains(request.Name));
             }
             if (!string.IsNullOrEmpty(request.Address))
             {
-                query = query.Where(x => x.Address.Contains(request.Address));
+                query = query.Where(x => x.s.Address.Contains(request.Address));
             }
             if (request.Status >= 0)
             {
-                query = query.Where(x => (int)x.Status == request.Status);
+                query = query.Where(x => (int)x.s.Status == request.Status);
+            }
+            if (request.RouteId != null)
+            {
+                query = query.Where(x => x.s.RouteId == request.RouteId);
             }
             // Paging
             int totalRow = await query.CountAsync();
@@ -43,15 +50,18 @@ namespace BusTracking.Application.Catalog.StopService
                                   .Take(request.PageSize)
                                   .Select(x => new StopDto()
                                   {
-                                      Id = x.Id,
-                                      Name = x.Name,
-                                      Address = x.Address,
-                                      Longitude = x.Longitude,
-                                      Latitude = x.Latitude,
-                                      TimePickUp = x.TimePickUp,
-                                      TimeDropOff = x.TimeDropOff,
-                                      NumberOfStudents = x.NumberOfStudents,
-                                      Status = (int)x.Status
+                                      Id = x.s.Id,
+                                      Name = x.s.Name,
+                                      Address = x.s.Address,
+                                      Longitude = x.s.Longitude,
+                                      Latitude = x.s.Latitude,
+                                      TimePickUp = x.s.TimePickUp,
+                                      TimeDropOff = x.s.TimeDropOff,
+                                      NumberOfStudents = x.s.NumberOfStudents,
+                                      Status = (int)x.s.Status,
+                                      TypeStop = (int)x.s.TypeStop,
+                                      RouteId = x.s.RouteId,
+                                      RouteName = x.r.Name
                                   }).ToListAsync();
             // Return 
             var pageResult = new PageResultDto<StopDto>()
@@ -63,7 +73,6 @@ namespace BusTracking.Application.Catalog.StopService
             };
             return pageResult;
         }
-
         public async Task<StopDto> GetById(int id)
         {
             var x = await _context.Stops.Where(x => x.IsDeleted == false).FirstOrDefaultAsync(x => x.Id == id);
@@ -83,6 +92,48 @@ namespace BusTracking.Application.Catalog.StopService
             };
             return stop;
         }
+        public async Task<ResultDto<List<StopDto>>> GetAllByBus(int busId, int typeStop)
+        {
+            var query = from s in _context.Stops
+                        where s.IsDeleted == false && s.TypeStop == (TypeStop)typeStop
+                        join r in _context.Routes on s.RouteId equals r.Id
+                        join b in _context.Buses on r.Id equals b.RouteId
+                        select new { s, r,b };
+            // Filter
+            if (busId>0)
+            {
+                query = query.Where(x => x.b.Id == busId);
+            }
+            if (typeStop>=0)
+            {
+                query = query.Where(x => x.s.TypeStop == (TypeStop)typeStop);
+            }
+           
+            // Paging
+            var data = await query.Select(x => new StopDto()
+                                  {
+                                      Id = x.s.Id,
+                                      Name = x.s.Name,
+                                      Address = x.s.Address,
+                                      Longitude = x.s.Longitude,
+                                      Latitude = x.s.Latitude,
+                                      TimePickUp = x.s.TimePickUp,
+                                      TimeDropOff = x.s.TimeDropOff,
+                                      NumberOfStudents = x.s.NumberOfStudents,
+                                      Status = (int)x.s.Status,
+                                      TypeStop = (int)x.s.TypeStop,
+                                      RouteId = x.s.RouteId,
+                                      RouteName = x.r.Name
+                                  }).ToListAsync();
+            // Return 
+            var result = new ResultDto<List<StopDto>>()
+            {
+                StatusCode = ResponseCode.Success,
+                Message = "Thành công",
+                Result = data
+            };
+            return result;
+        }
         public async Task<int> Create(CreateStopRequestDto request)
         {
             var stop = new Stop()
@@ -94,7 +145,9 @@ namespace BusTracking.Application.Catalog.StopService
                 TimeDropOff = new TimeSpan(request.HourDropOff, request.MinuteDropOff, 0),
                 Longitude = request.Longitude,
                 Latitude = request.Latitude,
-                Status = (Status)request.Status
+                Status = (Status)request.Status,
+                TypeStop = (TypeStop)request.TypeStop,
+                RouteId = request.RouteId
             };
             await _context.Stops.AddAsync(stop);
             await _context.SaveChangesAsync();
@@ -113,8 +166,6 @@ namespace BusTracking.Application.Catalog.StopService
             return await _context.SaveChangesAsync();
         }
 
-       
-
         public async Task<int> Update(UpdateStopRequestDto request)
         {
             var stop = await _context.Stops.Where(x => x.IsDeleted == false).FirstOrDefaultAsync(x => x.Id == request.Id);
@@ -127,8 +178,12 @@ namespace BusTracking.Application.Catalog.StopService
             stop.TimePickUp = new TimeSpan(request.HourPickUp, request.MinutePickUp, 0);
             stop.TimeDropOff = new TimeSpan(request.HourDropOff, request.MinuteDropOff, 0);
             stop.Status = (Status)request.Status;
+            stop.TypeStop = (TypeStop)request.TypeStop;
+            stop.RouteId = request.RouteId;
             _context.Stops.Update(stop);
             return await _context.SaveChangesAsync();
         }
+
+        
     }
 }

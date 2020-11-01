@@ -12,7 +12,6 @@ namespace BusTracking.ViewModels.Catalog.Students
         public string StudentName { get; set; }
         public int? CheckInResult { get; set; }
         public int? BusId { get; set; }
-        public int? StopId { get; set; }
         public int? CheckInType { get; set; }
         
         

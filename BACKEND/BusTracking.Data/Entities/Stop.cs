@@ -17,7 +17,9 @@ namespace BusTracking.Data.Entities
         public Boolean IsDeleted { get; set; }
         public decimal Longitude { get; set; }
         public decimal Latitude { get; set; }
-        public List<RouteStop> RouteStops { get; set; }
+        public TypeStop TypeStop { get; set; }
+        public int? RouteId { get; set; }
+        public Route Route { get; set; }
         public List<Student> Students { get; set; }
         public List<StudentCheckIn> StudentCheckIns { get; set; }
     }

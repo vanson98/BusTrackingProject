@@ -4,9 +4,9 @@ using System.Text;
 
 namespace BusTracking.Data.Enum
 {
-    public enum PointStatus
-    {   
-        Stop,
-        Running
+    public enum TypeStop
+    {
+        PickUp,
+        DropOff
     }
 }

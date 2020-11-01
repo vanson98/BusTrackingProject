@@ -1274,11 +1274,12 @@ export class StopServiceProxy {
      * @param name (optional) 
      * @param address (optional) 
      * @param status (optional) 
+     * @param routeId (optional) 
      * @param pageIndex (optional) 
      * @param pageSize (optional) 
      * @return Success
      */
-    getAllPaging(name: string | null | undefined, address: string | null | undefined, status: number | null | undefined, pageIndex: number | undefined, pageSize: number | undefined): Observable<StopDtoPageResultDto> {
+    getAllPaging(name: string | null | undefined, address: string | null | undefined, status: number | null | undefined, routeId: number | null | undefined, pageIndex: number | undefined, pageSize: number | undefined): Observable<StopDtoPageResultDto> {
         let url_ = this.baseUrl + "/api/Stop/GetAllPaging?";
         if (name !== undefined)
             url_ += "Name=" + encodeURIComponent("" + name) + "&"; 
@@ -1286,6 +1287,8 @@ export class StopServiceProxy {
             url_ += "Address=" + encodeURIComponent("" + address) + "&"; 
         if (status !== undefined)
             url_ += "Status=" + encodeURIComponent("" + status) + "&"; 
+        if (routeId !== undefined)
+            url_ += "RouteId=" + encodeURIComponent("" + routeId) + "&"; 
         if (pageIndex === null)
             throw new Error("The parameter 'pageIndex' cannot be null.");
         else if (pageIndex !== undefined)
@@ -1817,13 +1820,12 @@ export class StudentServiceProxy {
      * @param studentName (optional) 
      * @param checkInResult (optional) 
      * @param busId (optional) 
-     * @param stopId (optional) 
      * @param checkInType (optional) 
      * @param pageIndex (optional) 
      * @param pageSize (optional) 
      * @return Success
      */
-    getLogsCheckIn(fromDate: moment.Moment | undefined, toDate: moment.Moment | undefined, studentName: string | null | undefined, checkInResult: number | null | undefined, busId: number | null | undefined, stopId: number | null | undefined, checkInType: number | null | undefined, pageIndex: number | undefined, pageSize: number | undefined): Observable<StudentCheckInDtoPageResultDto> {
+    getLogsCheckIn(fromDate: moment.Moment | undefined, toDate: moment.Moment | undefined, studentName: string | null | undefined, checkInResult: number | null | undefined, busId: number | null | undefined, checkInType: number | null | undefined, pageIndex: number | undefined, pageSize: number | undefined): Observable<StudentCheckInDtoPageResultDto> {
         let url_ = this.baseUrl + "/api/Student/GetLogsCheckIn?";
         if (fromDate === null)
             throw new Error("The parameter 'fromDate' cannot be null.");
@@ -1839,8 +1841,6 @@ export class StudentServiceProxy {
             url_ += "CheckInResult=" + encodeURIComponent("" + checkInResult) + "&"; 
         if (busId !== undefined)
             url_ += "BusId=" + encodeURIComponent("" + busId) + "&"; 
-        if (stopId !== undefined)
-            url_ += "StopId=" + encodeURIComponent("" + stopId) + "&"; 
         if (checkInType !== undefined)
             url_ += "CheckInType=" + encodeURIComponent("" + checkInType) + "&"; 
         if (pageIndex === null)
@@ -4412,6 +4412,9 @@ export class StopDto implements IStopDto {
     status: number;
     longitude: number;
     latitude: number;
+    typeStop: number;
+    routeId: number | undefined;
+    routeName: string | undefined;
 
     constructor(data?: IStopDto) {
         if (data) {
@@ -4433,6 +4436,9 @@ export class StopDto implements IStopDto {
             this.status = data["status"];
             this.longitude = data["longitude"];
             this.latitude = data["latitude"];
+            this.typeStop = data["typeStop"];
+            this.routeId = data["routeId"];
+            this.routeName = data["routeName"];
         }
     }
 
@@ -4454,6 +4460,9 @@ export class StopDto implements IStopDto {
         data["status"] = this.status;
         data["longitude"] = this.longitude;
         data["latitude"] = this.latitude;
+        data["typeStop"] = this.typeStop;
+        data["routeId"] = this.routeId;
+        data["routeName"] = this.routeName;
         return data; 
     }
 
@@ -4475,6 +4484,9 @@ export interface IStopDto {
     status: number;
     longitude: number;
     latitude: number;
+    typeStop: number;
+    routeId: number | undefined;
+    routeName: string | undefined;
 }
 
 export class StopDtoPageResultDto implements IStopDtoPageResultDto {
@@ -4602,6 +4614,8 @@ export class CreateStopRequestDto implements ICreateStopRequestDto {
     status: number;
     longitude: number;
     latitude: number;
+    typeStop: number;
+    routeId: number;
 
     constructor(data?: ICreateStopRequestDto) {
         if (data) {
@@ -4624,6 +4638,8 @@ export class CreateStopRequestDto implements ICreateStopRequestDto {
             this.status = data["status"];
             this.longitude = data["longitude"];
             this.latitude = data["latitude"];
+            this.typeStop = data["typeStop"];
+            this.routeId = data["routeId"];
         }
     }
 
@@ -4646,6 +4662,8 @@ export class CreateStopRequestDto implements ICreateStopRequestDto {
         data["status"] = this.status;
         data["longitude"] = this.longitude;
         data["latitude"] = this.latitude;
+        data["typeStop"] = this.typeStop;
+        data["routeId"] = this.routeId;
         return data; 
     }
 
@@ -4668,6 +4686,8 @@ export interface ICreateStopRequestDto {
     status: number;
     longitude: number;
     latitude: number;
+    typeStop: number;
+    routeId: number;
 }
 
 export class UpdateStopRequestDto implements IUpdateStopRequestDto {
@@ -4682,6 +4702,8 @@ export class UpdateStopRequestDto implements IUpdateStopRequestDto {
     status: number;
     longitude: number;
     latitude: number;
+    typeStop: number;
+    routeId: number;
 
     constructor(data?: IUpdateStopRequestDto) {
         if (data) {
@@ -4705,6 +4727,8 @@ export class UpdateStopRequestDto implements IUpdateStopRequestDto {
             this.status = data["status"];
             this.longitude = data["longitude"];
             this.latitude = data["latitude"];
+            this.typeStop = data["typeStop"];
+            this.routeId = data["routeId"];
         }
     }
 
@@ -4728,6 +4752,8 @@ export class UpdateStopRequestDto implements IUpdateStopRequestDto {
         data["status"] = this.status;
         data["longitude"] = this.longitude;
         data["latitude"] = this.latitude;
+        data["typeStop"] = this.typeStop;
+        data["routeId"] = this.routeId;
         return data; 
     }
 
@@ -4751,6 +4777,8 @@ export interface IUpdateStopRequestDto {
     status: number;
     longitude: number;
     latitude: number;
+    typeStop: number;
+    routeId: number;
 }
 
 export class StudentDto implements IStudentDto {
@@ -5057,9 +5085,10 @@ export class StudentCheckInDto implements IStudentCheckInDto {
     monitorName: string | undefined;
     studentName: string | undefined;
     busName: string | undefined;
-    stopName: string | undefined;
     checkInType: number;
     checkInTime: moment.Moment;
+    longitude: number;
+    latitude: number;
     checkInResult: number;
 
     constructor(data?: IStudentCheckInDto) {
@@ -5080,9 +5109,10 @@ export class StudentCheckInDto implements IStudentCheckInDto {
             this.monitorName = data["monitorName"];
             this.studentName = data["studentName"];
             this.busName = data["busName"];
-            this.stopName = data["stopName"];
             this.checkInType = data["checkInType"];
             this.checkInTime = data["checkInTime"] ? moment(data["checkInTime"].toString()) : <any>undefined;
+            this.longitude = data["longitude"];
+            this.latitude = data["latitude"];
             this.checkInResult = data["checkInResult"];
         }
     }
@@ -5103,9 +5133,10 @@ export class StudentCheckInDto implements IStudentCheckInDto {
         data["monitorName"] = this.monitorName;
         data["studentName"] = this.studentName;
         data["busName"] = this.busName;
-        data["stopName"] = this.stopName;
         data["checkInType"] = this.checkInType;
         data["checkInTime"] = this.checkInTime ? this.checkInTime.toISOString() : <any>undefined;
+        data["longitude"] = this.longitude;
+        data["latitude"] = this.latitude;
         data["checkInResult"] = this.checkInResult;
         return data; 
     }
@@ -5126,9 +5157,10 @@ export interface IStudentCheckInDto {
     monitorName: string | undefined;
     studentName: string | undefined;
     busName: string | undefined;
-    stopName: string | undefined;
     checkInType: number;
     checkInTime: moment.Moment;
+    longitude: number;
+    latitude: number;
     checkInResult: number;
 }
 
@@ -5324,7 +5356,8 @@ export interface INotificationDtoListResultDto {
 export class CheckInRequestDto implements ICheckInRequestDto {
     studentId: number;
     monitorId: string | undefined;
-    stopId: number | undefined;
+    longitude: number;
+    latitude: number;
     checkInType: number | undefined;
     checkInTime: moment.Moment;
     checkInResult: number;
@@ -5342,7 +5375,8 @@ export class CheckInRequestDto implements ICheckInRequestDto {
         if (data) {
             this.studentId = data["studentId"];
             this.monitorId = data["monitorId"];
-            this.stopId = data["stopId"];
+            this.longitude = data["longitude"];
+            this.latitude = data["latitude"];
             this.checkInType = data["checkInType"];
             this.checkInTime = data["checkInTime"] ? moment(data["checkInTime"].toString()) : <any>undefined;
             this.checkInResult = data["checkInResult"];
@@ -5360,7 +5394,8 @@ export class CheckInRequestDto implements ICheckInRequestDto {
         data = typeof data === 'object' ? data : {};
         data["studentId"] = this.studentId;
         data["monitorId"] = this.monitorId;
-        data["stopId"] = this.stopId;
+        data["longitude"] = this.longitude;
+        data["latitude"] = this.latitude;
         data["checkInType"] = this.checkInType;
         data["checkInTime"] = this.checkInTime ? this.checkInTime.toISOString() : <any>undefined;
         data["checkInResult"] = this.checkInResult;
@@ -5378,7 +5413,8 @@ export class CheckInRequestDto implements ICheckInRequestDto {
 export interface ICheckInRequestDto {
     studentId: number;
     monitorId: string | undefined;
-    stopId: number | undefined;
+    longitude: number;
+    latitude: number;
     checkInType: number | undefined;
     checkInTime: moment.Moment;
     checkInResult: number;

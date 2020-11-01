@@ -10,5 +10,6 @@ namespace BusTracking.ViewModels.Catalog.Stops
         public string Name { get; set; }
         public string Address { get; set; }
         public int? Status { get; set; }
+        public int? RouteId { get; set; }
     }
 }

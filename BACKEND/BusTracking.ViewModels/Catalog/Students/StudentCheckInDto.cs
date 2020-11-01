@@ -13,9 +13,10 @@ namespace BusTracking.ViewModels.Catalog.Students
         public string MonitorName { get; set; }
         public string StudentName { get; set; }
         public string BusName { get; set; }
-        public string StopName { get; set; }
         public int CheckInType { get; set; }
         public DateTime CheckInTime { get; set; }
+        public decimal Longitude { get; set; }
+        public decimal Latitude { get; set; }
         public int CheckInResult { get; set; }
         
     }

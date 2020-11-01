@@ -42,6 +42,8 @@ import { UserComponent } from './user/user.component';
 import { CreateUserDialogComponent } from './user/create-user-dialog/create-user-dialog.component';
 import { EditUserDialogComponent } from './user/edit-user-dialog/edit-user-dialog.component';
 import { CheckinLogComponent } from './checkin-log/checkin-log.component';
+import { OWL_DATE_TIME_FORMATS, OWL_DATE_TIME_LOCALE } from 'ng-pick-datetime';
+import { MY_NATIVE_FORMATS } from '@shared/validator/datepicker-format';
 
 @NgModule({
   declarations: [
@@ -91,9 +93,12 @@ import { CheckinLogComponent } from './checkin-log/checkin-log.component';
     // Time Owl
     OwlDateTimeModule, 
     OwlNativeDateTimeModule,
+    
   ],
   providers: [
-    {provide: MAT_DATE_LOCALE, useValue: 'vi-vn'}
+    {provide: MAT_DATE_LOCALE, useValue: 'vi-vn'},
+    {provide: OWL_DATE_TIME_LOCALE, useValue: 'vi'},
+    {provide: OWL_DATE_TIME_FORMATS, useValue: MY_NATIVE_FORMATS},
   ],
   entryComponents: [
     CreateDriverDialogComponent,

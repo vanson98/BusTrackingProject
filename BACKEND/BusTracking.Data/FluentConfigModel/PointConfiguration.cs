@@ -12,12 +12,14 @@ namespace BusTracking.Data.FluentConfigModel
     {
         public void Configure(EntityTypeBuilder<Point> builder)
         {
-            builder.HasNoKey();
-            builder.Property(x => x.BusId).IsRequired().HasDefaultValue(-1);
+            builder.HasKey(x=> x.Id);
+            builder.Property(x => x.Id).UseIdentityColumn();
 
-            builder.Property(x => x.Time).IsRequired();
-            builder.Property(x => x.Status).IsRequired();
-            builder.Property(x => x.Address).HasMaxLength(255);
+            builder.HasOne(x => x.Route)
+                    .WithMany(s => s.Points)
+                    .HasForeignKey(x => x.RouteId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
             builder.Property(x => x.Longitude).IsRequired();
             builder.Property(x => x.Latitude).IsRequired();
         }

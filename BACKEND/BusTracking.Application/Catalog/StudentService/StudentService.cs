@@ -107,7 +107,8 @@ namespace BusTracking.Application.Catalog.StudentService
                 CheckInTime = request.CheckInTime,
                 CheckInType = (CheckInType)request.CheckInType,
                 MonitorId = request.MonitorId,
-                StopId = request.StopId,
+                Latitude = request.Latitude,
+                Longitude = request.Longitude,
                 StudentId = request.StudentId
             };
             // Lưu điểm danh vào DB
@@ -177,7 +178,7 @@ namespace BusTracking.Application.Catalog.StudentService
         }
 
         /// <summary>
-        /// Tìm kiếm và phân trang
+        /// Tìm kiếm và phân trang danh sách học sinh
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -340,11 +341,10 @@ namespace BusTracking.Application.Catalog.StudentService
         {
             var query = from ck in _context.StudentCheckIns
                         from m in _context.AppUsers.Where(m => m.Id == ck.MonitorId).DefaultIfEmpty()
-                        from st in _context.Stops.Where(x => x.Id == ck.StopId).DefaultIfEmpty()
                         join s in _context.Students on ck.StudentId equals s.Id
                         join p in _context.AppUsers on s.ParentId equals p.Id
                         join b in _context.Buses on s.BusId equals b.Id
-                        select new { ck, m, st, s, p, b };
+                        select new { ck, m, s, p, b };
             var checkInItem = await query.Where(x => x.ck.Id == id).Select(x => new StudentCheckInDto()
             {
                 Id = x.ck.Id,
@@ -354,10 +354,11 @@ namespace BusTracking.Application.Catalog.StudentService
                 CheckInType = (int)x.ck.CheckInType,
                 MonitorId = x.m == null ? Guid.Empty : x.m.Id,
                 MonitorName = x.m == null ? null : x.m.FullName,
-                StopName = x.st == null ? null : x.st.Name,
                 StudentName = x.s.Name,
                 StudentId = x.s.Id,
-                ParentId = x.p.Id
+                ParentId = x.p.Id,
+                Latitude = x.ck.Latitude,
+                Longitude = x.ck.Longitude
             }).FirstOrDefaultAsync();
             return checkInItem;
         }
@@ -394,7 +395,7 @@ namespace BusTracking.Application.Catalog.StudentService
         }
 
         /// <summary>
-        /// Lấy tất cả message của phụ huynh
+        /// Lấy tất cả notification của phụ huynh
         /// </summary>
         /// <param name="id"></param>
         /// <param name="fromDate"></param>
@@ -433,17 +434,12 @@ namespace BusTracking.Application.Catalog.StudentService
         {
             var query = from ck in _context.StudentCheckIns
                         from m in _context.AppUsers.Where(m => m.Id == ck.MonitorId).DefaultIfEmpty()
-                        from st in _context.Stops.Where(x => x.Id == ck.StopId).DefaultIfEmpty()
                         join s in _context.Students on ck.StudentId equals s.Id
                         join b in _context.Buses on s.BusId equals b.Id
-                        select new { ck,m,st,s,b };
+                        select new { ck,m,s,b };
             if (request.BusId != null)
             {
                 query = query.Where(x => x.b.Id == request.BusId);
-            }
-            if (request.StopId != null)
-            {
-                query = query.Where(x => x.st.Id == request.StopId);
             }
             if (request.StudentName != null)
             {
@@ -473,9 +469,10 @@ namespace BusTracking.Application.Catalog.StudentService
                 CheckInTime = x.ck.CheckInTime,
                 CheckInType = (int)x.ck.CheckInType,
                 MonitorName = x.m.FullName,
-                StopName = x.st.Name,
                 StudentName = x.s.Name,
-                StudentId = x.s.Id
+                StudentId = x.s.Id,
+                Longitude = x.ck.Longitude,
+                Latitude = x.ck.Latitude
             }).ToListAsync();
 
             return new PageResultDto<StudentCheckInDto>()

@@ -62,42 +62,77 @@
           />
         </mat-form-field>
       </div>
-      <div class="col-md-3">
-        <mat-form-field>
-          <input matInput [(ngModel)]="timePickUp" name="timepick" [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1" placeholder="Chọn thời gian đón">
-          <owl-date-time #dt1 [pickerType]="'timer'"></owl-date-time>
-        </mat-form-field>
+      <div class="col-md-6">
+        <mat-radio-group 
+           [(ngModel)]='stop.typeStop' 
+           (change)='setTypeStop($event)' 
+           class="radio-container"
+           name='typeStop'>
+          <mat-radio-button [value]="0">Điểm đón</mat-radio-button>
+          <mat-radio-button [value]="1">Điểm trả</mat-radio-button>
+        </mat-radio-group>
       </div>
-      <div class="col-md-3">
-        <mat-form-field>
-          <input matInput [(ngModel)]="timeDropOff" name="timedrop"  [owlDateTime]="dt2" [owlDateTimeTrigger]="dt2" placeholder="Chọn thời trả">
-          <owl-date-time #dt2 [pickerType]="'timer'"></owl-date-time>
-        </mat-form-field>
-      </div>
-      <div class="col-md-3">
-        <mat-form-field>
-          <input
+      <div class="col-md-12" style="padding: 0;">
+        <div class="col-md-3">
+          <mat-form-field>
+            <input
+              matInput
+              name="name"
+              placeholder="Tên điểm dừng"
+              [(ngModel)]="stop.name"
+              required
+              minlength="2"
+              maxlength="255"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field>
+            <input
             matInput
-            name="name"
-            placeholder="Tên điểm dừng"
-            [(ngModel)]="stop.name"
+            name="numberOffStudent"
+            placeholder="Số lượng học sinh"
+            [(ngModel)]="stop.numberOfStudents"
+            type="number"
             required
-            minlength="2"
-            maxlength="255"
-          />
-        </mat-form-field>
+          />  
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field>
+            <input 
+              matInput 
+              [(ngModel)]="timePickUp" 
+              name="timepick" 
+              [owlDateTime]="dt1" 
+              [owlDateTimeTrigger]="dt1" 
+              placeholder="Chọn thời gian đón"
+              [disabled]="stop.typeStop==1">
+            <owl-date-time #dt1 [pickerType]="'timer'"></owl-date-time>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field>
+            <input 
+              matInput 
+              [(ngModel)]="timeDropOff"
+              name="timedrop"  
+              [owlDateTime]="dt2" 
+              [owlDateTimeTrigger]="dt2" 
+              placeholder="Chọn thời trả"
+              [disabled]="stop.typeStop==0">
+            <owl-date-time #dt2 [pickerType]="'timer'"></owl-date-time>
+          </mat-form-field>
+        </div>
       </div>
-      
       <div class="col-md-3">
-        <mat-form-field>
-          <input
-          matInput
-          name="numberOffStudent"
-          placeholder="Số lượng học sinh"
-          [(ngModel)]="stop.numberOfStudents"
-          type="number"
-          required
-        />  
+        <mat-form-field appearance="fill">
+          <mat-label>Chọn tuyến</mat-label>
+          <mat-select required [(ngModel)]="stop.routeId" name='bus'>
+            <mat-option *ngFor="let route of routes" [value]="route.id">
+              {{route.name}}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
       </div>
       <div class="col-md-3">

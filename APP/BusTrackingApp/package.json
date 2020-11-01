@@ -17,6 +17,7 @@
     "@aspnet/signalr": "^1.1.4",
     "@react-native-community/async-storage": "^1.12.0",
     "@react-native-community/datetimepicker": "^3.0.4",
+    "@react-native-community/geolocation": "^2.0.2",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/bottom-tabs": "^5.8.0",
     "@react-navigation/drawer": "^5.9.0",

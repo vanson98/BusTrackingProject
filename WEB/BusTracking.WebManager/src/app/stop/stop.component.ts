@@ -1,7 +1,7 @@
 import { PagedListingComponentBase, PagedRequestDto } from './../../shared/paged-listing-component-base';
 import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { StopDto, StopDtoPageResultDto, StopServiceProxy } from '@shared/service-proxies/service-proxies';
+import { RouteDto, RouteServiceProxy, StopDto, StopDtoPageResultDto, StopServiceProxy } from '@shared/service-proxies/service-proxies';
 import { MatDialog } from '@angular/material';
 import { finalize } from 'rxjs/operators';
 import { CreateStopDialogComponent } from './create-stop-dialog/create-stop-dialog.component';
@@ -16,14 +16,17 @@ import { AppResCode } from '@shared/const/AppResCode';
 })
 export class StopComponent extends PagedListingComponentBase<StopDto> {
   stops: StopDto[] = [];
+  routes: RouteDto[] = []
   // Search Field
   name: string = '';
   address: string = '';
   status: number | null;
+  routeId: number | null;
 
   constructor(
     injector: Injector,
     private _stopService: StopServiceProxy,
+    private _routeService: RouteServiceProxy,
     private _dialog: MatDialog
   ) {
     super(injector);
@@ -31,6 +34,9 @@ export class StopComponent extends PagedListingComponentBase<StopDto> {
 
   ngOnInit() {
     this.refresh();
+    this._routeService.getAllPaging(undefined,undefined,undefined,1,999999).subscribe(res=>{
+      this.routes = res.items;
+    });
   }
 
   editStop(Stop: StopDto) {
@@ -43,7 +49,7 @@ export class StopComponent extends PagedListingComponentBase<StopDto> {
   
   protected list(request: PagedRequestDto, pageNumber: number, finishedCallback: Function): void {
     this._stopService
-          .getAllPaging(this.name.trim(),this.address.trim(),this.status,pageNumber,request.maxResultCount)
+          .getAllPaging(this.name.trim(),this.address.trim(),this.status,this.routeId,pageNumber,request.maxResultCount)
           .pipe(
             finalize(() => {
                 finishedCallback();

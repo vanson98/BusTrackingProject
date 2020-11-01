@@ -49,7 +49,7 @@ implements OnInit {
         abp.message.error(res.message);
       }
     })
-    this._stopService.getAllPaging(undefined,undefined,undefined,1,1000).subscribe(result=>{
+    this._stopService.getAllPaging(undefined,undefined,undefined,undefined,1,1000).subscribe(result=>{
       if(result.statusCode==AppResCode.Success){
         this.stops = result.items;
       }else{

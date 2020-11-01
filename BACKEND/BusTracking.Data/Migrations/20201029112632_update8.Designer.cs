@@ -4,14 +4,16 @@ using BusTracking.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BusTracking.Data.Migrations
 {
     [DbContext(typeof(BusTrackingDbContext))]
-    partial class BusTrackingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201029112632_update8")]
+    partial class update8
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,7 +52,7 @@ namespace BusTracking.Data.Migrations
                         new
                         {
                             Id = new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"),
-                            ConcurrencyStamp = "27ba294f-56ad-435a-aee5-9c8ef2245957",
+                            ConcurrencyStamp = "fd54680b-eaae-4dc1-b4fe-53abf91fe3a0",
                             Description = "Administrator role",
                             Name = "admin",
                             NormalizedName = "admin"
@@ -135,7 +137,7 @@ namespace BusTracking.Data.Migrations
                         {
                             Id = new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9eaf840f-1e61-42f1-9eb0-05f1c82bed86",
+                            ConcurrencyStamp = "8ac216f1-8bc6-43b9-b732-c505eaa8f0b2",
                             Dob = new DateTime(1998, 8, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "vansonnguyen@gmail.com",
                             EmailConfirmed = true,
@@ -144,7 +146,7 @@ namespace BusTracking.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "vansonnguyen@gmail.com",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEWZzOLhR6SP73sl0XUGFw5lTsJaYJAeW/EIdGSJm3wjIv6G81MZKnELji26VpYYqw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEP9o/O4BmVZj/gvXzVvoPoqqJhy7EWluhzvCz0uXO9pOWLLkYpLTLtdIEjJlS4PfwQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             Status = 0,
@@ -156,7 +158,7 @@ namespace BusTracking.Data.Migrations
                         {
                             Id = new Guid("da5ac2ab-0346-416a-b640-d5915dad85ed"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b0ae80b0-5418-453f-b07c-1ba145845e13",
+                            ConcurrencyStamp = "a9aee39f-0765-47c0-a0a2-9b8b845a1b96",
                             Dob = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "vansonnguyen1@gmail.com",
                             EmailConfirmed = true,
@@ -165,7 +167,7 @@ namespace BusTracking.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "vansonnguyen1@gmail.com",
                             NormalizedUserName = "admin1",
-                            PasswordHash = "AQAAAAEAACcQAAAAENLMdI10NnBSmHdiPoyo1ldzRaypmewb2YN/yV8TTI4d/A+hfkrOH4jmC2+ipaG8fA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEa7Li1ncjBmGYhDIqLC8wTnm0QSbG8TaIKVFgr055z90TExPZMnPuT5c6UnzvM6zQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             Status = 0,
@@ -177,7 +179,7 @@ namespace BusTracking.Data.Migrations
                         {
                             Id = new Guid("d5b139c2-3764-431f-900f-ecc01adf5b91"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "960f80f5-10bd-4ab2-be0b-befcde587b49",
+                            ConcurrencyStamp = "152eeb0d-919d-45d3-837d-24e692e6b229",
                             Dob = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "vansonnguyen2@gmail.com",
                             EmailConfirmed = true,
@@ -186,7 +188,7 @@ namespace BusTracking.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "vansonnguyen2@gmail.com",
                             NormalizedUserName = "admin2",
-                            PasswordHash = "AQAAAAEAACcQAAAAEC0E9yaPAvvUVVyLp0nBIYHmbJ+48HgVstr7z+gvHhIKSloB/Mw92J2PSmExk9VQyA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFhemKtjEMg0Pm99G1+nZYy5rYq7d9zVRDaiM5+CsKUhZz3jIDiXjvn20ZC8r9ch9w==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             Status = 0,
@@ -503,6 +505,24 @@ namespace BusTracking.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("BusTracking.Data.Entities.RouteStop", b =>
+                {
+                    b.Property<int>("RouteId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StopId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.HasKey("RouteId", "StopId");
+
+                    b.HasIndex("StopId");
+
+                    b.ToTable("RouteStops");
+                });
+
             modelBuilder.Entity("BusTracking.Data.Entities.Stop", b =>
                 {
                     b.Property<int>("Id")
@@ -535,24 +555,21 @@ namespace BusTracking.Data.Migrations
                     b.Property<int>("NumberOfStudents")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RouteId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<TimeSpan>("TimeDropOff")
+                    b.Property<TimeSpan?>("TimeDropOff")
+                        .IsRequired()
                         .HasColumnType("time");
 
-                    b.Property<TimeSpan>("TimePickUp")
+                    b.Property<TimeSpan?>("TimePickUp")
+                        .IsRequired()
                         .HasColumnType("time");
 
                     b.Property<int>("TypeStop")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RouteId");
 
                     b.ToTable("Stops");
                 });
@@ -639,12 +656,6 @@ namespace BusTracking.Data.Migrations
 
                     b.Property<int?>("CheckInType")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("Latitude")
-                        .HasColumnType("decimal(10,8)");
-
-                    b.Property<decimal>("Longitude")
-                        .HasColumnType("decimal(11,8)");
 
                     b.Property<Guid?>("MonitorId")
                         .HasColumnType("uniqueidentifier");
@@ -804,12 +815,19 @@ namespace BusTracking.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BusTracking.Data.Entities.Stop", b =>
+            modelBuilder.Entity("BusTracking.Data.Entities.RouteStop", b =>
                 {
                     b.HasOne("BusTracking.Data.Entities.Route", "Route")
-                        .WithMany("Stops")
+                        .WithMany("RouteStops")
                         .HasForeignKey("RouteId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BusTracking.Data.Entities.Stop", "Stop")
+                        .WithMany("RouteStops")
+                        .HasForeignKey("StopId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BusTracking.Data.Entities.Student", b =>
@@ -840,9 +858,10 @@ namespace BusTracking.Data.Migrations
                         .HasForeignKey("MonitorId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("BusTracking.Data.Entities.Stop", null)
+                    b.HasOne("BusTracking.Data.Entities.Stop", "Stop")
                         .WithMany("StudentCheckIns")
-                        .HasForeignKey("StopId");
+                        .HasForeignKey("StopId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("BusTracking.Data.Entities.Student", "Student")
                         .WithMany("StudentCheckIns")

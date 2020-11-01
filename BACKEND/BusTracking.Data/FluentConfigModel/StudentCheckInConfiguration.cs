@@ -24,14 +24,11 @@ namespace BusTracking.Data.FluentConfigModel
                 .HasForeignKey(x => x.MonitorId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne(x => x.Stop)
-                .WithMany(s => s.StudentCheckIns)
-                .HasForeignKey(x => x.StopId)
-                .OnDelete(DeleteBehavior.NoAction);
-
             builder.Property(x => x.CheckInTime).IsRequired();
             builder.Property(x => x.CheckInResult).IsRequired();
             builder.Property(x => x.StudentId).IsRequired();
+            builder.Property(s => s.Longitude).HasColumnType("decimal(11,8)").IsRequired();
+            builder.Property(s => s.Latitude).HasColumnType("decimal(10,8)").IsRequired();
         }
     }
 }

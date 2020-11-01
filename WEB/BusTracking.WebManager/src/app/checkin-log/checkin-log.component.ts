@@ -17,7 +17,6 @@ export class CheckinLogComponent extends PagedListingComponentBase<StudentCheckI
   
   logs: StudentCheckInDto[] = [];
   buses: BusDto[] = [];
-  stops: StopDto[] = [];
 
   // Search Field
   fromDate : Date;
@@ -52,10 +51,6 @@ export class CheckinLogComponent extends PagedListingComponentBase<StudentCheckI
     this._busService.getAllPaging(undefined,undefined,undefined,undefined,1,10000).subscribe(res=>{
       this.buses = res.items;
     })
-    // Get all stop
-    this._stopService.getAllPaging(undefined,undefined,undefined,1,10000).subscribe(res=>{
-      this.stops = res.items;
-    })
   }
 
   trackingStudentCheckIn(){
@@ -81,7 +76,6 @@ export class CheckinLogComponent extends PagedListingComponentBase<StudentCheckI
             this.studentName.trim(),
             studentStatus,
             busId,
-            stopId,
             checkInType,
             pageNumber,
             this.pageSize)

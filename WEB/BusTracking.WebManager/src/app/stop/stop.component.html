@@ -23,17 +23,27 @@
                     <div class="col-md-12">
                         <form>
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <mat-form-field>
                                         <input matInput placeholder="Tên điểm dừng" [(ngModel)]="name" name="name">
                                     </mat-form-field>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <mat-form-field>
                                         <input matInput placeholder="Địa chỉ" [(ngModel)]="address" name="address">
                                     </mat-form-field>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select required [(ngModel)]="routeId" name='route' placeholder="Chọn tuyến">
+                                            <mat-option value="">Tất cả</mat-option>
+                                            <mat-option *ngFor="let route of routes" [value]="route.id">
+                                                {{route.name}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
                                     <mat-form-field>
                                         <mat-select placeholder="Trạng thái" [(ngModel)]="status" name="status">
                                             <mat-option value="">Tất  cả</mat-option>
@@ -58,6 +68,7 @@
                             <th>STT</th>
                             <th>Tên điểm dừng</th>
                             <th>Địa chỉ</th>
+                            <th>Loại điểm dừng</th>
                             <th>Số lượng HS</th>
                             <th>Thời gian đón</th>
                             <th>Thời gian trả</th>
@@ -81,9 +92,13 @@
                             <td>{{i+1}}</td>
                             <td>{{ stop.name }}</td>
                             <td>{{ stop.address }}</td>
+                            <td> 
+                                <span *ngIf="stop.typeStop==0" class="label label-success">Điểm đón</span>  
+                                <span *ngIf="stop.typeStop==1" class="label label-warning">Điểm trả</span>  
+                            </td>
                             <td>{{ stop.numberOfStudents}}</td>
-                            <td>{{ stop.timePickUp.hours+' giờ '+ stop.timePickUp.minutes +' phút'}}</td>
-                            <td>{{ stop.timeDropOff.hours+' giờ '+ stop.timeDropOff.minutes +' phút'}}</td>
+                            <td>{{ stop.typeStop == 0 ? stop.timePickUp.hours+' giờ '+ stop.timePickUp.minutes +' phút' : 'Không có'}}</td>
+                            <td>{{ stop.typeStop == 1 ? stop.timeDropOff.hours+' giờ '+ stop.timeDropOff.minutes +' phút' : 'Không có'}}</td>
                             <td align="center">
                                 <i class="material-icons check_box" *ngIf="stop.status">
                                     check_box

@@ -1,4 +1,4 @@
-import { StopServiceProxy, CreateStopRequestDto, UpdateStopRequestDto, StopDto } from './../../../shared/service-proxies/service-proxies';
+import { StopServiceProxy, CreateStopRequestDto, UpdateStopRequestDto, StopDto, RouteServiceProxy, RouteDto } from './../../../shared/service-proxies/service-proxies';
 import { AfterViewInit, Component, ElementRef, Inject, Injector, NgZone, OnInit, Optional, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -19,6 +19,7 @@ export class EditStopDialogComponent extends AppComponentBase implements OnInit,
   saving = false;
   stop: UpdateStopRequestDto = new UpdateStopRequestDto();
   isActive = true;
+  routes: RouteDto[] = []
   // Map
   longitude: number;
   latitude: number;
@@ -35,6 +36,7 @@ export class EditStopDialogComponent extends AppComponentBase implements OnInit,
     public _stopService: StopServiceProxy,
     private _dialogRef: MatDialogRef<EditStopDialogComponent>,
     private mapsAPILoader: MapsAPILoader,
+    private _routeService: RouteServiceProxy,
     private ngZone: NgZone,
     @Optional() @Inject(MAT_DIALOG_DATA) private _data: object
     ) {
@@ -44,6 +46,9 @@ export class EditStopDialogComponent extends AppComponentBase implements OnInit,
   ngOnInit() {
     let stopOrigin :StopDto = this._data['stopEdit'];
     this.stop.init(stopOrigin);
+    this._routeService.getAllPaging(undefined,undefined,undefined,1,999999).subscribe(res=>{
+      this.routes = res.items;
+    });
     this.timePickUp = new Date(2020,1,1,stopOrigin.timePickUp.hours,stopOrigin.timePickUp.minutes);
     this.timeDropOff = new Date(2020,1,1,stopOrigin.timeDropOff.hours,stopOrigin.timeDropOff.minutes);
   }
@@ -103,13 +108,24 @@ export class EditStopDialogComponent extends AppComponentBase implements OnInit,
     this.zoom = 16;
   }
 
+  setTypeStop($event){
+    this.stop.typeStop = $event.value;
+  }
+
   getTime(){
-    var timePick = moment(this.timePickUp);
-    var timeDrop = moment(this.timeDropOff);
-    this.stop.hourPickUp = timePick.hours();
-    this.stop.hourDropOff = timeDrop.hour();
-    this.stop.minutePickUp = timePick.minutes();
-    this.stop.minuteDropOff = timeDrop.minutes();
+    if(this.stop.typeStop==0){
+      var timePick = moment(this.timePickUp);
+      this.stop.hourPickUp = timePick.hours();
+      this.stop.minutePickUp = timePick.minutes();
+      this.stop.hourDropOff = 0;
+      this.stop.minuteDropOff = 0;
+    }else{
+      var timeDrop = moment(this.timeDropOff);
+      this.stop.hourDropOff = timeDrop.hour();
+      this.stop.minuteDropOff = timeDrop.minutes();
+      this.stop.hourPickUp = 0;
+      this.stop.minutePickUp = 0;
+    }
   }
 
   save(): void {

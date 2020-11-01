@@ -14,6 +14,11 @@ namespace BusTracking.Data.FluentConfigModel
             builder.HasKey(s=>s.Id);
             builder.Property(s => s.Id).UseIdentityColumn();
 
+            builder.HasOne(s => s.Route)
+                   .WithMany(r => r.Stops)
+                   .HasForeignKey(s => s.RouteId)
+                   .OnDelete(DeleteBehavior.NoAction);
+            builder.Property(x => x.RouteId).IsRequired(false);
             builder.Property(s => s.Name).IsRequired().HasMaxLength(50);
             builder.Property(s => s.Address).IsRequired();
             builder.Property(s => s.NumberOfStudents).IsRequired();
@@ -23,6 +28,7 @@ namespace BusTracking.Data.FluentConfigModel
             builder.Property(s => s.Latitude).HasColumnType("decimal(10,8)").IsRequired();
             builder.Property(s => s.Status).IsRequired();
             builder.Property(s => s.IsDeleted).HasDefaultValue(false);
+            builder.Property(s => s.TypeStop).IsRequired();
         }
     }
 }

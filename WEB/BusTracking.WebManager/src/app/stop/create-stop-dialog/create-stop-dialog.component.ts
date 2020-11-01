@@ -1,5 +1,5 @@
 
-import { StopServiceProxy, CreateStopRequestDto } from './../../../shared/service-proxies/service-proxies';
+import { StopServiceProxy, CreateStopRequestDto, RouteDto, RouteServiceProxy } from './../../../shared/service-proxies/service-proxies';
 import { AfterViewInit, Component, ElementRef, Injector, NgZone, OnInit, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { MatDialogRef } from '@angular/material';
@@ -19,6 +19,7 @@ export class CreateStopDialogComponent extends AppComponentBase implements OnIni
   // Var
   saving = false;
   stop: CreateStopRequestDto = new CreateStopRequestDto();
+  routes: RouteDto[] = []
   isActive = true;
   // Map
   longitude : number;
@@ -37,6 +38,7 @@ export class CreateStopDialogComponent extends AppComponentBase implements OnIni
     public _diverService: StopServiceProxy,
     private _dialogRef: MatDialogRef<CreateStopDialogComponent>,
     private mapsAPILoader: MapsAPILoader,
+    private _routeService: RouteServiceProxy,
     private ngZone: NgZone
     ) {
     super(injector);
@@ -69,6 +71,13 @@ export class CreateStopDialogComponent extends AppComponentBase implements OnIni
   }
 
   ngOnInit() {
+    this._routeService.getAllPaging(undefined,undefined,undefined,1,999999).subscribe(res=>{
+      this.routes = res.items;
+    });
+  }
+
+  setTypeStop($event){
+    this.stop.typeStop = $event.value;
   }
 
   setCurrentLocation() {
@@ -104,12 +113,15 @@ export class CreateStopDialogComponent extends AppComponentBase implements OnIni
   }
 
   getTime(){
-    var timePick = moment(this.timePickUp);
-    var timeDrop = moment(this.timeDropOff);
-    this.stop.hourPickUp = timePick.hours();
-    this.stop.hourDropOff = timeDrop.hour();
-    this.stop.minutePickUp = timePick.minutes();
-    this.stop.minuteDropOff = timeDrop.minutes();
+    if(this.stop.typeStop==0){
+      var timePick = moment(this.timePickUp);
+      this.stop.hourPickUp = timePick.hours();
+      this.stop.minutePickUp = timePick.minutes();
+    }else{
+      var timeDrop = moment(this.timeDropOff);
+      this.stop.hourDropOff = timeDrop.hour();
+      this.stop.minuteDropOff = timeDrop.minutes();
+    }
   }
 
   save(): void {

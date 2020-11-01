@@ -8,9 +8,16 @@ namespace BusTracking.BackendApi.HubConfig
 {
     public class BusTrackingHub : Hub
     {
-        public Task SendNotifyToParent(string userId,Object data)
+        public async Task SendLocationToGroup(string groupName,Object data)
         {
-            return Clients.User(userId).SendAsync("ReceiveNotify", data);
+            await Clients.Group(groupName).SendAsync("ReceiveLocation", data);
+            //await Clients.User(userId).SendAsync("ReceiveLocation", data);
+        }
+
+        public async Task AddToGroup(string groupName)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+            await Clients.Group(groupName).SendAsync("CheckAddedGroup", $"{Context.ConnectionId} has joined the group {groupName}");
         }
     }
 }

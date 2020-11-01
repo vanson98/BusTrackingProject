@@ -28,7 +28,6 @@ namespace BusTracking.Data.EF
             modelBuilder.ApplyConfiguration(new NotificationConfiguration());
             modelBuilder.ApplyConfiguration(new PointConfiguration());
             modelBuilder.ApplyConfiguration(new RouteConfiguration());
-            modelBuilder.ApplyConfiguration(new RouteStopConfiguration());
             modelBuilder.ApplyConfiguration(new StopConfiguration());
             modelBuilder.ApplyConfiguration(new StudentConfiguration());
             modelBuilder.ApplyConfiguration(new StudentCheckInConfiguration());
@@ -51,7 +50,6 @@ namespace BusTracking.Data.EF
         public DbSet<Notification> Notification { get; set; }
         public DbSet<Point> Points { get; set; }
         public DbSet<Route> Routes { get; set; }
-        public DbSet<RouteStop> RouteStops {get;set;}
         public DbSet<Stop> Stops  {get;set;}
         public DbSet<Student> Students  {get;set;}
         public DbSet<StudentCheckIn> StudentCheckIns { get; set; }
