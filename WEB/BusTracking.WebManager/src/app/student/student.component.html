@@ -72,7 +72,8 @@
                             <th>SDT</th>
                             <th>Xe</th>
                             <th>Phụ huynh</th>
-                            <th>Điểm dừng</th>
+                            <th>Điểm đón</th>
+                            <th>Điểm trả</th>
                             <th>
                                 <div style="text-align:center">Trạng thái</div>
                             </th>
@@ -96,7 +97,8 @@
                             <td>{{ student.phoneNumber }}</td>
                             <td>{{ student.busName }}</td>
                             <td>{{ student.parentName }}</td>
-                            <td>{{ student.stopName }}</td>
+                            <td>{{ student.stopPickName }}</td>
+                            <td>{{ student.stopDropName }}</td>
                             <td>
                                 <span class="label label-default" *ngIf="student.status==0">Mặc định</span>
                                 <span class="label label-danger" *ngIf="student.status==1">Vắng mặt</span>

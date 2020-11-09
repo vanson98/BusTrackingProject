@@ -28,7 +28,7 @@ const ProfileComponent = (props)=>{
                     <Text style={{fontSize:15,fontWeight:'bold'}} onPress={()=>navigation.navigate('UpdateProfile')}>Cập nhật thông tin</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.action}>
-                    <Text style={{fontSize:15,fontWeight:'bold'}}>Đổi mật khẩu</Text>
+                    <Text style={{fontSize:15,fontWeight:'bold'}} onPress={()=>navigation.navigate('UpdatePassword')}>Đổi mật khẩu</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.action} onPress={()=>logOut()}>
                     <Text style={{fontSize:15,fontWeight:'bold'}}>Đăng xuất</Text>

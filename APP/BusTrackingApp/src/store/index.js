@@ -9,6 +9,8 @@ const persistConfig = {
     storage: AsyncStorage
 }
 
+let _hub;
+
 export const store = createStore(
     persistReducer(persistConfig,rootReducer),
     applyMiddleware(thunk)

@@ -15,7 +15,8 @@ implements OnInit {
   saving = false;
   isActive = true;
   parents : UserDto[] = [];
-  stops : StopDto[] = [];
+  stopsDrop : StopDto[] = [];
+  stopsPick : StopDto[] = [];
   buses : BusDto[] = [];
   student: CreateStudentRequestDto = new CreateStudentRequestDto();
   
@@ -49,11 +50,18 @@ implements OnInit {
         abp.message.error(res.message);
       }
     })
-    this._stopService.getAllPaging(undefined,undefined,undefined,undefined,1,1000).subscribe(result=>{
-      if(result.statusCode==AppResCode.Success){
-        this.stops = result.items;
+    this._stopService.getAllByType(0).subscribe(res=>{
+      if(res.statusCode==AppResCode.Success){
+        this.stopsPick = res.result;
       }else{
-        abp.message.error(result.message);
+        abp.message.error(res.message);
+      }
+    })
+    this._stopService.getAllByType(1).subscribe(res=>{
+      if(res.statusCode==AppResCode.Success){
+        this.stopsDrop = res.result;
+      }else{
+        abp.message.error(res.message);
       }
     })
   }

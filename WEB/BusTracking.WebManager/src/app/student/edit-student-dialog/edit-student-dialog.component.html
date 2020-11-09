@@ -31,9 +31,17 @@
             </mat-select>
           </mat-form-field>
           <mat-form-field appearance="fill">
-            <mat-label>Chọn điểm dừng</mat-label>
-            <mat-select required [(ngModel)]="student.stopId" formControlName='stop'>
-              <mat-option *ngFor="let stop of stops" [value]="stop.id">
+            <mat-label>Chọn điểm đón</mat-label>
+            <mat-select required [(ngModel)]="student.stopPickId" formControlName='stopPick'>
+              <mat-option *ngFor="let stop of stopsPick" [value]="stop.id">
+                {{stop.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Chọn điểm trả</mat-label>
+            <mat-select required [(ngModel)]="student.stopDropId" formControlName='stopDrop'>
+              <mat-option *ngFor="let stop of stopsDrop" [value]="stop.id">
                 {{stop.name}}
               </mat-option>
             </mat-select>

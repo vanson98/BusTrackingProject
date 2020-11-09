@@ -16,6 +16,7 @@ namespace BusTracking.Data.Entities
         public CheckInType? CheckInType { get; set; }
         public DateTime CheckInTime { get; set; }
         public StudentStatus CheckInResult { get; set; }
+        public CheckInState? CheckInState { get; set; }
         public Student Student { get; set; }
         public AppUser Monitor { get; set; }
     }

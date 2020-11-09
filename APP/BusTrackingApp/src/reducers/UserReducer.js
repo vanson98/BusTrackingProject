@@ -5,6 +5,7 @@ export const initialUserSession = {
     userId: null,
     fullName: null,
     email: null,
+    phoneNumber: null,
     roles: null,
     userToken: null
 }

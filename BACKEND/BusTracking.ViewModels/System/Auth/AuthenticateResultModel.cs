@@ -10,6 +10,7 @@ namespace BusTracking.ViewModels.System.Auth
         public string FullName { get; set; }
         public int TypeAccount { get; set; }
         public string Email { get; set; }
+        public string PhoneNumber { get; set; }
         public IList<string> Roles { get; set; }
         public string AccessToken { get; set; }
     }

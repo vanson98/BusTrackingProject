@@ -27,8 +27,13 @@ namespace BusTracking.Data.FluentConfigModel
 
             builder.HasOne(x => x.Stop)
                    .WithMany(s => s.Students)
-                   .HasForeignKey(x => x.StopId);
-            builder.Property(s => s.StopId).IsRequired(true);
+                   .HasForeignKey(x => x.StopPickId);
+            builder.Property(s => s.StopPickId).IsRequired(true);
+
+            builder.HasOne(x => x.Stop)
+                   .WithMany(s => s.Students)
+                   .HasForeignKey(x => x.StopDropId);
+            builder.Property(s => s.StopDropId).IsRequired(true);
 
             builder.Property(d => d.Name).IsRequired();
             builder.Property(d => d.Address).HasMaxLength(255);

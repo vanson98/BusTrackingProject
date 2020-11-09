@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BusTracking.Data.Migrations
 {
     [DbContext(typeof(BusTrackingDbContext))]
-    [Migration("20200908154748_init")]
-    partial class init
+    [Migration("20201109072258_update2")]
+    partial class update2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,6 +35,9 @@ namespace BusTracking.Data.Migrations
                         .HasColumnType("nvarchar(255)")
                         .HasMaxLength(255);
 
+                    b.Property<string>("DisplayName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -49,7 +52,7 @@ namespace BusTracking.Data.Migrations
                         new
                         {
                             Id = new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"),
-                            ConcurrencyStamp = "ab3e47d8-3d62-4af7-86a8-e9ad9414bb9c",
+                            ConcurrencyStamp = "06ab15bb-8d47-43a9-8e34-4c28c2b597fd",
                             Description = "Administrator role",
                             Name = "admin",
                             NormalizedName = "admin"
@@ -134,64 +137,64 @@ namespace BusTracking.Data.Migrations
                         {
                             Id = new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6d56e74b-9b07-49cd-a3c7-896b8193e86d",
+                            ConcurrencyStamp = "aa574945-35e7-42e1-8623-7e6a4318ac08",
                             Dob = new DateTime(1998, 8, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "vansonnguyen@gmail.com",
+                            Email = "quan@gmail.com",
                             EmailConfirmed = true,
-                            FullName = "Nguyễn Văn Sơn",
+                            FullName = "Nguyễn Văn Quân",
                             IsDeleted = false,
                             LockoutEnabled = false,
-                            NormalizedEmail = "vansonnguyen@gmail.com",
-                            NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPkpngstwvnNeWU8iTGAJt8ZrUjbyGjCPjKlINnRuTrIdbAZrPD6k9IEQTIi0FGnMA==",
+                            NormalizedEmail = "quan@gmail.com",
+                            NormalizedUserName = "quan",
+                            PasswordHash = "AQAAAAEAACcQAAAAELLSvGxBoMDzVfqpIzeHtKGfhSXV3g+olP+yWTWvEDolTYABvbg3Ke2jBYDtL/VL3g==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             Status = 0,
                             TwoFactorEnabled = false,
                             TypeAccount = 2,
-                            UserName = "admin"
+                            UserName = "quan"
                         },
                         new
                         {
                             Id = new Guid("da5ac2ab-0346-416a-b640-d5915dad85ed"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d45ab998-1625-4db8-994f-2246938e7871",
+                            ConcurrencyStamp = "ddf2171c-e775-41a2-a311-7e3bfbdd96f5",
                             Dob = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "vansonnguyen1@gmail.com",
+                            Email = "tuan@gmail.com",
                             EmailConfirmed = true,
-                            FullName = "Nguyễn Văn Trung",
+                            FullName = "Nguyễn Văn Tuấn",
                             IsDeleted = false,
                             LockoutEnabled = false,
-                            NormalizedEmail = "vansonnguyen1@gmail.com",
-                            NormalizedUserName = "admin1",
-                            PasswordHash = "AQAAAAEAACcQAAAAEM8kCrO9L8guTrCxAWHtsEi6XxCD1BkGoxfX3wjRnBNcbUGeaaBW9cfqoY9zGwp9CA==",
+                            NormalizedEmail = "tuan@gmail.com",
+                            NormalizedUserName = "tuan",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHMAWhTBWx2dZSGju5o1/4r/zIdCMN1UTSctxkiu9I0kcPk+StKd3JZBwuTlgk+DOw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             Status = 0,
                             TwoFactorEnabled = false,
                             TypeAccount = 0,
-                            UserName = "admin"
+                            UserName = "tuan"
                         },
                         new
                         {
                             Id = new Guid("d5b139c2-3764-431f-900f-ecc01adf5b91"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b9099a79-4be8-49f3-bc7e-c9e7eda2dd96",
+                            ConcurrencyStamp = "91cbacc1-1306-470f-986f-1760716cf81b",
                             Dob = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "vansonnguyen2@gmail.com",
+                            Email = "dung@gmail.com",
                             EmailConfirmed = true,
-                            FullName = "Nguyễn Văn Lâm",
+                            FullName = "Nguyễn Việt Dũng",
                             IsDeleted = false,
                             LockoutEnabled = false,
-                            NormalizedEmail = "vansonnguyen2@gmail.com",
-                            NormalizedUserName = "admin2",
-                            PasswordHash = "AQAAAAEAACcQAAAAEC2w4dxN8ZIyLT0IzJjBnSeAtLcxv7WWUb2efrhdVjNraTnl8pBcGyGCamE2ZKPh2g==",
+                            NormalizedEmail = "dung@gmail.com",
+                            NormalizedUserName = "dung",
+                            PasswordHash = "AQAAAAEAACcQAAAAEH2T7OOQrhChJoPV2E5qnEUBbjHrzTqMoGkKDOLf1S2CunPqMHnDgPioA3zHg+m2lA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             Status = 0,
                             TwoFactorEnabled = false,
                             TypeAccount = 0,
-                            UserName = "admin"
+                            UserName = "dung"
                         });
                 });
 
@@ -229,6 +232,11 @@ namespace BusTracking.Data.Migrations
                     b.Property<Guid?>("MonitorId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(255)")
+                        .HasMaxLength(255);
+
                     b.Property<int?>("RouteId")
                         .HasColumnType("int");
 
@@ -250,44 +258,6 @@ namespace BusTracking.Data.Migrations
                         .HasFilter("[RouteId] IS NOT NULL");
 
                     b.ToTable("Buses");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            DriverId = 1,
-                            IsDeleted = false,
-                            LicenseCode = "29S6-81655",
-                            MaxSize = 12,
-                            MaxSpeed = 45m,
-                            MonitorId = new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"),
-                            RouteId = 1,
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            DriverId = 2,
-                            IsDeleted = false,
-                            LicenseCode = "29S6-81656",
-                            MaxSize = 10,
-                            MaxSpeed = 40m,
-                            MonitorId = new Guid("da5ac2ab-0346-416a-b640-d5915dad85ed"),
-                            RouteId = 2,
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            DriverId = 3,
-                            IsDeleted = false,
-                            LicenseCode = "29S6-81657",
-                            MaxSize = 22,
-                            MaxSpeed = 35m,
-                            MonitorId = new Guid("d5b139c2-3764-431f-900f-ecc01adf5b91"),
-                            RouteId = 3,
-                            Status = 1
-                        });
                 });
 
             modelBuilder.Entity("BusTracking.Data.Entities.Driver", b =>
@@ -329,86 +299,9 @@ namespace BusTracking.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Drivers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Address = "Định công",
-                            Dob = new DateTime(2020, 8, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "abc@gmail.com",
-                            IsDeleted = false,
-                            Name = "Nguyễn Sơn",
-                            PhoneNumber = "0364735051",
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Address = "Định công",
-                            Dob = new DateTime(1998, 8, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "abc@gmail.com",
-                            IsDeleted = false,
-                            Name = "Nguyễn Hoàng",
-                            PhoneNumber = "0364735052",
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Address = "Định công",
-                            Dob = new DateTime(1998, 8, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "abc@gmail.com",
-                            IsDeleted = false,
-                            Name = "Nguyễn Minh Đức",
-                            PhoneNumber = "0364735053",
-                            Status = 1
-                        });
                 });
 
-            modelBuilder.Entity("BusTracking.Data.Entities.Notify", b =>
-                {
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
-
-                    b.Property<DateTime>("TimeSent")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.ToTable("Notifies");
-                });
-
-            modelBuilder.Entity("BusTracking.Data.Entities.Point", b =>
-                {
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
-
-                    b.Property<int>("BusId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(-1);
-
-                    b.Property<decimal>("Latitude")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Longitude")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime2");
-
-                    b.ToTable("Points");
-                });
-
-            modelBuilder.Entity("BusTracking.Data.Entities.Round", b =>
+            modelBuilder.Entity("BusTracking.Data.Entities.Notification", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -417,15 +310,56 @@ namespace BusTracking.Data.Migrations
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Status")
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
+
+                    b.Property<int>("StudentId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("TimeStart")
+                    b.Property<DateTime>("TimeSent")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Rounds");
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Notification");
+                });
+
+            modelBuilder.Entity("BusTracking.Data.Entities.Point", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("Latitude")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Longitude")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("OriginalIndex")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PlaceId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RouteId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RouteId");
+
+                    b.ToTable("Points");
                 });
 
             modelBuilder.Entity("BusTracking.Data.Entities.Route", b =>
@@ -464,65 +398,6 @@ namespace BusTracking.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Routes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Distance = 12.34m,
-                            IsDeleted = false,
-                            Name = "Tuyến 01",
-                            RouteCode = "R001",
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Distance = 10.34m,
-                            IsDeleted = false,
-                            Name = "Tuyến 02",
-                            RouteCode = "R002",
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Distance = 77.15m,
-                            IsDeleted = false,
-                            Name = "Tuyến 03",
-                            RouteCode = "R003",
-                            Status = 1
-                        });
-                });
-
-            modelBuilder.Entity("BusTracking.Data.Entities.RouteRound", b =>
-                {
-                    b.Property<int>("RouteId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoundId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RouteId", "RoundId");
-
-                    b.HasIndex("RoundId");
-
-                    b.ToTable("RouteRounds");
-                });
-
-            modelBuilder.Entity("BusTracking.Data.Entities.RouteStop", b =>
-                {
-                    b.Property<int>("RouteId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StopId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RouteId", "StopId");
-
-                    b.HasIndex("StopId");
-
-                    b.ToTable("RouteStops");
                 });
 
             modelBuilder.Entity("BusTracking.Data.Entities.Stop", b =>
@@ -536,8 +411,7 @@ namespace BusTracking.Data.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -545,10 +419,10 @@ namespace BusTracking.Data.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<decimal>("Latitude")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(10,8)");
 
                     b.Property<decimal>("Longitude")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(11,8)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -558,10 +432,24 @@ namespace BusTracking.Data.Migrations
                     b.Property<int>("NumberOfStudents")
                         .HasColumnType("int");
 
+                    b.Property<int?>("RouteId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<TimeSpan>("TimeDropOff")
+                        .HasColumnType("time");
+
+                    b.Property<TimeSpan>("TimePickUp")
+                        .HasColumnType("time");
+
+                    b.Property<int>("TypeStop")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("RouteId");
 
                     b.ToTable("Stops");
                 });
@@ -582,6 +470,9 @@ namespace BusTracking.Data.Migrations
                     b.Property<int>("BusId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ClassOfStudent")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("Dob")
                         .HasColumnType("datetime2");
 
@@ -589,16 +480,12 @@ namespace BusTracking.Data.Migrations
                         .HasColumnType("varchar(max)")
                         .IsUnicode(false);
 
-                    b.Property<string>("FisrtName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<string>("LastName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -609,11 +496,20 @@ namespace BusTracking.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoundId")
+                    b.Property<string>("PhoneTeacher")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int>("Status")
+                    b.Property<int>("StopDropId")
                         .HasColumnType("int");
+
+                    b.Property<int>("StopPickId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TeacherName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -621,9 +517,51 @@ namespace BusTracking.Data.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.HasIndex("RoundId");
+                    b.HasIndex("StopDropId");
 
                     b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("BusTracking.Data.Entities.StudentCheckIn", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CheckInResult")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CheckInState")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CheckInTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("CheckInType")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Latitude")
+                        .HasColumnType("decimal(10,8)");
+
+                    b.Property<decimal>("Longitude")
+                        .HasColumnType("decimal(11,8)");
+
+                    b.Property<Guid?>("MonitorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MonitorId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentCheckIns");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -703,7 +641,7 @@ namespace BusTracking.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"),
+                            UserId = new Guid("d5b139c2-3764-431f-900f-ecc01adf5b91"),
                             RoleId = new Guid("8d04dce2-969a-435d-bba4-df3f325983dc")
                         });
                 });
@@ -746,34 +684,30 @@ namespace BusTracking.Data.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
                 });
 
-            modelBuilder.Entity("BusTracking.Data.Entities.RouteRound", b =>
+            modelBuilder.Entity("BusTracking.Data.Entities.Notification", b =>
                 {
-                    b.HasOne("BusTracking.Data.Entities.Round", "Round")
-                        .WithMany("RouteRounds")
-                        .HasForeignKey("RoundId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BusTracking.Data.Entities.Route", "Route")
-                        .WithMany("RouteRounds")
-                        .HasForeignKey("RouteId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("BusTracking.Data.Entities.Student", "Student")
+                        .WithMany("Notifications")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BusTracking.Data.Entities.RouteStop", b =>
+            modelBuilder.Entity("BusTracking.Data.Entities.Point", b =>
                 {
                     b.HasOne("BusTracking.Data.Entities.Route", "Route")
-                        .WithMany("RouteStops")
+                        .WithMany("Points")
                         .HasForeignKey("RouteId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+                });
 
-                    b.HasOne("BusTracking.Data.Entities.Stop", "Stop")
-                        .WithMany("RouteStops")
-                        .HasForeignKey("StopId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            modelBuilder.Entity("BusTracking.Data.Entities.Stop", b =>
+                {
+                    b.HasOne("BusTracking.Data.Entities.Route", "Route")
+                        .WithMany("Stops")
+                        .HasForeignKey("RouteId")
+                        .OnDelete(DeleteBehavior.NoAction);
                 });
 
             modelBuilder.Entity("BusTracking.Data.Entities.Student", b =>
@@ -790,10 +724,24 @@ namespace BusTracking.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BusTracking.Data.Entities.Round", "Round")
-                        .WithMany()
-                        .HasForeignKey("RoundId")
+                    b.HasOne("BusTracking.Data.Entities.Stop", "Stop")
+                        .WithMany("Students")
+                        .HasForeignKey("StopDropId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BusTracking.Data.Entities.StudentCheckIn", b =>
+                {
+                    b.HasOne("BusTracking.Data.Entities.AppUser", "Monitor")
+                        .WithMany("StudentCheckIns")
+                        .HasForeignKey("MonitorId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("BusTracking.Data.Entities.Student", "Student")
+                        .WithMany("StudentCheckIns")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

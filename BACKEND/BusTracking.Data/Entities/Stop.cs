@@ -21,6 +21,5 @@ namespace BusTracking.Data.Entities
         public int? RouteId { get; set; }
         public Route Route { get; set; }
         public List<Student> Students { get; set; }
-        public List<StudentCheckIn> StudentCheckIns { get; set; }
     }
 }

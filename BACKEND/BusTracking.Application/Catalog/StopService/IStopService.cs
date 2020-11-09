@@ -11,7 +11,8 @@ namespace BusTracking.Application.Catalog.StopService
     public interface IStopService
     {
         Task<PageResultDto<StopDto>> GetAllPaging(GetStopPagingReqestDto request);
-        Task<ResultDto<List<StopDto>>> GetAllByBus(int busId,int typeStop);
+        Task<ResultDto<List<StopMapDto>>> GetAllByMonitor(Guid monitorId,int typeStop);
+        Task<ResultDto<List<StopDto>>> GetAllByType(int typeStop);
         Task<StopDto> GetById(int busId);
         Task<int> Create(CreateStopRequestDto request);
         Task<int> Update(UpdateStopRequestDto request);

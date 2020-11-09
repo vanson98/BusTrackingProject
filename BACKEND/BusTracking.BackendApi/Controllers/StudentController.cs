@@ -111,7 +111,7 @@ namespace StudentTracking.BackendApi.Controllers
                 // Message to All
                 await _hubContext.Clients.All.SendAsync("ReceiveCheckIn", res);
                 var notification = await _studentService.AddNotification(res.Result);
-                if (notification.TypeNotification != 7 && notification.TypeNotification != 8 )
+                if (notification.TypeNotification != (int)TypeMessage.AtHome && notification.TypeNotification != (int)TypeMessage.OnLeave )
                 {
                     // Message to parent
                     await _hubContext.Clients.User(res.Result.ParentId.ToString()).SendAsync("ReceiveNotication", notification);

@@ -9,7 +9,8 @@ namespace BusTracking.Data.Entities
     {
         public int Id { get; set; }
         public int BusId { get; set; }
-        public int StopId { get; set; }
+        public int StopPickId { get; set; }
+        public int StopDropId { get; set; }
         public Guid ParentId { get; set; }
         public string TeacherName {get;set;}
         public string PhoneTeacher { get; set; }

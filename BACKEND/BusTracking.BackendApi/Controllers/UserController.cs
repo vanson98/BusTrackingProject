@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BusTracking.BackendApi.Controllers
 {
-    [Authorize(Roles = "admin")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -23,6 +23,7 @@ namespace BusTracking.BackendApi.Controllers
             _userService = userService;
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet("GetAllMonitorUnAssign")]
         public async Task<ResultDto<List<UserDto>>> GetAllMonitorUnAssign()
         {
@@ -35,6 +36,7 @@ namespace BusTracking.BackendApi.Controllers
             };
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet("GetAllByType")]
         public async Task<ResultDto<List<UserDto>>> GetAllByType([FromQuery]int type)
         {
@@ -47,13 +49,15 @@ namespace BusTracking.BackendApi.Controllers
             };
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet("GetAllPaging")]
         public async Task<PageResultDto<UserDto>> GetAllPaging([FromQuery] GetUserPagingRequestDto request)
         {
             var result = await _userService.GetAllPaging(request);
             return result;
         }
-        
+
+        [Authorize(Roles = "admin")]
         [HttpGet("GetById")]
         public async Task<ResultDto<UserDto>> GetById([FromQuery] Guid id)
         {
@@ -61,6 +65,7 @@ namespace BusTracking.BackendApi.Controllers
             return result;
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost("CreateUser")]
         public async Task<ResponseDto> CreateUser([FromBody]CreateUserRequestDto request)
         {
@@ -70,6 +75,7 @@ namespace BusTracking.BackendApi.Controllers
             return result;
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("Update")]
         public async Task<ResponseDto> Update([FromBody]UpdateUserRequestDto request)
         {
@@ -81,6 +87,7 @@ namespace BusTracking.BackendApi.Controllers
             return result;
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("Delete")]
         public async Task<ResponseDto> Delete([FromQuery]Guid id)
         {
@@ -88,6 +95,7 @@ namespace BusTracking.BackendApi.Controllers
             return result;
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("AssignRole")]
         public async Task<ResponseDto> AssignRole([FromBody] RoleAssignRequest request)
         {
@@ -96,6 +104,17 @@ namespace BusTracking.BackendApi.Controllers
                 return new ResponseDto(ResponseCode.Validate, "Đầu vào không hợp lệ");
             }
             var result = await _userService.AssignRoles(request);
+            return result;
+        }
+
+        [HttpPut("UpdateAccount")]
+        public async Task<ResponseDto> UpdateAccount([FromBody]UpdateAccountRequestDto request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return new ResponseDto(ResponseCode.Validate, "Đầu vào không hợp lệ");
+            }
+            var result = await _userService.UpdateAccount(request);
             return result;
         }
     }

@@ -75,8 +75,16 @@ namespace BusTracking.BackendApi.Controllers
             else
             {
                 return new ResultDto<UserSessionDto>(ResponseCode.LogicError, "Thất bại", null);
-            }
-            
+            }        
+        }
+
+        [HttpPut("ChangePassword")]
+        public async Task<ResponseDto> ChangePassword([FromBody]ChangePasswordRequestDto request)
+        {
+            if (!ModelState.IsValid)
+                return new ResultDto<AuthenticateResultModel>(ResponseCode.Validate, "Dữ liệu truyền vào không đúng", null);
+            var res = await _authService.UpdatePassword(request);
+            return res;
         }
     }
 }

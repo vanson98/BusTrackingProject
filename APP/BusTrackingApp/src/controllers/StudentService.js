@@ -17,12 +17,13 @@ const StudentService =  {
             }
         });
     },
-    checkIn: (studentId,monitorId,stopId,checkInType,checkInTime,checkInResult,jwt)=>{
+    checkIn: (studentId,monitorId,longitude,latitude,checkInType,checkInTime,checkInResult,jwt)=>{
         const url = "/Student/CheckIn";
         return httpClient.post(url,{
             studentId: studentId,
             monitorId: monitorId,
-            stopId: stopId,
+            longitude: longitude,
+            latitude: latitude,
             checkInType: checkInType,
             checkInTime: checkInTime,
             checkInResult: checkInResult
@@ -32,6 +33,7 @@ const StudentService =  {
             }
         })
     },
+
     getAllNotificationOfMonitor: (monitorId,fromDate,toDate,jwt)=>{
         const url = "Student/GetNotificationOfMonitor?monitorId="+monitorId+"&fromDate="+fromDate+"&toDate="+toDate;
         return httpClient.get(url,{
@@ -40,9 +42,18 @@ const StudentService =  {
             }
         })
     },
+
     getAllNotificationOfParent: (parentId,fromDate,toDate,jwt)=>{
         const url = "Student/GetNotificationOfParent?parentId="+parentId+"&fromDate="+fromDate+"&toDate="+toDate;
-        console.log(url);
+        return httpClient.get(url,{
+            headers: {
+                'Authorization': "Bearer " + jwt
+            }
+        })
+    },
+
+    getAllStopOfMonitor: (monitorId,typeStop,jwt) =>{
+        const url = "Stop/GetAllByMonitor?monitorId="+monitorId+"&typeStop="+typeStop;
         return httpClient.get(url,{
             headers: {
                 'Authorization': "Bearer " + jwt

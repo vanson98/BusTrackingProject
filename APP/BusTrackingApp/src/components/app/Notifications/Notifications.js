@@ -63,7 +63,7 @@ const NotificationsComponent = (props) => {
       });
       // Gắn sự kiện khi kết thúc navigation 
       return unsubscribe;
-},[navigation])
+  },[navigation])
 
   // Kết nối tới hub khi khởi tạo component
   useEffect(()=>{

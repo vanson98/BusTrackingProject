@@ -5,35 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200909162609_update1.cs" />
-    <Compile Remove="Migrations\20200909162609_update1.Designer.cs" />
-    <Compile Remove="Migrations\20200920175405_update3.cs" />
-    <Compile Remove="Migrations\20200920175405_update3.Designer.cs" />
-    <Compile Remove="Migrations\20200920175846_update3.cs" />
-    <Compile Remove="Migrations\20200920175846_update3.Designer.cs" />
-    <Compile Remove="Migrations\20201006170116_update4.cs" />
-    <Compile Remove="Migrations\20201006170116_update4.Designer.cs" />
-    <Compile Remove="Migrations\20201009102623_update5.cs" />
-    <Compile Remove="Migrations\20201009102623_update5.Designer.cs" />
-    <Compile Remove="Migrations\20201013074941_update5.cs" />
-    <Compile Remove="Migrations\20201013074941_update5.Designer.cs" />
-    <Compile Remove="Migrations\20201013075051_update5.cs" />
-    <Compile Remove="Migrations\20201013075051_update5.Designer.cs" />
-    <Compile Remove="Migrations\20201014122623_update6.cs" />
-    <Compile Remove="Migrations\20201014122623_update6.Designer.cs" />
-    <Compile Remove="Migrations\20201014122853_update6.cs" />
-    <Compile Remove="Migrations\20201014122853_update6.Designer.cs" />
-    <Compile Remove="Migrations\20201014123327_update6.cs" />
-    <Compile Remove="Migrations\20201014123327_update6.Designer.cs" />
-    <Compile Remove="Migrations\20201016025602_update6.cs" />
-    <Compile Remove="Migrations\20201016025602_update6.Designer.cs" />
-    <Compile Remove="Migrations\20201016025821_update6.cs" />
-    <Compile Remove="Migrations\20201016025821_update6.Designer.cs" />
-    <Compile Remove="Migrations\20201030141912_update9.cs" />
-    <Compile Remove="Migrations\20201030141912_update9.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.7">
       <PrivateAssets>all</PrivateAssets>

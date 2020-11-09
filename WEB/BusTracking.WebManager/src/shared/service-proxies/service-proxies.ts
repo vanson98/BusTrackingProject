@@ -240,6 +240,62 @@ export class AuthServiceProxy {
         }
         return _observableOf<UserSessionDtoResultDto>(<any>null);
     }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    changePassword(body: ChangePasswordRequestDto | undefined): Observable<ResponseDto> {
+        let url_ = this.baseUrl + "/api/Auth/ChangePassword";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processChangePassword(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processChangePassword(<any>response_);
+                } catch (e) {
+                    return <Observable<ResponseDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ResponseDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processChangePassword(response: HttpResponseBase): Observable<ResponseDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ResponseDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ResponseDto>(<any>null);
+    }
 }
 
 @Injectable()
@@ -1341,6 +1397,123 @@ export class StopServiceProxy {
             }));
         }
         return _observableOf<StopDtoPageResultDto>(<any>null);
+    }
+
+    /**
+     * @param monitorId (optional) 
+     * @param typeStop (optional) 
+     * @return Success
+     */
+    getAllByMonitor(monitorId: string | undefined, typeStop: number | undefined): Observable<StopMapDtoListResultDto> {
+        let url_ = this.baseUrl + "/api/Stop/GetAllByMonitor?";
+        if (monitorId === null)
+            throw new Error("The parameter 'monitorId' cannot be null.");
+        else if (monitorId !== undefined)
+            url_ += "monitorId=" + encodeURIComponent("" + monitorId) + "&"; 
+        if (typeStop === null)
+            throw new Error("The parameter 'typeStop' cannot be null.");
+        else if (typeStop !== undefined)
+            url_ += "typeStop=" + encodeURIComponent("" + typeStop) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllByMonitor(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllByMonitor(<any>response_);
+                } catch (e) {
+                    return <Observable<StopMapDtoListResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<StopMapDtoListResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllByMonitor(response: HttpResponseBase): Observable<StopMapDtoListResultDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StopMapDtoListResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<StopMapDtoListResultDto>(<any>null);
+    }
+
+    /**
+     * @param typeStop (optional) 
+     * @return Success
+     */
+    getAllByType(typeStop: number | undefined): Observable<StopDtoListResultDto> {
+        let url_ = this.baseUrl + "/api/Stop/GetAllByType?";
+        if (typeStop === null)
+            throw new Error("The parameter 'typeStop' cannot be null.");
+        else if (typeStop !== undefined)
+            url_ += "typeStop=" + encodeURIComponent("" + typeStop) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllByType(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllByType(<any>response_);
+                } catch (e) {
+                    return <Observable<StopDtoListResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<StopDtoListResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllByType(response: HttpResponseBase): Observable<StopDtoListResultDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StopDtoListResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<StopDtoListResultDto>(<any>null);
     }
 
     /**
@@ -2778,6 +2951,62 @@ export class UserServiceProxy {
         }
         return _observableOf<ResponseDto>(<any>null);
     }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateAccount(body: UpdateAccountRequestDto | undefined): Observable<ResponseDto> {
+        let url_ = this.baseUrl + "/api/User/UpdateAccount";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateAccount(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateAccount(<any>response_);
+                } catch (e) {
+                    return <Observable<ResponseDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ResponseDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateAccount(response: HttpResponseBase): Observable<ResponseDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ResponseDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ResponseDto>(<any>null);
+    }
 }
 
 export class LoginRequestDto implements ILoginRequestDto {
@@ -2836,6 +3065,7 @@ export class AuthenticateResultModel implements IAuthenticateResultModel {
     fullName: string | undefined;
     typeAccount: number;
     email: string | undefined;
+    phoneNumber: string | undefined;
     roles: string[] | undefined;
     accessToken: string | undefined;
 
@@ -2854,6 +3084,7 @@ export class AuthenticateResultModel implements IAuthenticateResultModel {
             this.fullName = data["fullName"];
             this.typeAccount = data["typeAccount"];
             this.email = data["email"];
+            this.phoneNumber = data["phoneNumber"];
             if (Array.isArray(data["roles"])) {
                 this.roles = [] as any;
                 for (let item of data["roles"])
@@ -2876,6 +3107,7 @@ export class AuthenticateResultModel implements IAuthenticateResultModel {
         data["fullName"] = this.fullName;
         data["typeAccount"] = this.typeAccount;
         data["email"] = this.email;
+        data["phoneNumber"] = this.phoneNumber;
         if (Array.isArray(this.roles)) {
             data["roles"] = [];
             for (let item of this.roles)
@@ -2898,6 +3130,7 @@ export interface IAuthenticateResultModel {
     fullName: string | undefined;
     typeAccount: number;
     email: string | undefined;
+    phoneNumber: string | undefined;
     roles: string[] | undefined;
     accessToken: string | undefined;
 }
@@ -3185,6 +3418,104 @@ export interface IUserSessionDtoResultDto {
     message: string | undefined;
 }
 
+export class ChangePasswordRequestDto implements IChangePasswordRequestDto {
+    userId: string | undefined;
+    oldPass: string | undefined;
+    newPass: string | undefined;
+
+    constructor(data?: IChangePasswordRequestDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.userId = data["userId"];
+            this.oldPass = data["oldPass"];
+            this.newPass = data["newPass"];
+        }
+    }
+
+    static fromJS(data: any): ChangePasswordRequestDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ChangePasswordRequestDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userId"] = this.userId;
+        data["oldPass"] = this.oldPass;
+        data["newPass"] = this.newPass;
+        return data; 
+    }
+
+    clone(): ChangePasswordRequestDto {
+        const json = this.toJSON();
+        let result = new ChangePasswordRequestDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IChangePasswordRequestDto {
+    userId: string | undefined;
+    oldPass: string | undefined;
+    newPass: string | undefined;
+}
+
+export class ResponseDto implements IResponseDto {
+    statusCode: string | undefined;
+    message: string | undefined;
+
+    constructor(data?: IResponseDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.statusCode = data["statusCode"];
+            this.message = data["message"];
+        }
+    }
+
+    static fromJS(data: any): ResponseDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ResponseDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["statusCode"] = this.statusCode;
+        data["message"] = this.message;
+        return data; 
+    }
+
+    clone(): ResponseDto {
+        const json = this.toJSON();
+        let result = new ResponseDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IResponseDto {
+    statusCode: string | undefined;
+    message: string | undefined;
+}
+
 export class BusDto implements IBusDto {
     id: number;
     name: string | undefined;
@@ -3463,53 +3794,6 @@ export interface ICreateBusRequestDto {
     driverId: number | undefined;
     monitorId: string | undefined;
     routeId: number | undefined;
-}
-
-export class ResponseDto implements IResponseDto {
-    statusCode: string | undefined;
-    message: string | undefined;
-
-    constructor(data?: IResponseDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(data?: any) {
-        if (data) {
-            this.statusCode = data["statusCode"];
-            this.message = data["message"];
-        }
-    }
-
-    static fromJS(data: any): ResponseDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ResponseDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["statusCode"] = this.statusCode;
-        data["message"] = this.message;
-        return data; 
-    }
-
-    clone(): ResponseDto {
-        const json = this.toJSON();
-        let result = new ResponseDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IResponseDto {
-    statusCode: string | undefined;
-    message: string | undefined;
 }
 
 export class UpdateBusRequestDto implements IUpdateBusRequestDto {
@@ -4552,6 +4836,238 @@ export interface IStopDtoPageResultDto {
     message: string | undefined;
 }
 
+export class Coordinate implements ICoordinate {
+    latitude: number;
+    longitude: number;
+
+    constructor(data?: ICoordinate) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.latitude = data["latitude"];
+            this.longitude = data["longitude"];
+        }
+    }
+
+    static fromJS(data: any): Coordinate {
+        data = typeof data === 'object' ? data : {};
+        let result = new Coordinate();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["latitude"] = this.latitude;
+        data["longitude"] = this.longitude;
+        return data; 
+    }
+
+    clone(): Coordinate {
+        const json = this.toJSON();
+        let result = new Coordinate();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICoordinate {
+    latitude: number;
+    longitude: number;
+}
+
+export class StopMapDto implements IStopMapDto {
+    id: number;
+    name: string | undefined;
+    timePickUp: string | undefined;
+    timeDropOff: string | undefined;
+    address: string | undefined;
+    coordinate: Coordinate;
+    numberOfStudents: number;
+
+    constructor(data?: IStopMapDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+            this.name = data["name"];
+            this.timePickUp = data["timePickUp"];
+            this.timeDropOff = data["timeDropOff"];
+            this.address = data["address"];
+            this.coordinate = data["coordinate"] ? Coordinate.fromJS(data["coordinate"]) : <any>undefined;
+            this.numberOfStudents = data["numberOfStudents"];
+        }
+    }
+
+    static fromJS(data: any): StopMapDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new StopMapDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["timePickUp"] = this.timePickUp;
+        data["timeDropOff"] = this.timeDropOff;
+        data["address"] = this.address;
+        data["coordinate"] = this.coordinate ? this.coordinate.toJSON() : <any>undefined;
+        data["numberOfStudents"] = this.numberOfStudents;
+        return data; 
+    }
+
+    clone(): StopMapDto {
+        const json = this.toJSON();
+        let result = new StopMapDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IStopMapDto {
+    id: number;
+    name: string | undefined;
+    timePickUp: string | undefined;
+    timeDropOff: string | undefined;
+    address: string | undefined;
+    coordinate: Coordinate;
+    numberOfStudents: number;
+}
+
+export class StopMapDtoListResultDto implements IStopMapDtoListResultDto {
+    result: StopMapDto[] | undefined;
+    statusCode: string | undefined;
+    message: string | undefined;
+
+    constructor(data?: IStopMapDtoListResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            if (Array.isArray(data["result"])) {
+                this.result = [] as any;
+                for (let item of data["result"])
+                    this.result.push(StopMapDto.fromJS(item));
+            }
+            this.statusCode = data["statusCode"];
+            this.message = data["message"];
+        }
+    }
+
+    static fromJS(data: any): StopMapDtoListResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new StopMapDtoListResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.result)) {
+            data["result"] = [];
+            for (let item of this.result)
+                data["result"].push(item.toJSON());
+        }
+        data["statusCode"] = this.statusCode;
+        data["message"] = this.message;
+        return data; 
+    }
+
+    clone(): StopMapDtoListResultDto {
+        const json = this.toJSON();
+        let result = new StopMapDtoListResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IStopMapDtoListResultDto {
+    result: StopMapDto[] | undefined;
+    statusCode: string | undefined;
+    message: string | undefined;
+}
+
+export class StopDtoListResultDto implements IStopDtoListResultDto {
+    result: StopDto[] | undefined;
+    statusCode: string | undefined;
+    message: string | undefined;
+
+    constructor(data?: IStopDtoListResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            if (Array.isArray(data["result"])) {
+                this.result = [] as any;
+                for (let item of data["result"])
+                    this.result.push(StopDto.fromJS(item));
+            }
+            this.statusCode = data["statusCode"];
+            this.message = data["message"];
+        }
+    }
+
+    static fromJS(data: any): StopDtoListResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new StopDtoListResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.result)) {
+            data["result"] = [];
+            for (let item of this.result)
+                data["result"].push(item.toJSON());
+        }
+        data["statusCode"] = this.statusCode;
+        data["message"] = this.message;
+        return data; 
+    }
+
+    clone(): StopDtoListResultDto {
+        const json = this.toJSON();
+        let result = new StopDtoListResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IStopDtoListResultDto {
+    result: StopDto[] | undefined;
+    statusCode: string | undefined;
+    message: string | undefined;
+}
+
 export class StopDtoResultDto implements IStopDtoResultDto {
     result: StopDto;
     statusCode: string | undefined;
@@ -4794,9 +5310,12 @@ export class StudentDto implements IStudentDto {
     teacherName: string | undefined;
     phoneTeacher: string | undefined;
     classOfStudent: string | undefined;
-    stopId: number;
-    stopName: string | undefined;
-    stopAddress: string | undefined;
+    stopPickId: number;
+    stopDropId: number;
+    stopPickName: string | undefined;
+    stopDropName: string | undefined;
+    stopPickAddress: string | undefined;
+    stopDropAddress: string | undefined;
     name: string | undefined;
     dob: moment.Moment;
     address: string | undefined;
@@ -4827,9 +5346,12 @@ export class StudentDto implements IStudentDto {
             this.teacherName = data["teacherName"];
             this.phoneTeacher = data["phoneTeacher"];
             this.classOfStudent = data["classOfStudent"];
-            this.stopId = data["stopId"];
-            this.stopName = data["stopName"];
-            this.stopAddress = data["stopAddress"];
+            this.stopPickId = data["stopPickId"];
+            this.stopDropId = data["stopDropId"];
+            this.stopPickName = data["stopPickName"];
+            this.stopDropName = data["stopDropName"];
+            this.stopPickAddress = data["stopPickAddress"];
+            this.stopDropAddress = data["stopDropAddress"];
             this.name = data["name"];
             this.dob = data["dob"] ? moment(data["dob"].toString()) : <any>undefined;
             this.address = data["address"];
@@ -4860,9 +5382,12 @@ export class StudentDto implements IStudentDto {
         data["teacherName"] = this.teacherName;
         data["phoneTeacher"] = this.phoneTeacher;
         data["classOfStudent"] = this.classOfStudent;
-        data["stopId"] = this.stopId;
-        data["stopName"] = this.stopName;
-        data["stopAddress"] = this.stopAddress;
+        data["stopPickId"] = this.stopPickId;
+        data["stopDropId"] = this.stopDropId;
+        data["stopPickName"] = this.stopPickName;
+        data["stopDropName"] = this.stopDropName;
+        data["stopPickAddress"] = this.stopPickAddress;
+        data["stopDropAddress"] = this.stopDropAddress;
         data["name"] = this.name;
         data["dob"] = this.dob ? this.dob.toISOString() : <any>undefined;
         data["address"] = this.address;
@@ -4893,9 +5418,12 @@ export interface IStudentDto {
     teacherName: string | undefined;
     phoneTeacher: string | undefined;
     classOfStudent: string | undefined;
-    stopId: number;
-    stopName: string | undefined;
-    stopAddress: string | undefined;
+    stopPickId: number;
+    stopDropId: number;
+    stopPickName: string | undefined;
+    stopDropName: string | undefined;
+    stopPickAddress: string | undefined;
+    stopDropAddress: string | undefined;
     name: string | undefined;
     dob: moment.Moment;
     address: string | undefined;
@@ -5474,7 +6002,8 @@ export interface IStudentCheckInDtoResultDto {
 export class CreateStudentRequestDto implements ICreateStudentRequestDto {
     busId: number;
     parentId: string;
-    stopId: number;
+    stopPickId: number;
+    stopDropId: number;
     name: string | undefined;
     dob: moment.Moment;
     address: string | undefined;
@@ -5497,7 +6026,8 @@ export class CreateStudentRequestDto implements ICreateStudentRequestDto {
         if (data) {
             this.busId = data["busId"];
             this.parentId = data["parentId"];
-            this.stopId = data["stopId"];
+            this.stopPickId = data["stopPickId"];
+            this.stopDropId = data["stopDropId"];
             this.name = data["name"];
             this.dob = data["dob"] ? moment(data["dob"].toString()) : <any>undefined;
             this.address = data["address"];
@@ -5520,7 +6050,8 @@ export class CreateStudentRequestDto implements ICreateStudentRequestDto {
         data = typeof data === 'object' ? data : {};
         data["busId"] = this.busId;
         data["parentId"] = this.parentId;
-        data["stopId"] = this.stopId;
+        data["stopPickId"] = this.stopPickId;
+        data["stopDropId"] = this.stopDropId;
         data["name"] = this.name;
         data["dob"] = this.dob ? this.dob.toISOString() : <any>undefined;
         data["address"] = this.address;
@@ -5543,7 +6074,8 @@ export class CreateStudentRequestDto implements ICreateStudentRequestDto {
 export interface ICreateStudentRequestDto {
     busId: number;
     parentId: string;
-    stopId: number;
+    stopPickId: number;
+    stopDropId: number;
     name: string | undefined;
     dob: moment.Moment;
     address: string | undefined;
@@ -5558,7 +6090,8 @@ export class UpdateStudentRequestDto implements IUpdateStudentRequestDto {
     id: number;
     busId: number;
     parentId: string;
-    stopId: number;
+    stopPickId: number;
+    stopDropId: number;
     name: string | undefined;
     dob: moment.Moment;
     address: string | undefined;
@@ -5582,7 +6115,8 @@ export class UpdateStudentRequestDto implements IUpdateStudentRequestDto {
             this.id = data["id"];
             this.busId = data["busId"];
             this.parentId = data["parentId"];
-            this.stopId = data["stopId"];
+            this.stopPickId = data["stopPickId"];
+            this.stopDropId = data["stopDropId"];
             this.name = data["name"];
             this.dob = data["dob"] ? moment(data["dob"].toString()) : <any>undefined;
             this.address = data["address"];
@@ -5606,7 +6140,8 @@ export class UpdateStudentRequestDto implements IUpdateStudentRequestDto {
         data["id"] = this.id;
         data["busId"] = this.busId;
         data["parentId"] = this.parentId;
-        data["stopId"] = this.stopId;
+        data["stopPickId"] = this.stopPickId;
+        data["stopDropId"] = this.stopDropId;
         data["name"] = this.name;
         data["dob"] = this.dob ? this.dob.toISOString() : <any>undefined;
         data["address"] = this.address;
@@ -5630,7 +6165,8 @@ export interface IUpdateStudentRequestDto {
     id: number;
     busId: number;
     parentId: string;
-    stopId: number;
+    stopPickId: number;
+    stopDropId: number;
     name: string | undefined;
     dob: moment.Moment;
     address: string | undefined;
@@ -6183,6 +6719,61 @@ export class RoleAssignRequest implements IRoleAssignRequest {
 export interface IRoleAssignRequest {
     userId: string;
     roles: SelectedItem[] | undefined;
+}
+
+export class UpdateAccountRequestDto implements IUpdateAccountRequestDto {
+    id: string;
+    fullName: string | undefined;
+    email: string | undefined;
+    phoneNumber: string | undefined;
+
+    constructor(data?: IUpdateAccountRequestDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+            this.fullName = data["fullName"];
+            this.email = data["email"];
+            this.phoneNumber = data["phoneNumber"];
+        }
+    }
+
+    static fromJS(data: any): UpdateAccountRequestDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateAccountRequestDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["fullName"] = this.fullName;
+        data["email"] = this.email;
+        data["phoneNumber"] = this.phoneNumber;
+        return data; 
+    }
+
+    clone(): UpdateAccountRequestDto {
+        const json = this.toJSON();
+        let result = new UpdateAccountRequestDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateAccountRequestDto {
+    id: string;
+    fullName: string | undefined;
+    email: string | undefined;
+    phoneNumber: string | undefined;
 }
 
 export class ApiException extends Error {

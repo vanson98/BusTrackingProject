@@ -95,13 +95,13 @@
                             <th>STT</th>
                             <th>Họ và tên</th>
                             <th>Xe</th>
-                            <th>Điểm dừng</th>
                             <th>Giám sát xe</th>
                             <th>Chiều xe</th>
                             <th>Thời gian</th>
                             <th>
                                 <div>Trạng thái HS</div>
                             </th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -118,7 +118,6 @@
                             <td>{{((pageSize*pageNumber)-pageSize)+i+1}}</td>
                             <td>{{ log.studentName }}</td>
                             <td>{{ log.busName}}</td>
-                            <td>{{ log.stopName }}</td>
                             <td>{{ log.monitorName }}</td>
                             <td>{{ log.checkInType == 0 ? "Chiều đi" : "Chiều về" }}</td>
                             <td>{{ log.checkInTime.format('DD/MM/YYYY HH:mm:ss')  }}</td>
@@ -132,6 +131,17 @@
                                 <span class="label label-info" *ngIf="log.checkInResult==6">Đã trả</span>
                                 <span class="label label-primary" *ngIf="log.checkInResult==7">Tại nhà</span>
                                 <span class="label label-warning" *ngIf="log.checkInResult==8">Nghỉ học</span>
+                            </td>
+                            <td>
+                                <button class="action-button" mat-icon-button [matMenuTriggerFor]="actionsMenu">
+                                    <mat-icon>menu</mat-icon>
+                                </button>
+                                <mat-menu #actionsMenu="matMenu">
+                                    <button mat-menu-item (click)="openMap(log)">
+                                        <mat-icon>edit</mat-icon>
+                                        <span>Xem vị trí</span>
+                                    </button>
+                                </mat-menu>
                             </td>
                         </tr>
                     </tbody>

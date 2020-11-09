@@ -8,7 +8,8 @@ namespace BusTracking.ViewModels.Catalog.Students
     {
         public int BusId { get; set; }
         public Guid ParentId { get; set; }
-        public int StopId { get; set; }
+        public int StopPickId { get; set; }
+        public int StopDropId { get; set; }
         public string Name { get; set; }
         public DateTime Dob { get; set; }
         public string Address { get; set; }

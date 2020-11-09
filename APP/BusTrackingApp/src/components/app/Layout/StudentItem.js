@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import {View,Text,Image,StyleSheet,TouchableOpacity, Button, Alert} from 'react-native';
-import { color } from 'react-native-reanimated';
+import {View,Text,Image,StyleSheet,TouchableOpacity, PermissionsAndroid, Alert} from 'react-native';
+import Geolocation from '@react-native-community/geolocation';
 import { useSelector } from 'react-redux';
 import StudentService from '../../../controllers/StudentService';
 import moment from 'moment';
@@ -17,11 +17,48 @@ function StudentItem (props) {
     useEffect(()=>{
         setStudent(studentData);
     },[studentData])
-    
-    // CheckIn Function
-    const checkIn = async (checkInResult) =>{
+
+    // Lấy tọa độ hiện tại (Chỉ cho monitor)
+    const checkIn = async (checkInResult)=>{
+        try {
+            // Check quyền truy cập
+            const granted = await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+              {
+                title: "Cấp quyền truy cập",
+                message:
+                  "Cho phép ứng dụng truy cập vị trí hiện tại của bạn.",
+                buttonNegative: "Không",
+                buttonPositive: "Đồng ý"
+              }
+            );
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                console.log("Đã có quyền truy cập vị trí");
+                // Lấy tọa độ hiện tại sau khi được phép
+               
+                Geolocation.getCurrentPosition(
+                    (position)=>{
+                        var lat = parseFloat(position.coords.latitude);
+                        var long = parseFloat(position.coords.longitude);
+                        sendCheckIn(long,lat,checkInResult);
+                    },
+                    (error)=>{
+                        Alert.alert(JSON.stringify(error))
+                    },
+                    { enableHighAccuracy: false, timeout: 20000}
+                )
+                
+            } else {
+              console.log("Quyền truy cập vị trí bị từ chối");
+            }
+        } catch (err) {
+            console.warn(err);
+        }
+    }
+
+    const sendCheckIn = async (long,lat,checkInResult) =>{
         var dateCheck = moment().subtract(10,'second').format("YYYY-MM-DDTHH:mm:ss");
-        var res = await StudentService.checkIn(student.id,monitor.userId,2,typeCheck,dateCheck,checkInResult,monitor.userToken)
+        var res = await StudentService.checkIn(student.id,monitor.userId,long,lat,typeCheck,dateCheck,checkInResult,monitor.userToken)
         if(res.statusCode=='B002'){
             setStudent({
                 ...student,

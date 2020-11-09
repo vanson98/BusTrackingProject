@@ -4,8 +4,10 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { PagedListingComponentBase, PagedRequestDto } from '@shared/paged-listing-component-base';
 import { BusDto, BusServiceProxy, StopDto, StopServiceProxy, StudentCheckInDto, StudentCheckInDtoResultDto, StudentServiceProxy } from '@shared/service-proxies/service-proxies';
 import { SignalRService } from '@shared/signalr-service/signal-r.service';
+import { MessageService } from 'abp-ng2-module/dist/src/message/message.service';
 import * as moment from 'moment';
 import { finalize } from 'rxjs/operators';
+import { MapCheckinDialogComponent } from './map-checkin-dialog/map-checkin-dialog.component';
 
 @Component({
   selector: 'app-checkin-log',
@@ -31,9 +33,9 @@ export class CheckinLogComponent extends PagedListingComponentBase<StudentCheckI
     injector: Injector,
     private _studentService: StudentServiceProxy,
     private _busService: BusServiceProxy,
-    private _stopService: StopServiceProxy,
     private _dialog: MatDialog,
-    private _signalRService: SignalRService 
+    private _signalRService: SignalRService,
+    private _messageService: MessageService
   ) {
     super(injector);
   }
@@ -64,6 +66,20 @@ export class CheckinLogComponent extends PagedListingComponentBase<StudentCheckI
     })
   }
   
+  openMap(log: StudentCheckInDto){
+    if(log.longitude==0 && log.latitude == 0){
+      this._messageService.info("Thông báo","Bản ghi điểm danh không có vị trí");
+    }else{
+      this._dialog.open(MapCheckinDialogComponent,{
+        data: {
+          long: log.longitude,
+          lat: log.latitude
+        }
+      })
+    }
+
+  }
+
   protected list(request: PagedRequestDto, pageNumber: number, finishedCallback: Function): void {
     var studentStatus = this.studentStatus == "" ? undefined : parseInt(this.studentStatus);
     var busId = this.busId == "" ? undefined : parseInt(this.busId);

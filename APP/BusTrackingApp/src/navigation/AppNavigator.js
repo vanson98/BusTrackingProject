@@ -1,4 +1,3 @@
-import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -10,12 +9,79 @@ import UpdateAccount from '../components/app/Profile/UpdateAccount/UpdateAccount
 import UpdatePassword from '../components/app/Profile/UpdatePassword/UpdatePassword';
 import MyChildrenComponent from '../components/app/MyChildren';
 import RouteMapComponent from '../components/app/RouteMap';
+import Geolocation from '@react-native-community/geolocation';
+import SignalRService from '../controllers/SignalRService';
+import {PermissionsAndroid} from 'react-native';
+import React, { useEffect } from 'react';
+
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const MainTabScreen = (props) => {
-  const {userRole}=props;
+  const {user}=props;
+  var userRole = user.roles[0];
+  var signalRService;
+
+   // Lấy tọa độ hiện tại (Chỉ cho monitor)
+   const trackingLocation = async () => {
+    try {
+      // Check quyền truy cập
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Cấp quyền truy cập',
+          message: 'Cho phép ứng dụng truy cập vị trí hiện tại của bạn.',
+          buttonNegative: 'Không',
+          buttonPositive: 'Đồng ý',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('Đã có quyền truy cập location (Root)');
+        // Set callback cho watcher theo dõi vị trí thay đổi
+         Geolocation.watchPosition((position) => {
+            var lat = position.coords.latitude;
+            var long = position.coords.longitude;
+            var lastRegion = {
+              latitude: lat,
+              longitude: long
+            };
+            // Gửi về cho hub
+            signalRService
+              .invoke('SendLocationToGroup',user.userId, lastRegion)
+              .then(() => {
+                console.log('send: ' + lastRegion.latitude);
+              })
+              .catch((err) => {
+                console.log(err);
+              });       
+        });
+      } else {
+        console.log('Quyền truy cập vị trí bị từ chối');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+
+  useEffect(()=>{
+    if(userRole=='monitor'){
+      signalRService = SignalRService(user.userToken);
+      signalRService.start()
+      .then(()=>{
+          console.log("Kết nối tới hub thành công (ROOT)");
+          // Join vào group hub
+          signalRService.invoke('AddToGroup',user.userId.toString()).catch((err)=>{console.log(err)});
+      })
+      .catch((err)=>{console.log("Kết nối tới hub thất bại (ROOT): "+err)});
+
+      signalRService.on("CheckAddedGroup",(res)=>{
+          console.log(res);
+          trackingLocation();
+      }); 
+    }
+  },[])
 
   return (
     <Tab.Navigator
@@ -210,7 +276,7 @@ const AccountStackNavigator = ()=>(
       }}
     />
     <Stack.Screen
-      name='UpdatePass'
+      name='UpdatePassword'
       component={UpdatePassword}
       options={{
         title: 'Cập nhật mật khẩu',

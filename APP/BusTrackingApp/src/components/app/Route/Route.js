@@ -16,7 +16,6 @@ const RouteComponent = (props)=>{
     var user = useSelector((state)=>state.user);
     var listStudent = [];
     const stateRef = useRef();
-
     //=========================  State ==========================
     const [students, setListStudent]=useState(listStudent)
     stateRef.current = students;
@@ -26,6 +25,8 @@ const RouteComponent = (props)=>{
     });
     
     // ======================= Function =====================
+    
+
     // Lấy tất cả danh sách học sinh trên tuyến đi
     useEffect(()=>{
         async function getListStudent(){
@@ -37,21 +38,17 @@ const RouteComponent = (props)=>{
             })
         }
         getListStudent();
-        // const unsubscribe = navigation.addListener('focus', () => {
-        //     // Lấy lại list student mới khi focus tab
-            
-        //   });
-        //   // Gắn sự kiện khi unmount
-        //   return unsubscribe;
     },[])
 
     // Kết nối tới hub theo dõi trạng thái HS
     useEffect(()=>{
         var signalRService = SignalRService(user.userToken);
         signalRService.start()
-        .then(()=>{console.log("Kết nối tới hub thành công");})
+        .then(()=>{
+            console.log("Kết nối tới hub thành công");
+        })
         .catch((err)=>{console.log("Kết nối tới hub thất bại: "+err)});
-        
+
         signalRService.on('ReceiveCheckIn',res=>{
             if(res.statusCode=='B002'){
                 var checkIn = res.result;
@@ -68,7 +65,7 @@ const RouteComponent = (props)=>{
         })
 
         return ()=>{
-            signalRService.stop().then(()=>{console.log("Đã ngắt kết nối hub")})
+            signalRService.stop().then(()=>{console.log("Đã ngắt kết nối hub (Tuyến)")})
         }
     },[])
 
@@ -79,7 +76,8 @@ const RouteComponent = (props)=>{
                 <TouchableOpacity 
                     style={styles.headerRight} 
                     onPress={()=>navigation.navigate('RouteMap',{
-                        busId: bus.busId
+                        typeMap: typeCheck,
+                        monitorId: user.userId
                     })}
                 >
                     <Ionicons name="map" color={'#FFF'} size={26} />

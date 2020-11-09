@@ -13,7 +13,8 @@ namespace BusTracking.Application.System.Auths
         Task<ResultDto<AuthenticateResultModel>> Authencate(LoginRequestDto loginRequest);
         Task<ResponseDto> CreateRole(string roleName);
         Task<ResultDto<List<RoleDto>>> GetAllRole();
-
         Task<ResultDto<UserSessionDto>> GetUserSession(string userId);
+        Task<ResponseDto> UpdatePassword(ChangePasswordRequestDto request);
+   
     }
 }

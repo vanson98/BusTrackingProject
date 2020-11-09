@@ -17,5 +17,6 @@ namespace BusTracking.Application.System.Users
         Task<ResponseDto> Update(UpdateUserRequestDto request);
         Task<ResponseDto> Delete(Guid id);
         Task<ResponseDto> AssignRoles(RoleAssignRequest request);
+        Task<ResponseDto> UpdateAccount(UpdateAccountRequestDto request);
     }
 }

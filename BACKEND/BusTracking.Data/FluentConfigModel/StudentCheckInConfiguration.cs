@@ -26,6 +26,7 @@ namespace BusTracking.Data.FluentConfigModel
 
             builder.Property(x => x.CheckInTime).IsRequired();
             builder.Property(x => x.CheckInResult).IsRequired();
+            builder.Property(x => x.CheckInState).IsRequired(false);
             builder.Property(x => x.StudentId).IsRequired();
             builder.Property(s => s.Longitude).HasColumnType("decimal(11,8)").IsRequired();
             builder.Property(s => s.Latitude).HasColumnType("decimal(10,8)").IsRequired();

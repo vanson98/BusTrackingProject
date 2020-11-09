@@ -280,5 +280,23 @@ namespace BusTracking.Application.System.Users
             }
             return new ResponseDto(ResponseCode.Validate, "Cập nhật thành công");
         }
+
+        public async Task<ResponseDto> UpdateAccount(UpdateAccountRequestDto request)
+        {
+            var user = await _userManager.Users.Where(x => x.IsDeleted == false && x.Id == request.Id).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                return new ResponseDto(ResponseCode.Validate, "Tài khoản không tồn tại");
+            }
+            user.Email = request.Email;
+            user.PhoneNumber = request.PhoneNumber;
+            user.FullName = request.FullName;
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                return new ResponseDto(ResponseCode.Success, "Cập nhật thành công");
+            }
+            return new ResponseDto(ResponseCode.LogicError, "Cập nhật thất bại");
+        }
     }
 }

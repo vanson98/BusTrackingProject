@@ -44,6 +44,7 @@ import { EditUserDialogComponent } from './user/edit-user-dialog/edit-user-dialo
 import { CheckinLogComponent } from './checkin-log/checkin-log.component';
 import { OWL_DATE_TIME_FORMATS, OWL_DATE_TIME_LOCALE } from 'ng-pick-datetime';
 import { MY_NATIVE_FORMATS } from '@shared/validator/datepicker-format';
+import { MapCheckinDialogComponent } from './checkin-log/map-checkin-dialog/map-checkin-dialog.component';
 
 @NgModule({
   declarations: [
@@ -73,6 +74,7 @@ import { MY_NATIVE_FORMATS } from '@shared/validator/datepicker-format';
     CreateUserDialogComponent,
     EditUserDialogComponent,
     CheckinLogComponent,
+    MapCheckinDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -112,7 +114,8 @@ import { MY_NATIVE_FORMATS } from '@shared/validator/datepicker-format';
     CreateStudentDialogComponent,
     EditStudentDialogComponent,
     CreateUserDialogComponent,
-    EditUserDialogComponent
+    EditUserDialogComponent,
+    MapCheckinDialogComponent
   ]
 })
 export class AppModule {}

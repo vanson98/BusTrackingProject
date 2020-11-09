@@ -24,8 +24,8 @@ function MyChildrenItem (props) {
 
     // Xin nghỉ cho học sinh
     const checkIn = async (checkInResult) =>{
-        var dateCheck = moment().format("YYYY-MM-DDTHH:mm:ss");
-        var res = await StudentService.checkIn(student.id,student.monitorId,2,2,dateCheck,checkInResult,parent.userToken)
+        var dateCheck = moment().subtract(10,'second').format("YYYY-MM-DDTHH:mm:ss");
+        var res = await StudentService.checkIn(student.id,student.monitorId,0,0,2,dateCheck,checkInResult,parent.userToken)
         if(res.statusCode=='B002'){
             setStudent({
                 ...student,
@@ -76,9 +76,11 @@ function MyChildrenItem (props) {
                 </View>
                 <View style={styles.action}>
                         <TouchableOpacity 
-                            style={[styles.container_action,(student.status==7 | student.status==8) ? styles.blur : styles.notBlur]}
-                            onPress={()=>{Alert.show("Bản đồ")}}
-                            disabled={student.status==8 | student.status==7}
+                            style={[styles.container_action,(student.status==2 | student.status==5) ? styles.notBlur : styles.blur ]}
+                            onPress={()=>router.navigate('RouteMap',{
+                                monitorId: student.monitorId
+                            })}
+                            disabled={!(student.status==2 | student.status==5)}
                             >
                             <Ionicons name="locate-outline" style={styles.action_icon} />
                             <Text style={{color:'#FF9800'}}>Theo dõi xe</Text>

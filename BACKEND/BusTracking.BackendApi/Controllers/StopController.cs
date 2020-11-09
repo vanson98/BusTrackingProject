@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace StopTracking.BackendApi.Controllers
 {
-    [Authorize(Roles ="admin")]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class StopController : ControllerBase
@@ -22,6 +22,7 @@ namespace StopTracking.BackendApi.Controllers
             _stopService = stopService;
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet("GetAllPaging")]
         public async Task<PageResultDto<StopDto>> GetAllPaging([FromQuery]GetStopPagingReqestDto request)
         {
@@ -29,13 +30,21 @@ namespace StopTracking.BackendApi.Controllers
             return result;
         }
 
-        [HttpGet("GetAllByBus")]
-        public async Task<ResultDto<List<StopDto>>> GetAllByBus([FromQuery]int busId, int typeStop)
+        [HttpGet("GetAllByMonitor")]
+        public async Task<ResultDto<List<StopMapDto>>> GetAllByMonitor([FromQuery]Guid monitorId, [FromQuery]int typeStop)
         {
-            var result = await _stopService.GetAllByBus(busId,typeStop);
+            var result = await _stopService.GetAllByMonitor(monitorId,typeStop);
             return result;
         }
 
+        [HttpGet("GetAllByType")]
+        public async Task<ResultDto<List<StopDto>>> GetAllByType([FromQuery] int typeStop)
+        {
+            var result = await _stopService.GetAllByType(typeStop);
+            return result;
+        }
+
+        [Authorize(Roles = "admin")]
         [HttpGet("Get/{id}")]
         public async Task<ResultDto<StopDto>> GetById(int id)
         {
@@ -54,6 +63,7 @@ namespace StopTracking.BackendApi.Controllers
             };
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost("Create")]
         public async Task<ResponseDto> Create([FromBody]CreateStopRequestDto request)
         {
@@ -69,6 +79,7 @@ namespace StopTracking.BackendApi.Controllers
             return new ResponseDto(ResponseCode.Success, "Tạo mới thành công");
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("Update")]
         public async Task<ResponseDto> Update([FromBody] UpdateStopRequestDto request)
         {
@@ -84,6 +95,7 @@ namespace StopTracking.BackendApi.Controllers
             return new ResponseDto(ResponseCode.Success, "Cập nhật thành công");
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("Delete/{id}")]
         public async Task<ResponseDto> Delete(int id)
         {

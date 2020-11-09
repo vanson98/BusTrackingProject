@@ -70,11 +70,11 @@ implements OnInit {
         })
       )
       .subscribe((result) => {
-        if(result != null && result.statusCode=="S200"){
+        if(result != null && result.statusCode=="B002"){
           this.notify.success("Cập nhật thành công");
           this.close(true);
         }else{
-          this.notify.success("Cập nhật thất bại");
+          this.notify.error("Cập nhật thất bại");
         }
       });
   }

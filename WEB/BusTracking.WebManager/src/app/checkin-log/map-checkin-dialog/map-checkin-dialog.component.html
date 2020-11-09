@@ -1,0 +1,49 @@
+<form >
+    <h1 mat-dialog-title>Cập nhật điểm dừng</h1>
+    <mat-dialog-content style="width:1000px;height:1000px;">
+      <div class="row-fluid">
+        <div class="col-md-12" style="padding:0; margin-bottom: 20px;">
+          <agm-map 
+            [longitude]="longitude" 
+            [latitude]="latitude" 
+            [zoom]="zoom">
+              <agm-marker 
+              [latitude]="latitude" 
+              [longitude]="longitude"
+              ></agm-marker>
+          </agm-map>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field>
+            <input
+              matInput
+              name="latInput"
+              placeholder="Kinh độ"
+              [(ngModel)]="latitude"
+              required
+              disabled
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field>
+            <input
+              matInput
+              name="longInput"
+              placeholder="Vĩ độ"
+              [(ngModel)]="longitude"
+              required
+              disabled
+            />
+          </mat-form-field>
+        </div>
+    </div>
+       
+    </mat-dialog-content>
+    <div mat-dialog-actions align="end">
+      <button mat-button type="button" (click)="close(false)">
+            Hủy
+      </button>
+    </div>
+  </form>
+  

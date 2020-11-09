@@ -39,7 +39,6 @@ namespace BusTracking.Application.Catalog.StudentService
                 StudentId = checkInRecord.StudentId,
                 Type = (TypeMessage)checkInRecord.CheckInResult
             };
-
             if (checkInRecord.CheckInResult == (int)StudentStatus.AbsentOnPick)
             {
                 notify.Content = checkInRecord.StudentName + " không có mặt tại điểm đón";
@@ -47,10 +46,14 @@ namespace BusTracking.Application.Catalog.StudentService
             else if (checkInRecord.CheckInResult == (int)StudentStatus.PickedUp)
             {
                 notify.Content = checkInRecord.StudentName + " đã lên xe";
+                if (checkInRecord.CheckInState == (int)CheckInState.Late)
+                {
+                    notify.Content += " (đón muộn)";
+                }
             }
             else if (checkInRecord.CheckInResult == (int)StudentStatus.AtScholl)
             {
-                notify.Content = checkInRecord.StudentName + " đã tới trườg";
+                notify.Content = checkInRecord.StudentName + " đã tới trường";
             }
             else if (checkInRecord.CheckInResult == (int)StudentStatus.AbsentOnDrop)
             {
@@ -63,6 +66,10 @@ namespace BusTracking.Application.Catalog.StudentService
             else if (checkInRecord.CheckInResult == (int)StudentStatus.DropedOff)
             {
                 notify.Content = checkInRecord.StudentName + " đã xuống xe, hãy ra đón con!";
+                if (checkInRecord.CheckInState == (int)CheckInState.Late)
+                {
+                    notify.Content += " (trả muộn)";
+                }
             }
             else if (checkInRecord.CheckInResult == (int)StudentStatus.OnLeave)
             {
@@ -111,6 +118,38 @@ namespace BusTracking.Application.Catalog.StudentService
                 Longitude = request.Longitude,
                 StudentId = request.StudentId
             };
+            var student = await this.GetById(request.StudentId);
+            var checkInTimeSpan = new TimeSpan(studentCheckIn.CheckInTime.Hour, studentCheckIn.CheckInTime.Minute,00);
+            if(studentCheckIn.CheckInType == CheckInType.PickUp)
+            {
+                if (checkInTimeSpan < student.StopPickTime)
+                {
+                    studentCheckIn.CheckInState = CheckInState.Soon;
+                }
+                else if(checkInTimeSpan == student.StopPickTime)
+                {
+                    studentCheckIn.CheckInState = CheckInState.OnTime;
+                }
+                else
+                {
+                    studentCheckIn.CheckInState = CheckInState.Late;
+                }
+            }
+            else if(studentCheckIn.CheckInType == CheckInType.DropOff)
+            {
+                if (checkInTimeSpan < student.StopDropTime)
+                {
+                    studentCheckIn.CheckInState = CheckInState.Soon;
+                }
+                else if (checkInTimeSpan == student.StopDropTime)
+                {
+                    studentCheckIn.CheckInState = CheckInState.OnTime;
+                }
+                else
+                {
+                    studentCheckIn.CheckInState = CheckInState.Late;
+                }
+            }
             // Lưu điểm danh vào DB
             await _context.StudentCheckIns.AddAsync(studentCheckIn);
             var result = await _context.SaveChangesAsync();
@@ -144,7 +183,8 @@ namespace BusTracking.Application.Catalog.StudentService
             {
                 BusId = request.BusId,
                 ParentId = request.ParentId,
-                StopId = request.StopId,
+                StopPickId = request.StopPickId,
+                StopDropId = request.StopDropId,
                 Name = request.Name,
                 Address = request.Address,
                 Dob = request.Dob,
@@ -188,8 +228,9 @@ namespace BusTracking.Application.Catalog.StudentService
                         where s.IsDeleted == false
                         join p in _context.AppUsers on s.ParentId equals p.Id
                         join b in _context.Buses on s.BusId equals b.Id
-                        join st in _context.Stops on s.StopId equals st.Id
-                        select new { s, p, b,st };
+                        join stp in _context.Stops on s.StopPickId equals stp.Id
+                        join std in _context.Stops on s.StopDropId equals std.Id 
+                        select new { s, p, b,stp,std };
             // Filter
             if (!string.IsNullOrEmpty(request.Name))
             {
@@ -197,7 +238,7 @@ namespace BusTracking.Application.Catalog.StudentService
             }
             if (!string.IsNullOrEmpty(request.StopName))
             {
-                query = query.Where(x => x.st.Name.Contains(request.StopName));
+                query = query.Where(x => x.stp.Name.Contains(request.StopName));
             }
             if (!string.IsNullOrEmpty(request.BusName))
             {
@@ -221,8 +262,10 @@ namespace BusTracking.Application.Catalog.StudentService
                                       ClassOfStudent = x.s.ClassOfStudent,
                                       TeacherName = x.s.TeacherName,
                                       PhoneTeacher = x.s.PhoneTeacher,
-                                      StopId = x.st.Id,
-                                      StopName = x.st.Name,
+                                      StopPickId = x.stp.Id,
+                                      StopDropId = x.std.Id,
+                                      StopPickName = x.stp.Name,
+                                      StopDropName = x.std.Name,
                                       Name = x.s.Name,
                                       Address = x.s.Address,
                                       Dob = x.s.Dob,
@@ -251,9 +294,11 @@ namespace BusTracking.Application.Catalog.StudentService
             // Select and Join 
             var query = from s in _context.Students
                         where s.Id == id && s.IsDeleted == false
+                        join stp in _context.Stops on s.StopPickId equals stp.Id
+                        join std in _context.Stops on s.StopDropId equals std.Id
                         join p in _context.AppUsers on s.ParentId equals p.Id
                         join b in _context.Buses on s.BusId equals b.Id
-                        select new { s, p, b };
+                        select new { s, p, b, stp, std };
             var x = await query.FirstOrDefaultAsync();
             if (x == null) throw new BusTrackingException($"Can't not find any object with id is {id}");
             return new StudentDto()
@@ -269,6 +314,8 @@ namespace BusTracking.Application.Catalog.StudentService
                 ClassOfStudent = x.s.ClassOfStudent,
                 TeacherName = x.s.TeacherName,
                 PhoneTeacher = x.s.PhoneTeacher,
+                StopPickTime = x.stp.TimePickUp,
+                StopDropTime = x.std.TimeDropOff,
                 Email = x.s.Email,
                 PhoneNumber = x.s.PhoneNumber,
                 Status = (int)x.s.Status
@@ -288,8 +335,9 @@ namespace BusTracking.Application.Catalog.StudentService
                         join p in _context.AppUsers on s.ParentId equals p.Id
                         join b in _context.Buses on s.BusId equals b.Id
                         join m in _context.AppUsers on b.MonitorId equals m.Id
-                        join st in _context.Stops on s.StopId equals st.Id
-                        select new { s, p, b, m, st };
+                        join stp in _context.Stops on s.StopPickId equals stp.Id
+                        join std in _context.Stops on s.StopDropId equals std.Id
+                        select new { s, p, b, m, stp,std };
             if (monitorId != null)
             {
                 query = query.Where(x => x.m.Id == monitorId);
@@ -317,10 +365,12 @@ namespace BusTracking.Application.Catalog.StudentService
                                     PhoneParent = x.p.PhoneNumber,
                                     TeacherName = x.s.TeacherName,
                                     PhoneTeacher = x.s.PhoneTeacher,
-                                    StopId = x.s.StopId,
-                                    StopAddress = x.st.Address,
-                                    StopName = x.st.Name,
-                                    ClassOfStudent= x.s.ClassOfStudent
+                                    StopPickId = x.s.StopPickId,
+                                    StopPickAddress = x.stp.Address,
+                                    StopDropAddress = x.std.Address,
+                                    StopDropName = x.std.Name,
+                                    StopPickName = x.stp.Name,
+                                    ClassOfStudent = x.s.ClassOfStudent
                                 })
                                 .ToListAsync();
 
@@ -358,7 +408,8 @@ namespace BusTracking.Application.Catalog.StudentService
                 StudentId = x.s.Id,
                 ParentId = x.p.Id,
                 Latitude = x.ck.Latitude,
-                Longitude = x.ck.Longitude
+                Longitude = x.ck.Longitude,
+                CheckInState = (int)x.ck.CheckInState
             }).FirstOrDefaultAsync();
             return checkInItem;
         }
@@ -494,7 +545,8 @@ namespace BusTracking.Application.Catalog.StudentService
             if (student == null) return -1;
             student.BusId = request.BusId;
             student.ParentId = request.ParentId;
-            student.StopId = request.StopId;
+            student.StopPickId = request.StopPickId;
+            student.StopDropId = request.StopDropId;
             student.Name = request.Name;
             student.Address = request.Address;
             student.Dob = request.Dob;

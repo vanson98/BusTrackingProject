@@ -17,7 +17,8 @@ implements OnInit {
   saving = false;
   isActive = true;
   parents : UserDto[] = [];
-  stops : StopDto[] = [];
+  stopsPick : StopDto[] = [];
+  stopsDrop : StopDto[] = [];
   buses : BusDto[] = [];
   student: UpdateStudentRequestDto = new UpdateStudentRequestDto();
   
@@ -29,7 +30,8 @@ implements OnInit {
   class: FormControl;
   teacher: FormControl;
   phoneTeacher: FormControl;
-  stop: FormControl;
+  stopPick: FormControl;
+  stopDrop: FormControl;
   dob: FormControl;
   address: FormControl;
   email : FormControl;
@@ -65,7 +67,8 @@ implements OnInit {
     this.phone = new FormControl();
     this.bus = new FormControl();
     this.parent = new FormControl();
-    this.stop = new FormControl();
+    this.stopPick = new FormControl();
+    this.stopDrop = new FormControl();
     this.editForm = new FormGroup({
       'name': this.name,
       'dob': this.dob,
@@ -77,7 +80,8 @@ implements OnInit {
       'phone': this.phone,
       'bus': this.bus,
       'parent': this.parent,
-      'stop': this.stop
+      'stopPick': this.stopPick,
+      'stopDrop': this.stopDrop
     })
   }
 
@@ -96,11 +100,18 @@ implements OnInit {
         abp.message.error(res.message);
       }
     })
-    this._stopService.getAllPaging(undefined,undefined,undefined,undefined,1,1000).subscribe(result=>{
-      if(result.statusCode==AppResCode.Success){
-        this.stops = result.items;
+    this._stopService.getAllByType(0).subscribe(res=>{
+      if(res.statusCode==AppResCode.Success){
+        this.stopsPick = res.result;
       }else{
-        abp.message.error(result.message);
+        abp.message.error(res.message);
+      }
+    })
+    this._stopService.getAllByType(1).subscribe(res=>{
+      if(res.statusCode==AppResCode.Success){
+        this.stopsDrop = res.result;
+      }else{
+        abp.message.error(res.message);
       }
     })
   }

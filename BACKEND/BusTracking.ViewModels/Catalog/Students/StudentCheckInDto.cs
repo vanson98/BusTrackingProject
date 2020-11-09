@@ -18,6 +18,7 @@ namespace BusTracking.ViewModels.Catalog.Students
         public decimal Longitude { get; set; }
         public decimal Latitude { get; set; }
         public int CheckInResult { get; set; }
-        
+        public int CheckInState { get; set; }
+
     }
 }

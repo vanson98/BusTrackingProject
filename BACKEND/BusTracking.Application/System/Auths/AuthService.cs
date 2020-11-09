@@ -34,6 +34,7 @@ namespace BusTracking.Application.System.Auths
             this._roleManager = roleManager;
             this._config = config;
         }
+
         public async Task<ResultDto<AuthenticateResultModel>> Authencate(LoginRequestDto request)
         {
             var user = await _context.AppUsers.Where(x=>x.Status!=0 && x.IsDeleted==false && x.UserName==request.UserName).FirstOrDefaultAsync();
@@ -70,6 +71,7 @@ namespace BusTracking.Application.System.Auths
                 FullName = user.FullName,
                 TypeAccount = (int)user.TypeAccount,
                 Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
                 Roles = roles,
                 AccessToken = stringToken
             };
@@ -128,6 +130,21 @@ namespace BusTracking.Application.System.Auths
                 Email = user.Email
             };
             return new ResultDto<UserSessionDto>(ResponseCode.Success, "Thành công", session);
+        }
+
+        public async Task<ResponseDto> UpdatePassword(ChangePasswordRequestDto request)
+        {
+            var user = await _userManager.FindByIdAsync(request.UserId);
+            if (user == null)
+            {
+                return new ResponseDto(ResponseCode.LogicError,"Tài khoản không tồn");
+            }
+            var result = await _userManager.ChangePasswordAsync(user, request.OldPass, request.NewPass);
+            if (result.Succeeded)
+            {
+                return new ResponseDto(ResponseCode.Success, "Đổi mật khẩu thành công");
+            }
+            return new ResponseDto(ResponseCode.LogicError, "Đổi mật khẩu thất bại");
         }
     }
 }

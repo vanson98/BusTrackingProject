@@ -27,7 +27,7 @@ const MyChildrenComponent = (props)=>{
         getListStudent();
     },[])
 
-    // Kết nối tới hub khi khởi tạo component
+    // Kết nối tới hub theo dõi trạng thái HS khi điểm danh gửi về
     useEffect(()=>{
         var signalRService = SignalRService(user.userToken);
         signalRService.start()
