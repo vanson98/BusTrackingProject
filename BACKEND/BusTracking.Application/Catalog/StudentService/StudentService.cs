@@ -8,6 +8,7 @@ using BusTracking.ViewModels.Catalog.Students;
 using BusTracking.ViewModels.Common;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Quartz;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -570,6 +571,26 @@ namespace BusTracking.Application.Catalog.StudentService
             return await _context.SaveChangesAsync();
         }
 
-        
+        /// <summary>
+        /// Reset trạng thái học sinh về mặc định
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public async Task<int> ResetStatus(int status)
+        {
+            var students = await _context.Students
+                .Where(x => x.IsDeleted == false)
+                .Where(x => x.Status != StudentStatus.AbsentOnPick)
+                .Where(x => x.Status != StudentStatus.AbsentOnDrop)
+                .ToListAsync();
+            foreach (var student in students)
+            {
+                student.Status = (StudentStatus)status;
+                _context.Students.Update(student);
+            }
+            return await _context.SaveChangesAsync();
+        }
+
     }
 }

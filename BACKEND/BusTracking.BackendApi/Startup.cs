@@ -29,6 +29,11 @@ using System.Text;
 using System.Runtime.InteropServices.ComTypes;
 using BusTracking.BackendApi.HubConfig;
 using Microsoft.AspNetCore.SignalR;
+using Quartz;
+using System.Collections.Specialized;
+using Quartz.Impl;
+using BusTracking.BackendApi.Quartz;
+using Quartz.Spi;
 
 namespace BusTracking.BackendApi
 {
@@ -161,10 +166,18 @@ namespace BusTracking.BackendApi
             // 7. SignalR Hub
             services.AddSignalR();
 
-            // DI Provider for SignalR
+            // 8. DI Provider for SignalR
             services.AddSingleton<IUserIdProvider, CustomIdProvider>();
+
+
+            // 10.  Register the hosted service for quartz
+            services.AddSingleton<IJobFactory, QuartzJobFactory>();
+            services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+            services.AddSingleton<UpdateStudentStatusJob>();
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(UpdateStudentStatusJob), "Change Student Status Job", "0 0 17 * * ?"));
+            services.AddHostedService<QuartzHostedService>();
         }
-        
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -173,6 +186,7 @@ namespace BusTracking.BackendApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
             // Enable CORS!
             app.UseCors(_defaultCorsPolicyName); 
 
@@ -191,7 +205,6 @@ namespace BusTracking.BackendApi
             });
 
             //var idProvider = new CustomIdProvider();
-
             //GlobalHost.DependencyResolver.Register(typeof(IUserIdProvider), () => idProvider);
 
             //Endpoint

@@ -21,6 +21,7 @@ namespace BusTracking.Application.Catalog.StudentService
         Task<PageResultDto<StudentCheckInDto>> TraceLogCheckIn(GetStudentCheckInRequestDto request);
         Task<ResultDto<StudentCheckInDto>> CheckIn(CheckInRequestDto request);
         Task<int> UpdateStatus(int studentId, StudentStatus status);
+        Task<int> ResetStatus(int status);
         Task<StudentCheckInDto> GetItemCheckInById(int id);
         Task<NotificationDto> AddNotification(StudentCheckInDto studentCheckIn);
         Task<ResultDto<List<NotificationDto>>> GetAllNotificationOfMonitor(Guid id,DateTime fromDate,DateTime toDate);
