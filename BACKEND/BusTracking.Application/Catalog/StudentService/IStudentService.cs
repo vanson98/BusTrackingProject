@@ -26,7 +26,8 @@ namespace BusTracking.Application.Catalog.StudentService
         Task<NotificationDto> AddNotification(StudentCheckInDto studentCheckIn);
         Task<ResultDto<List<NotificationDto>>> GetAllNotificationOfMonitor(Guid id,DateTime fromDate,DateTime toDate);
         Task<ResultDto<List<NotificationDto>>> GetAllNotificationOfParent(Guid id,DateTime fromDate,DateTime toDate);
-        
+        Task<ResultDto<TotalStudentStatus>> GetTotalStudentStatus();
+        Task<ResultDto<ChartModel>> GetDataChart(int checkInType,DateTime time, int busId);
 
     }
 }

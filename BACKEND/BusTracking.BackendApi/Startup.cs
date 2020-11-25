@@ -34,6 +34,9 @@ using System.Collections.Specialized;
 using Quartz.Impl;
 using BusTracking.BackendApi.Quartz;
 using Quartz.Spi;
+using FluentValidation.AspNetCore;
+using BusTracking.ViewModels.Catalog.Buses;
+using FluentValidation;
 
 namespace BusTracking.BackendApi
 {
@@ -48,7 +51,8 @@ namespace BusTracking.BackendApi
         
         public void ConfigureServices(IServiceCollection services)
         {   
-            services.AddControllers();
+            // 0. Web API
+            services.AddControllers().AddFluentValidation(fv=>fv.RegisterValidatorsFromAssemblyContaining<CreateBusRequestValidator>());
 
             // 1. Config DbContext và DI cho DB context
             services.AddDbContext<BusTrackingDbContext>(options =>
@@ -70,6 +74,8 @@ namespace BusTracking.BackendApi
             services.AddTransient<IRouteService, RouteService>();
             services.AddTransient<IStopService, StopService>();
             services.AddTransient<IStudentService, StudentService>();
+
+            //services.AddTransient<IValidator<CreateBusRequestDto>, CreateBusRequestValidator>();
 
             // 4. Cấu hình Authentication và  Authorization 
             services
@@ -174,7 +180,7 @@ namespace BusTracking.BackendApi
             services.AddSingleton<IJobFactory, QuartzJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
             services.AddSingleton<UpdateStudentStatusJob>();
-            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(UpdateStudentStatusJob), "Change Student Status Job", "0 0 17 * * ?"));
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(UpdateStudentStatusJob), "Change Student Status Job", "0 0 0 * * ?"));
             services.AddHostedService<QuartzHostedService>();
         }
 

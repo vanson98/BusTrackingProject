@@ -11,7 +11,6 @@ import { AbpModule } from '@abp/abp.module';
 import { ServiceProxyModule } from '@shared/service-proxies/service-proxy.module';
 import { SharedModule } from '@shared/shared.module';
 import { HomeComponent } from '@app/home/home.component';
-import { AboutComponent } from '@app/about/about.component';
 import { TopBarComponent } from '@app/layout/topbar.component';
 import { SideBarUserAreaComponent } from '@app/layout/sidebar-user-area.component';
 import { SideBarNavComponent } from '@app/layout/sidebar-nav.component';
@@ -31,7 +30,6 @@ import { EditRouteDialogComponent } from './route/edit-route-dialog/edit-route-d
 import { StopComponent } from './stop/stop.component';
 import { CreateStopDialogComponent } from './stop/create-stop-dialog/create-stop-dialog.component';
 import { EditStopDialogComponent } from './stop/edit-stop-dialog/edit-stop-dialog.component';
-
 import { OwlDateTimeModule } from 'ng-pick-datetime/date-time/date-time.module';
 import { OwlNativeDateTimeModule } from 'ng-pick-datetime/date-time/adapter/native-date-time.module';
 import { AgmCoreModule } from '@agm/core';
@@ -45,12 +43,12 @@ import { CheckinLogComponent } from './checkin-log/checkin-log.component';
 import { OWL_DATE_TIME_FORMATS, OWL_DATE_TIME_LOCALE } from 'ng-pick-datetime';
 import { MY_NATIVE_FORMATS } from '@shared/validator/datepicker-format';
 import { MapCheckinDialogComponent } from './checkin-log/map-checkin-dialog/map-checkin-dialog.component';
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    AboutComponent,
     TopBarComponent,
     SideBarUserAreaComponent,
     SideBarNavComponent,
@@ -87,6 +85,7 @@ import { MapCheckinDialogComponent } from './checkin-log/map-checkin-dialog/map-
     AppRoutingModule,
     ServiceProxyModule,
     SharedModule,
+    ChartsModule,
     //Google Map Api
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAlXj3gfNdc17yhMJQ06BoE14Lz8NsbWl0',

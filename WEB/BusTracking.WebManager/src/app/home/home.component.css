@@ -1,0 +1,18 @@
+.req-head {
+    padding: 15px;
+}
+.req-head {
+    padding: 15px;
+    padding-bottom:0;
+    padding-top: 42px;
+}
+.line {
+    height: 1px;
+    background-color: #c1c1c1;
+    width: 87%;
+    margin: auto;
+}
+.body-tab{
+    padding: 0 15px;
+}
+

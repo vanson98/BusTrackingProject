@@ -97,6 +97,22 @@ namespace StudentTracking.BackendApi.Controllers
             return result;
         }
 
+        [Authorize(Roles = "admin")]
+        [HttpGet("GetTotalStudentStatus")]
+        public async Task<ResultDto<TotalStudentStatus>> GetTotalStudentStatus()
+        {
+            var result = await _studentService.GetTotalStudentStatus();
+            return result;
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpGet("GetDataChar")]
+        public async Task<ResultDto<ChartModel>> GetDataChart([FromQuery] int checkInType, [FromQuery]DateTime time, [FromQuery] int busId)
+        {
+            var result = await _studentService.GetDataChart(checkInType, time, busId);
+            return result;
+        }
+
         [Authorize(Roles = "monitor,parent")]
         [HttpPost("CheckIn")]
         public async Task<ResultDto<StudentCheckInDto>> CheckIn([FromBody]CheckInRequestDto request)
@@ -193,5 +209,7 @@ namespace StudentTracking.BackendApi.Controllers
                 return new ResponseDto(ResponseCode.LogicError, "Không tìm thấy đối tượng cần xóa");
             return new ResponseDto(ResponseCode.Success, "Xóa thành công");
         }
+
+       
     }
 }

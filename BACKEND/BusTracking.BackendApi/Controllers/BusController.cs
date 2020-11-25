@@ -54,7 +54,7 @@ namespace BusTracking.BackendApi.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return new ResultDto<BusDto>(ResponseCode.Validate, "Đầu vào không hợp lệ", null);
+                return new ResponseDto(ResponseCode.Validate, "Đầu vào không hợp lệ");
             }
             var busId = await _busService.CreateAsync(request);
             if (busId == 0)

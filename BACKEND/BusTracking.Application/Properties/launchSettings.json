@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "BusTracking.Application": {
+      "commandName": "Project"
+    }
+  }
+}

@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { AppRouteGuard } from '@shared/auth/auth-route-guard';
 import { HomeComponent } from './home/home.component';
-import { AboutComponent } from './about/about.component';
 import { BusComponent } from './bus/bus.component';
 import { RouteComponent } from './route/route.component';
 import { StopComponent } from './stop/stop.component';

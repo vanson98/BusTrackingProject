@@ -1,1 +1,157 @@
-﻿<h2>home</h2>
+﻿<div class='row clearfix'>
+    <div class='col-lg-12 col-md-12 col-xs-12'>
+        <div class='card'>
+            <div class="header">
+                <h2>Dashboard</h2>
+            </div>
+            <div style="min-height: 500px;">
+                <div class="row clearfix" style="width: 100%;padding: 10px 0;margin: auto;">
+                    <div class="col-md-12" style="font-weight: 600;font-size: 17px;padding-bottom: 15px;">Thời gian thực</div> 
+                    <div class="col-lg-12 col-md-12 col-xs-12">
+                        <div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="info-box bg-cyan hover-expand-effect">
+                                    <div class="icon">
+                                        <i class="fa fa-bookmark" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="text">TỔNG SỐ</div>
+                                        <div class="number count-to">{{totalStudentStatus.totalStudent}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="info-box bg-pink hover-expand-effect">
+                                    <div class="icon">
+                                        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="text">VẮNG MẶT</div>
+                                        <div class="number count-to">{{totalStudentStatus.absent}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="info-box bg-yellow hover-expand-effect">
+                                    <div class="icon">
+                                        <i class="fa fa-thermometer-three-quarters" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="text">NGHỈ HỌC</div>
+                                        <div class="number count-to">{{totalStudentStatus.onLeave}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="info-box bg-green hover-expand-effect">
+                                    <div class="icon">
+                                        <i class="fa fa-bus" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="text">TRÊN XE</div>
+                                        <div class="number count-to">{{totalStudentStatus.onBus}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="info-box bg-light-green hover-expand-effect">
+                                    <div class="icon">
+                                        <i class="fa fa-check" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="text">TẠI TRƯỜNG</div>
+                                        <div class="number count-to">{{totalStudentStatus.atSchool}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="info-box bg-orange hover-expand-effect">
+                                    <div class="icon">
+                                        <i class="fa fa-home" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="text">TẠI NHÀ</div>
+                                        <div class="number count-to">{{totalStudentStatus.atHome}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-12" style="font-weight: 600;font-size: 17px;padding-bottom: 15px;">Thống kê trong tháng</div> 
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-label>Chọn thời gian</mat-label>
+                                <input matInput [matDatepicker]="picker" [(ngModel)]="timeRequest" (dateChange)="getDataChart()">
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-select placeholder="Chọn lượt" [(ngModel)]="checkIntype" (selectionChange)="getDataChart()">
+                                    <mat-option value="">
+                                        Lượt đi và Lượt về
+                                    </mat-option>
+                                    <mat-option value="0">
+                                        Lượt đi
+                                    </mat-option>
+                                    <mat-option value="1">
+                                        Lượt về
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-select required [(ngModel)]="busId" name='bus' placeholder="Chọn xe" (selectionChange)="getDataChart()">
+                                    <mat-option *ngFor="let bus of buses" [value]="bus.id">
+                                        {{bus.name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12" style="height: 500px;padding-top: 22px;">
+                        <div class="col-md-5" *ngIf="doughnutChartData.length!=0">
+                            <div>
+                                <div style="display:block" *ngIf="this.doughnutChartData.length!=0">
+                                <canvas baseChart
+                                        [data]="doughnutChartData"
+                                        [labels]="doughnutChartLabel"
+                                        chartType="doughnut"></canvas>
+                                </div>
+                            </div> 
+                            <div style="text-align: center; margin-top: 15px;">Thống kê số lần đón đúng giờ, muộn, sớm của xe trong tháng</div>
+                        </div>
+                        <div class="col-md-7" style="padding-bottom: 24px;">
+                            <!-- Thống kê theo giờ -->
+                           <div>
+                               <div style="display:block">
+                                   <canvas baseChart
+                                       [datasets]="barChartData"
+                                       [labels]="barChartLabel"
+                                       [options]="barChartOptions"
+                                       [legend]="barChartLegend"
+                                       chartType="bar">
+                                      </canvas>
+                               </div>
+                               <div style="text-align: center; margin-top: 15px;">Thống kê theo ngày trong tháng</div>
+                           </div>
+                        </div>  
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

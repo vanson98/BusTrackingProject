@@ -120,35 +120,38 @@ namespace BusTracking.Application.Catalog.StudentService
                 StudentId = request.StudentId
             };
             var student = await this.GetById(request.StudentId);
-            var checkInTimeSpan = new TimeSpan(studentCheckIn.CheckInTime.Hour, studentCheckIn.CheckInTime.Minute,00);
-            if(studentCheckIn.CheckInType == CheckInType.PickUp)
+            var checkInTimeSpan = new TimeSpan(studentCheckIn.CheckInTime.Hour, (studentCheckIn.CheckInTime.Minute) ,00);
+            if (studentCheckIn.CheckInResult == StudentStatus.PickedUp)
             {
-                if (checkInTimeSpan < student.StopPickTime)
+                TimeSpan timeCheck = checkInTimeSpan.Subtract(student.StopPickTime);
+                if (timeCheck.TotalMinutes>5)
+                {
+                    studentCheckIn.CheckInState = CheckInState.Late;
+                }
+                else if(timeCheck.TotalMinutes<-5)
                 {
                     studentCheckIn.CheckInState = CheckInState.Soon;
                 }
-                else if(checkInTimeSpan == student.StopPickTime)
-                {
-                    studentCheckIn.CheckInState = CheckInState.OnTime;
-                }
                 else
                 {
-                    studentCheckIn.CheckInState = CheckInState.Late;
+                    studentCheckIn.CheckInState = CheckInState.OnTime;
                 }
             }
-            else if(studentCheckIn.CheckInType == CheckInType.DropOff)
+            else if(studentCheckIn.CheckInResult == StudentStatus.DropedOff)
             {
-                if (checkInTimeSpan < student.StopDropTime)
+                TimeSpan timeCheck = checkInTimeSpan.Subtract(student.StopDropTime);
+                if (timeCheck.TotalMinutes>5)
+                {
+                    studentCheckIn.CheckInState = CheckInState.Late;
+                    
+                }
+                else if (timeCheck.TotalMinutes<-5)
                 {
                     studentCheckIn.CheckInState = CheckInState.Soon;
                 }
-                else if (checkInTimeSpan == student.StopDropTime)
-                {
-                    studentCheckIn.CheckInState = CheckInState.OnTime;
-                }
                 else
                 {
-                    studentCheckIn.CheckInState = CheckInState.Late;
+                    studentCheckIn.CheckInState = CheckInState.OnTime;
                 }
             }
             // Lưu điểm danh vào DB
@@ -592,5 +595,56 @@ namespace BusTracking.Application.Catalog.StudentService
             return await _context.SaveChangesAsync();
         }
 
+        public async Task<ResultDto<TotalStudentStatus>> GetTotalStudentStatus()
+        {
+            var students = new TotalStudentStatus();
+            students.TotalStudent = await _context.Students.CountAsync();
+            students.AtSchool = await _context.Students.Where(x => x.Status == StudentStatus.AtScholl).CountAsync();
+            students.Absent = await _context.Students
+                                    .Where(x => x.Status == StudentStatus.AbsentOnDrop | x.Status == StudentStatus.AbsentOnPick)
+                                    .CountAsync();
+            students.AtHome = await _context.Students.Where(x => x.Status == StudentStatus.AtHome | x.Status == StudentStatus.Reset).CountAsync();
+            students.OnBus = await _context.Students
+                                    .Where(x => x.Status == StudentStatus.PickedUp | x.Status == StudentStatus.GoingHome)
+                                    .CountAsync();
+            students.OnLeave = await _context.Students.Where(x => x.Status == StudentStatus.OnLeave).CountAsync();
+            return new ResultDto<TotalStudentStatus>()
+            {
+                Result = students,
+                Message = "Thành công",
+                StatusCode = ResponseCode.Success
+            };
+        }
+
+        public async Task<ResultDto<ChartModel>> GetDataChart(int checkInType, DateTime time, int busId)
+        {
+            var query = from ck in _context.StudentCheckIns
+                        where ck.CheckInType == (CheckInType)checkInType && ck.CheckInState != null
+                        where ck.CheckInTime.Month == time.Month && ck.CheckInTime.Year == time.Year
+                        join s in _context.Students on ck.StudentId equals s.Id
+                        where s.BusId == busId
+                        select ck;
+
+            TotalCheckInState totalCheckInState = new TotalCheckInState();
+            totalCheckInState.Soon = query.Where(x => (int)x.CheckInState == 2).Count();
+            totalCheckInState.Late = query.Where(x => (int)x.CheckInState == 0).Count();
+            totalCheckInState.OnTime = query.Where(x => (int)x.CheckInState == 1).Count();
+            var listCheckIn = await query.Select(x => new CheckInChartModel() {
+                CheckInDay = x.CheckInTime.ToString("yyyy-MM-dd"),
+                CheckInState = (int)x.CheckInState
+            }).ToListAsync();
+            
+            var chartModel = new ChartModel()
+            {
+                totalCheckInState = totalCheckInState,
+                checkInChartModel = listCheckIn
+            };
+            return new ResultDto<ChartModel>()
+            {
+                Message = "Thành công",
+                Result = chartModel,
+                StatusCode = ResponseCode.Success
+            };
+        }
     }
 }

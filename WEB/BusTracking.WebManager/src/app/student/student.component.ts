@@ -1,5 +1,5 @@
 import { PagedListingComponentBase, PagedRequestDto } from './../../shared/paged-listing-component-base';
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { StudentCheckInDto, StudentCheckInDtoResultDto, StudentDto, StudentDtoPageResultDto, StudentServiceProxy } from '@shared/service-proxies/service-proxies';
 import { MatDialog } from '@angular/material';
@@ -17,9 +17,8 @@ import * as _ from 'lodash';
   styleUrls: ['./student.component.css']
 })
 
-export class StudentComponent extends PagedListingComponentBase<StudentDto> {
+export class StudentComponent extends PagedListingComponentBase<StudentDto> implements OnDestroy {
   students: StudentDto[] = [];
-  dataHub: StudentCheckInDto = new StudentCheckInDto();
   // Search Field
   name: string = '';
   studentStatus: string = '';
@@ -34,10 +33,15 @@ export class StudentComponent extends PagedListingComponentBase<StudentDto> {
   ) {
     super(injector);
   }
+ 
 
   ngOnInit() {
     this.refresh();
     this.trackingStudentCheckIn();
+  }
+
+  ngOnDestroy(): void {
+    this._signalRService.closeConnection();
   }
 
   trackingStudentCheckIn(){

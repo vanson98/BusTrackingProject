@@ -2203,6 +2203,123 @@ export class StudentServiceProxy {
     }
 
     /**
+     * @return Success
+     */
+    getTotalStudentStatus(): Observable<TotalStudentStatusResultDto> {
+        let url_ = this.baseUrl + "/api/Student/GetTotalStudentStatus";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTotalStudentStatus(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTotalStudentStatus(<any>response_);
+                } catch (e) {
+                    return <Observable<TotalStudentStatusResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TotalStudentStatusResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTotalStudentStatus(response: HttpResponseBase): Observable<TotalStudentStatusResultDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TotalStudentStatusResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TotalStudentStatusResultDto>(<any>null);
+    }
+
+    /**
+     * @param checkInType (optional) 
+     * @param time (optional) 
+     * @param busId (optional) 
+     * @return Success
+     */
+    getDataChar(checkInType: number | undefined, time: moment.Moment | undefined, busId: number | undefined): Observable<ChartModelResultDto> {
+        let url_ = this.baseUrl + "/api/Student/GetDataChar?";
+        if (checkInType === null)
+            throw new Error("The parameter 'checkInType' cannot be null.");
+        else if (checkInType !== undefined)
+            url_ += "checkInType=" + encodeURIComponent("" + checkInType) + "&"; 
+        if (time === null)
+            throw new Error("The parameter 'time' cannot be null.");
+        else if (time !== undefined)
+            url_ += "time=" + encodeURIComponent(time ? "" + time.toJSON() : "") + "&"; 
+        if (busId === null)
+            throw new Error("The parameter 'busId' cannot be null.");
+        else if (busId !== undefined)
+            url_ += "busId=" + encodeURIComponent("" + busId) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetDataChar(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetDataChar(<any>response_);
+                } catch (e) {
+                    return <Observable<ChartModelResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ChartModelResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetDataChar(response: HttpResponseBase): Observable<ChartModelResultDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ChartModelResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ChartModelResultDto>(<any>null);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
@@ -5314,6 +5431,8 @@ export class StudentDto implements IStudentDto {
     stopDropId: number;
     stopPickName: string | undefined;
     stopDropName: string | undefined;
+    stopPickTime: TimeSpan;
+    stopDropTime: TimeSpan;
     stopPickAddress: string | undefined;
     stopDropAddress: string | undefined;
     name: string | undefined;
@@ -5350,6 +5469,8 @@ export class StudentDto implements IStudentDto {
             this.stopDropId = data["stopDropId"];
             this.stopPickName = data["stopPickName"];
             this.stopDropName = data["stopDropName"];
+            this.stopPickTime = data["stopPickTime"] ? TimeSpan.fromJS(data["stopPickTime"]) : <any>undefined;
+            this.stopDropTime = data["stopDropTime"] ? TimeSpan.fromJS(data["stopDropTime"]) : <any>undefined;
             this.stopPickAddress = data["stopPickAddress"];
             this.stopDropAddress = data["stopDropAddress"];
             this.name = data["name"];
@@ -5386,6 +5507,8 @@ export class StudentDto implements IStudentDto {
         data["stopDropId"] = this.stopDropId;
         data["stopPickName"] = this.stopPickName;
         data["stopDropName"] = this.stopDropName;
+        data["stopPickTime"] = this.stopPickTime ? this.stopPickTime.toJSON() : <any>undefined;
+        data["stopDropTime"] = this.stopDropTime ? this.stopDropTime.toJSON() : <any>undefined;
         data["stopPickAddress"] = this.stopPickAddress;
         data["stopDropAddress"] = this.stopDropAddress;
         data["name"] = this.name;
@@ -5422,6 +5545,8 @@ export interface IStudentDto {
     stopDropId: number;
     stopPickName: string | undefined;
     stopDropName: string | undefined;
+    stopPickTime: TimeSpan;
+    stopDropTime: TimeSpan;
     stopPickAddress: string | undefined;
     stopDropAddress: string | undefined;
     name: string | undefined;
@@ -5618,6 +5743,7 @@ export class StudentCheckInDto implements IStudentCheckInDto {
     longitude: number;
     latitude: number;
     checkInResult: number;
+    checkInState: number;
 
     constructor(data?: IStudentCheckInDto) {
         if (data) {
@@ -5642,6 +5768,7 @@ export class StudentCheckInDto implements IStudentCheckInDto {
             this.longitude = data["longitude"];
             this.latitude = data["latitude"];
             this.checkInResult = data["checkInResult"];
+            this.checkInState = data["checkInState"];
         }
     }
 
@@ -5666,6 +5793,7 @@ export class StudentCheckInDto implements IStudentCheckInDto {
         data["longitude"] = this.longitude;
         data["latitude"] = this.latitude;
         data["checkInResult"] = this.checkInResult;
+        data["checkInState"] = this.checkInState;
         return data; 
     }
 
@@ -5690,6 +5818,7 @@ export interface IStudentCheckInDto {
     longitude: number;
     latitude: number;
     checkInResult: number;
+    checkInState: number;
 }
 
 export class StudentCheckInDtoPageResultDto implements IStudentCheckInDtoPageResultDto {
@@ -5877,6 +6006,324 @@ export class NotificationDtoListResultDto implements INotificationDtoListResultD
 
 export interface INotificationDtoListResultDto {
     result: NotificationDto[] | undefined;
+    statusCode: string | undefined;
+    message: string | undefined;
+}
+
+export class TotalStudentStatus implements ITotalStudentStatus {
+    totalStudent: number;
+    absent: number;
+    onLeave: number;
+    onBus: number;
+    atSchool: number;
+    atHome: number;
+
+    constructor(data?: ITotalStudentStatus) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.totalStudent = data["totalStudent"];
+            this.absent = data["absent"];
+            this.onLeave = data["onLeave"];
+            this.onBus = data["onBus"];
+            this.atSchool = data["atSchool"];
+            this.atHome = data["atHome"];
+        }
+    }
+
+    static fromJS(data: any): TotalStudentStatus {
+        data = typeof data === 'object' ? data : {};
+        let result = new TotalStudentStatus();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalStudent"] = this.totalStudent;
+        data["absent"] = this.absent;
+        data["onLeave"] = this.onLeave;
+        data["onBus"] = this.onBus;
+        data["atSchool"] = this.atSchool;
+        data["atHome"] = this.atHome;
+        return data; 
+    }
+
+    clone(): TotalStudentStatus {
+        const json = this.toJSON();
+        let result = new TotalStudentStatus();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ITotalStudentStatus {
+    totalStudent: number;
+    absent: number;
+    onLeave: number;
+    onBus: number;
+    atSchool: number;
+    atHome: number;
+}
+
+export class TotalStudentStatusResultDto implements ITotalStudentStatusResultDto {
+    result: TotalStudentStatus;
+    statusCode: string | undefined;
+    message: string | undefined;
+
+    constructor(data?: ITotalStudentStatusResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.result = data["result"] ? TotalStudentStatus.fromJS(data["result"]) : <any>undefined;
+            this.statusCode = data["statusCode"];
+            this.message = data["message"];
+        }
+    }
+
+    static fromJS(data: any): TotalStudentStatusResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TotalStudentStatusResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["result"] = this.result ? this.result.toJSON() : <any>undefined;
+        data["statusCode"] = this.statusCode;
+        data["message"] = this.message;
+        return data; 
+    }
+
+    clone(): TotalStudentStatusResultDto {
+        const json = this.toJSON();
+        let result = new TotalStudentStatusResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ITotalStudentStatusResultDto {
+    result: TotalStudentStatus;
+    statusCode: string | undefined;
+    message: string | undefined;
+}
+
+export class TotalCheckInState implements ITotalCheckInState {
+    soon: number;
+    late: number;
+    onTime: number;
+
+    constructor(data?: ITotalCheckInState) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.soon = data["soon"];
+            this.late = data["late"];
+            this.onTime = data["onTime"];
+        }
+    }
+
+    static fromJS(data: any): TotalCheckInState {
+        data = typeof data === 'object' ? data : {};
+        let result = new TotalCheckInState();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["soon"] = this.soon;
+        data["late"] = this.late;
+        data["onTime"] = this.onTime;
+        return data; 
+    }
+
+    clone(): TotalCheckInState {
+        const json = this.toJSON();
+        let result = new TotalCheckInState();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ITotalCheckInState {
+    soon: number;
+    late: number;
+    onTime: number;
+}
+
+export class CheckInChartModel implements ICheckInChartModel {
+    checkInDay: string | undefined;
+    checkInState: number;
+
+    constructor(data?: ICheckInChartModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.checkInDay = data["checkInDay"];
+            this.checkInState = data["checkInState"];
+        }
+    }
+
+    static fromJS(data: any): CheckInChartModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new CheckInChartModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["checkInDay"] = this.checkInDay;
+        data["checkInState"] = this.checkInState;
+        return data; 
+    }
+
+    clone(): CheckInChartModel {
+        const json = this.toJSON();
+        let result = new CheckInChartModel();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICheckInChartModel {
+    checkInDay: string | undefined;
+    checkInState: number;
+}
+
+export class ChartModel implements IChartModel {
+    totalCheckInState: TotalCheckInState;
+    checkInChartModel: CheckInChartModel[] | undefined;
+
+    constructor(data?: IChartModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.totalCheckInState = data["totalCheckInState"] ? TotalCheckInState.fromJS(data["totalCheckInState"]) : <any>undefined;
+            if (Array.isArray(data["checkInChartModel"])) {
+                this.checkInChartModel = [] as any;
+                for (let item of data["checkInChartModel"])
+                    this.checkInChartModel.push(CheckInChartModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ChartModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new ChartModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCheckInState"] = this.totalCheckInState ? this.totalCheckInState.toJSON() : <any>undefined;
+        if (Array.isArray(this.checkInChartModel)) {
+            data["checkInChartModel"] = [];
+            for (let item of this.checkInChartModel)
+                data["checkInChartModel"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): ChartModel {
+        const json = this.toJSON();
+        let result = new ChartModel();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IChartModel {
+    totalCheckInState: TotalCheckInState;
+    checkInChartModel: CheckInChartModel[] | undefined;
+}
+
+export class ChartModelResultDto implements IChartModelResultDto {
+    result: ChartModel;
+    statusCode: string | undefined;
+    message: string | undefined;
+
+    constructor(data?: IChartModelResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.result = data["result"] ? ChartModel.fromJS(data["result"]) : <any>undefined;
+            this.statusCode = data["statusCode"];
+            this.message = data["message"];
+        }
+    }
+
+    static fromJS(data: any): ChartModelResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ChartModelResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["result"] = this.result ? this.result.toJSON() : <any>undefined;
+        data["statusCode"] = this.statusCode;
+        data["message"] = this.message;
+        return data; 
+    }
+
+    clone(): ChartModelResultDto {
+        const json = this.toJSON();
+        let result = new ChartModelResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IChartModelResultDto {
+    result: ChartModel;
     statusCode: string | undefined;
     message: string | undefined;
 }
