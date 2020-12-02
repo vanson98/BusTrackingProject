@@ -95,12 +95,12 @@ const RouteMapComponent = ({route})=>{
     useEffect(()=>{
         if(userRole=='monitor'){
             getCurentLocation();
-        }else if(userRole=='parent'){
+        }else if(userRole=='parent' | userRole=='teacher'){
             // Kết nối tới group trên hub để nhận tọa độ gửi về
             var signalRService = SignalRService(user.userToken);
             signalRService.start()
             .then(()=>{
-                console.log("Kết nối tới hub thành công (PARENT-MAP)");
+                console.log("Kết nối tới hub thành công (PARENT-TEACHER-MAP)");
                 signalRService.invoke('AddToGroup',monitorId.toString());
             })
             .catch((err)=>{console.log("Kết nối tới hub thất bại (PARENT-MAP)"+err)});

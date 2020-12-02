@@ -85,6 +85,8 @@ export class HomeComponent extends AppComponentBase implements OnInit, OnDestroy
                 this.totalStudentStatus.onBus--;
             }else if(studentCheckIn.checkInResult == 8){
                 this.totalStudentStatus.onLeave++;
+            }else if(studentCheckIn.checkInResult ==10){
+                this.totalStudentStatus.atSchool--;
             }
           }
         })

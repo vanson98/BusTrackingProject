@@ -27,7 +27,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Runtime.InteropServices.ComTypes;
-using BusTracking.BackendApi.HubConfig;
 using Microsoft.AspNetCore.SignalR;
 using Quartz;
 using System.Collections.Specialized;
@@ -37,6 +36,7 @@ using Quartz.Spi;
 using FluentValidation.AspNetCore;
 using BusTracking.ViewModels.Catalog.Buses;
 using FluentValidation;
+using BusTracking.BackendApi.SignalRHub;
 
 namespace BusTracking.BackendApi
 {
@@ -180,7 +180,7 @@ namespace BusTracking.BackendApi
             services.AddSingleton<IJobFactory, QuartzJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
             services.AddSingleton<UpdateStudentStatusJob>();
-            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(UpdateStudentStatusJob), "Change Student Status Job", "0 0 0 * * ?"));
+            services.AddSingleton<CheckStudentStatusJob>();
             services.AddHostedService<QuartzHostedService>();
         }
 

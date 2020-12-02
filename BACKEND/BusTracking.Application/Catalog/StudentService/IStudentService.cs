@@ -14,7 +14,7 @@ namespace BusTracking.Application.Catalog.StudentService
     {
         Task<PageResultDto<StudentDto>> GetAllPaging(GetStudentPagingRequestDto request);
         Task<StudentDto> GetById(int busId);
-        Task<ResultDto<List<StudentDto>>> GetStudentByMonitorIdOrParentId(Guid? monitorId, Guid? parentId);
+        Task<ResultDto<List<StudentDto>>> GetStudentByUser(Guid? monitorId, Guid? parentId, Guid? teacherId);
         Task<int> Create(CreateStudentRequestDto requestDto);
         Task<int> Update(UpdateStudentRequestDto requestDto);
         Task<int> Delete(int studentId);
@@ -26,8 +26,11 @@ namespace BusTracking.Application.Catalog.StudentService
         Task<NotificationDto> AddNotification(StudentCheckInDto studentCheckIn);
         Task<ResultDto<List<NotificationDto>>> GetAllNotificationOfMonitor(Guid id,DateTime fromDate,DateTime toDate);
         Task<ResultDto<List<NotificationDto>>> GetAllNotificationOfParent(Guid id,DateTime fromDate,DateTime toDate);
+        Task<ResultDto<List<NotificationDto>>> GetAllNotificationOfTeacher(Guid id,DateTime fromDate,DateTime toDate);
         Task<ResultDto<TotalStudentStatus>> GetTotalStudentStatus();
         Task<ResultDto<ChartModel>> GetDataChart(int checkInType,DateTime time, int busId);
-
+        Task<List<WarningCheckInDto>> CheckStudentStatus();
+        Task<int> AddWarning(int studentId,int type,string content,DateTime timeSent);
+        Task<int> UpdateWarningState(int studentId, bool isWarning);
     }
 }

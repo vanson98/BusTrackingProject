@@ -31,6 +31,14 @@
             </mat-select>
           </mat-form-field>
           <mat-form-field appearance="fill">
+            <mat-label>Chọn GVCN</mat-label>
+            <mat-select required [(ngModel)]="student.teacherId" formControlName='teacher'>
+              <mat-option *ngFor="let teacher of teachers" [value]="teacher.id">
+                {{teacher.fullName}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
             <mat-label>Chọn điểm đón</mat-label>
             <mat-select required [(ngModel)]="student.stopPickId" formControlName='stopPick'>
               <mat-option *ngFor="let stop of stopsPick" [value]="stop.id">
@@ -57,26 +65,6 @@
               formControlName="class"
               placeholder='Lớp'
               [(ngModel)]="student.classOfStudent"
-              required
-              maxlength="20"
-            />
-          </mat-form-field>
-          <mat-form-field>
-            <input
-              matInput
-              formControlName="teacher"
-              placeholder='Giáo viên chủ nhiệm'
-              [(ngModel)]="student.teacherName"
-              required
-              maxlength="255"
-            />
-          </mat-form-field>
-          <mat-form-field>
-            <input
-              matInput
-              formControlName="phoneTeacher"
-              placeholder='Số điện thoại GVCN'
-              [(ngModel)]="student.phoneTeacher"
               required
               maxlength="20"
             />

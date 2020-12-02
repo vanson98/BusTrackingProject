@@ -13,6 +13,7 @@ import Geolocation from '@react-native-community/geolocation';
 import SignalRService from '../controllers/SignalRService';
 import {PermissionsAndroid} from 'react-native';
 import React, { useEffect } from 'react';
+import MyStudentComponent from '../components/app/MyStudent';
 
 
 const Stack = createStackNavigator();
@@ -123,10 +124,24 @@ const MainTabScreen = (props) => {
         {
           userRole=='parent' ?
           <Tab.Screen
-            name="DropOffRoute"
+            name="ListChildRoute"
             component={ListChildNavigator}
             options={{
               tabBarLabel: 'Con của tôi',
+              tabBarIcon: ({color, size}) => (
+                <Ionicons name="people-outline" color={color} size={size} />
+              ),
+            }}
+          />
+          : null
+        }
+        {
+          userRole=='teacher' ?
+          <Tab.Screen
+            name="ListStudentRoute"
+            component={ListStudentNavigator}
+            options={{
+              tabBarLabel: 'Học sinh của tôi',
               tabBarIcon: ({color, size}) => (
                 <Ionicons name="people-outline" color={color} size={size} />
               ),
@@ -303,6 +318,43 @@ const ListChildNavigator = ({navigation}) => (
         component={MyChildrenComponent}
         options={{
           title: 'Con của tôi',
+        }}
+    />
+    <Stack.Screen
+        name="DetailStudent"
+        component={DetailStudentComponent}
+        options={{
+          title: 'Thông tin học sinh',
+        }}
+    />
+    <Stack.Screen
+      name="RouteMap"
+      component={RouteMapComponent}
+      options={{
+        title: 'Bản đồ tuyến đường',
+      }}
+    />
+  </Stack.Navigator>
+);
+
+const ListStudentNavigator = ({navigation}) => (
+  <Stack.Navigator
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: '#FF9800',
+      },
+      headerTitleStyle: {
+        color: '#fff',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        alignSelf: 'center',
+      },
+    }}>
+    <Stack.Screen
+        name="ListChild"
+        component={MyStudentComponent}
+        options={{
+          title: 'Học sinh của tôi',
         }}
     />
     <Stack.Screen

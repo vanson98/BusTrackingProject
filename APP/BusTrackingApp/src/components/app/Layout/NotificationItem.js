@@ -32,6 +32,15 @@ export default function NotificationItem(props){
                     message.typeNotification == 8 ?
                     <Ionicons name="medkit-outline" size={30}></Ionicons> 
                     :
+                    message.typeNotification == 9 ?
+                    <Ionicons name="log-in-outline" size={30}></Ionicons> 
+                    :
+                    message.typeNotification == 10 ?
+                    <Ionicons name="alert-outline" size={30}></Ionicons> 
+                    : 
+                    message.typeNotification == 11 ?
+                    <Ionicons name="alert-outline" size={30}></Ionicons> 
+                    :
                     <Ionicons name="home-outline" size={30}></Ionicons> 
                 }
             </View>

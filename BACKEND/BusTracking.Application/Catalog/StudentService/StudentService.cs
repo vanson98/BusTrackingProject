@@ -16,6 +16,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Threading.Tasks;
 
+
 namespace BusTracking.Application.Catalog.StudentService
 {
     public class StudentService : IStudentService
@@ -79,6 +80,16 @@ namespace BusTracking.Application.Catalog.StudentService
             else if (checkInRecord.CheckInResult == (int)StudentStatus.AtHome)
             {
                 notify.Content = checkInRecord.StudentName + " đã về nhà";
+            }else if(checkInRecord.CheckInResult == (int)StudentStatus.InClass)
+            {
+                notify.Content = checkInRecord.StudentName + " đã vào lớp học.";
+            }else if(checkInRecord.CheckInResult == (int)StudentStatus.NotInClass)
+            {
+                notify.Content = checkInRecord.StudentName + " vắng mặt tại lớp học.";
+            }
+            else
+            {
+                notify.Content = "Content default";
             }
             await _context.Notification.AddAsync(notify);
             var result = await _context.SaveChangesAsync();
@@ -161,6 +172,8 @@ namespace BusTracking.Application.Catalog.StudentService
             {
                 // Cập nhật trạng thái HS
                 var studentUpdateResult = await this.UpdateStatus(studentCheckIn.StudentId, (StudentStatus)request.CheckInResult);
+                // Cập nhật trạng thái warning 
+                var updateWarningResult = await this.UpdateWarningState(studentCheckIn.StudentId, false);
                 // Lấy StudentCheckInDto
                 var itemCheckIn = await this.GetItemCheckInById(studentCheckIn.Id);
                 if (studentUpdateResult != 0 && itemCheckIn != null)
@@ -194,10 +207,9 @@ namespace BusTracking.Application.Catalog.StudentService
                 Dob = request.Dob,
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber,
-                Status = null,
+                Status = 0,
                 ClassOfStudent = request.ClassOfStudent,
-                TeacherName = request.TeacherName,
-                PhoneTeacher = request.PhoneTeacher
+                TeacherId = request.TeacherId
             };
             await _context.Students.AddAsync(student);
             await _context.SaveChangesAsync();
@@ -264,8 +276,7 @@ namespace BusTracking.Application.Catalog.StudentService
                                       ParentId = x.p.Id,
                                       ParentName = x.p.FullName,
                                       ClassOfStudent = x.s.ClassOfStudent,
-                                      TeacherName = x.s.TeacherName,
-                                      PhoneTeacher = x.s.PhoneTeacher,
+                                      TeacherId = x.s.TeacherId,
                                       StopPickId = x.stp.Id,
                                       StopDropId = x.std.Id,
                                       StopPickName = x.stp.Name,
@@ -316,8 +327,7 @@ namespace BusTracking.Application.Catalog.StudentService
                 Address = x.s.Address,
                 Dob = x.s.Dob,
                 ClassOfStudent = x.s.ClassOfStudent,
-                TeacherName = x.s.TeacherName,
-                PhoneTeacher = x.s.PhoneTeacher,
+                TeacherId = x.s.TeacherId,
                 StopPickTime = x.stp.TimePickUp,
                 StopDropTime = x.std.TimeDropOff,
                 Email = x.s.Email,
@@ -332,16 +342,17 @@ namespace BusTracking.Application.Catalog.StudentService
         /// <param name="monitorId"></param>
         /// <param name="parentId"></param>
         /// <returns></returns>
-        public async Task<ResultDto<List<StudentDto>>> GetStudentByMonitorIdOrParentId(Guid? monitorId,Guid? parentId)
+        public async Task<ResultDto<List<StudentDto>>> GetStudentByUser(Guid? monitorId,Guid? parentId,Guid? teacherId)
         {
             var query = from s in _context.Students
                         where s.IsDeleted == false
                         join p in _context.AppUsers on s.ParentId equals p.Id
+                        join t in _context.AppUsers on s.TeacherId equals t.Id
                         join b in _context.Buses on s.BusId equals b.Id
                         join m in _context.AppUsers on b.MonitorId equals m.Id
                         join stp in _context.Stops on s.StopPickId equals stp.Id
                         join std in _context.Stops on s.StopDropId equals std.Id
-                        select new { s, p, b, m, stp,std };
+                        select new { s, p,t, b, m, stp,std };
             if (monitorId != null)
             {
                 query = query.Where(x => x.m.Id == monitorId);
@@ -349,6 +360,10 @@ namespace BusTracking.Application.Catalog.StudentService
             if(parentId != null)
             {
                 query = query.Where(x => x.s.ParentId == parentId);
+            }
+            if(teacherId != null)
+            {
+                query = query.Where(x => x.s.TeacherId == teacherId);
             }
             var listStudent = await query.Select(x=>new StudentDto() 
                                  { 
@@ -367,13 +382,17 @@ namespace BusTracking.Application.Catalog.StudentService
                                     ParentId = x.p.Id,
                                     ParentName = x.p.FullName,
                                     PhoneParent = x.p.PhoneNumber,
-                                    TeacherName = x.s.TeacherName,
-                                    PhoneTeacher = x.s.PhoneTeacher,
+                                    TeacherId = x.t.Id,
+                                    TeacherName = x.t.FullName,
+                                    PhoneTeacher = x.t.PhoneNumber,
                                     StopPickId = x.s.StopPickId,
                                     StopPickAddress = x.stp.Address,
                                     StopDropAddress = x.std.Address,
                                     StopDropName = x.std.Name,
                                     StopPickName = x.stp.Name,
+                                    StopDropId = x.std.Id,
+                                    StopDropTime = x.std.TimeDropOff,
+                                    StopPickTime = x.stp.TimePickUp,
                                     ClassOfStudent = x.s.ClassOfStudent
                                 })
                                 .ToListAsync();
@@ -397,8 +416,9 @@ namespace BusTracking.Application.Catalog.StudentService
                         from m in _context.AppUsers.Where(m => m.Id == ck.MonitorId).DefaultIfEmpty()
                         join s in _context.Students on ck.StudentId equals s.Id
                         join p in _context.AppUsers on s.ParentId equals p.Id
+                        join t in _context.AppUsers on s.TeacherId equals t.Id
                         join b in _context.Buses on s.BusId equals b.Id
-                        select new { ck, m, s, p, b };
+                        select new { ck, m, s, p,t, b };
             var checkInItem = await query.Where(x => x.ck.Id == id).Select(x => new StudentCheckInDto()
             {
                 Id = x.ck.Id,
@@ -411,6 +431,7 @@ namespace BusTracking.Application.Catalog.StudentService
                 StudentName = x.s.Name,
                 StudentId = x.s.Id,
                 ParentId = x.p.Id,
+                TeacherId = x.t.Id,
                 Latitude = x.ck.Latitude,
                 Longitude = x.ck.Longitude,
                 CheckInState = (int)x.ck.CheckInState
@@ -430,7 +451,11 @@ namespace BusTracking.Application.Catalog.StudentService
                         where b.MonitorId == id
                         join s in _context.Students on b.Id equals s.BusId
                         join n in _context.Notification on s.Id equals n.StudentId
-                        where n.Type == TypeMessage.OnLeave | n.Type == TypeMessage.AtHome
+                        where n.Type == TypeMessage.OnLeave 
+                        || n.Type == TypeMessage.AtHome 
+                        || n.Type == TypeMessage.WaningCheckin
+                        || n.Type == TypeMessage.InClass
+                        || n.Type == TypeMessage.NotInClass
                         where n.TimeSent.Date >= fromDate.Date && n.TimeSent.Date <= toDate.Date
                         select n;
 
@@ -480,6 +505,41 @@ namespace BusTracking.Application.Catalog.StudentService
             };
         }
 
+        /// <summary>
+        /// Lấy tất cả thông báo của giáo viên
+        /// </summary>
+        /// <param name="teacherId"></param>
+        /// <param name="fromDate"></param>
+        /// <param name="toDate"></param>
+        /// <returns></returns>
+        public async Task<ResultDto<List<NotificationDto>>> GetAllNotificationOfTeacher(Guid teacherId, DateTime fromDate, DateTime toDate)
+        {
+            var query = from s in _context.Students
+                        where s.TeacherId == teacherId
+                        join n in _context.Notification on s.Id equals n.StudentId
+                        where n.Type == TypeMessage.OnLeave 
+                        || n.Type == TypeMessage.AtHome
+                        || n.Type == TypeMessage.AbsentOnDrop
+                        || n.Type == TypeMessage.WaningCheckin
+                        || n.Type == TypeMessage.AbsentOnPick
+                        || n.Type == TypeMessage.WaningCheckin
+                        where n.TimeSent.Date >= fromDate.Date && n.TimeSent.Date <= toDate.Date
+                        select n;
+
+            var notifications = await query.OrderByDescending(x => x.TimeSent).Select(x => new NotificationDto()
+            {
+                Id = x.Id,
+                TypeNotification = (int)x.Type,
+                Content = x.Content,
+                TimeSent = x.TimeSent
+            }).ToListAsync();
+            return new ResultDto<List<NotificationDto>>()
+            {
+                StatusCode = ResponseCode.Success,
+                Message = "Thành công",
+                Result = notifications
+            };
+        }
         /// <summary>
         /// Tra cứu lịch sử điểm danh
         /// </summary>
@@ -555,6 +615,7 @@ namespace BusTracking.Application.Catalog.StudentService
             student.Address = request.Address;
             student.Dob = request.Dob;
             student.Email = request.Email;
+            student.TeacherId = request.TeacherId;
             student.PhoneNumber = request.PhoneNumber;
             _context.Students.Update(student);
             return await _context.SaveChangesAsync();
@@ -590,6 +651,7 @@ namespace BusTracking.Application.Catalog.StudentService
             foreach (var student in students)
             {
                 student.Status = (StudentStatus)status;
+                student.WarningCheckIn = false;
                 _context.Students.Update(student);
             }
             return await _context.SaveChangesAsync();
@@ -599,7 +661,7 @@ namespace BusTracking.Application.Catalog.StudentService
         {
             var students = new TotalStudentStatus();
             students.TotalStudent = await _context.Students.CountAsync();
-            students.AtSchool = await _context.Students.Where(x => x.Status == StudentStatus.AtScholl).CountAsync();
+            students.AtSchool = await _context.Students.Where(x => x.Status == StudentStatus.AtScholl | x.Status == StudentStatus.InClass).CountAsync();
             students.Absent = await _context.Students
                                     .Where(x => x.Status == StudentStatus.AbsentOnDrop | x.Status == StudentStatus.AbsentOnPick)
                                     .CountAsync();
@@ -645,6 +707,109 @@ namespace BusTracking.Application.Catalog.StudentService
                 Result = chartModel,
                 StatusCode = ResponseCode.Success
             };
+        }
+
+        public async Task<List<WarningCheckInDto>> CheckStudentStatus()
+        {
+            var listWarning = new List<WarningCheckInDto>();
+            DateTime now = DateTime.Now;
+            var nowTimeSpan = new TimeSpan(now.Hour, now.Minute,00);
+            var query = from s in _context.Students  where s.IsDeleted == false
+                        join b in _context.Buses on s.BusId equals b.Id
+                        join m in _context.AppUsers on b.MonitorId equals m.Id
+                        join p in _context.AppUsers on s.ParentId equals p.Id
+                        join t in _context.AppUsers on s.TeacherId equals t.Id
+                        join stp in _context.Stops on s.StopPickId equals stp.Id
+                        join std in _context.Stops on s.StopDropId equals std.Id
+                        select new { s, b, m, p,t, stp, std };
+            // Lấy danh sách học sinh
+            var listStudent = query.Where(x=>x.s.WarningCheckIn==false).ToList();
+            foreach (var student in listStudent)
+            {
+                var warning = new WarningCheckInDto();
+                if (student.s.Status == StudentStatus.Reset)
+                {
+                    if (nowTimeSpan.Subtract(student.stp.TimePickUp).TotalMinutes > 30)
+                    {
+                        warning.Content = $"Đã 30 phút trôi qua, {student.s.Name} vẫn chưa được xác nhận được đón.";
+                        
+                    }
+                }
+                else if(student.s.Status == StudentStatus.PickedUp)
+                {
+                    if (nowTimeSpan.Subtract(new TimeSpan(7,00,00)).TotalMinutes > 30)
+                    {
+                        warning.Content = $"Đã 30 phút trôi qua, {student.s.Name} vẫn chưa được xác nhận đã tới trường.";
+                       
+                    }
+                }
+                else if(student.s.Status == StudentStatus.GoingHome)
+                {
+                    if (nowTimeSpan.Subtract(student.std.TimeDropOff).TotalMinutes > 30)
+                    {
+                        warning.Content = $"Đã 30 phút trôi qua, {student.s.Name} vẫn chưa được xác nhận đã được trả.";
+                       
+                    }
+                } 
+                else if (student.s.Status == StudentStatus.DropedOff)
+                {
+                    if (nowTimeSpan.Subtract(new TimeSpan(18,30,00)).TotalMinutes > 30)
+                    {
+                        warning.Content = $"Đã 30 phút trôi qua, {student.s.Name} vẫn chưa được xác nhận đã về nhà.";
+                        
+                    }
+                }
+                else if (student.s.Status == StudentStatus.AtScholl)
+                {
+                    if (nowTimeSpan.Subtract(new TimeSpan(7, 30, 00)).TotalMinutes > 30)
+                    {
+                        warning.Content = $"Đã 30 phút trôi qua, {student.s.Name} vẫn chưa được xác nhận đã ở trong lớp học.";
+                    }
+                }
+                warning.TimeSent = now;
+                warning.TypeNotification = 11;
+                warning.MonitorId = student.m.Id.ToString();
+                warning.ParentId = student.p.Id.ToString();
+                warning.TeacherId = student.t.Id.ToString();
+                if (warning.Content != null)
+                {
+                    var addNotifyResult = await this.AddWarning(student.s.Id, 11, warning.Content, now);
+                    var updateWarningResult = await this.UpdateWarningState(student.s.Id, true);
+                    if (addNotifyResult != -1 && updateWarningResult!=0)
+                    {
+                        warning.Id = addNotifyResult;
+                        listWarning.Add(warning);
+                    }
+                }
+            }
+            return listWarning;
+        }
+
+        // Lưu cảnh báo vào DB
+        public async Task<int> AddWarning(int studentId, int type, string content, DateTime timeSent)
+        {
+            var notification = new Notification() { 
+                StudentId = studentId,
+                Content = content,
+                TimeSent = timeSent,
+                Type = (TypeMessage)type
+            };
+            await _context.Notification.AddAsync(notification);
+            var result =  await _context.SaveChangesAsync();
+            if (result > 0)
+            {
+                return notification.Id;
+            }
+            return -1;
+        }
+
+        // Cập nhật trạng thái cảnh báo cho học sinh
+        public async Task<int> UpdateWarningState(int studentId, bool isWarning)
+        {
+            var student = await _context.Students.FirstOrDefaultAsync(x=>x.Id==studentId);
+            student.WarningCheckIn = isWarning;
+            _context.Students.Update(student);
+            return await _context.SaveChangesAsync();
         }
     }
 }

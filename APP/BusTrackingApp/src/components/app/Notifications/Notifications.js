@@ -43,8 +43,10 @@ const NotificationsComponent = (props) => {
     var res;
     if(user.roles[0]=='monitor'){
       res = await StudentService.getAllNotificationOfMonitor(user.userId,fromDate,toDate,user.userToken)
-    }else{
+    }else if(user.roles[0]=='parent'){
       res = await StudentService.getAllNotificationOfParent(user.userId,fromDate,toDate,user.userToken)
+    }else{
+      res = await StudentService.getAllNotificationOfTeacher(user.userId,fromDate,toDate,user.userToken)
     }
     setNotify({
       listNotify: res.result
@@ -73,6 +75,7 @@ const NotificationsComponent = (props) => {
     .catch((err)=>{console.log("Kết nối tới hub thất bại: "+err)});
     
     signalRService.on('ReceiveNotication',data=>{
+      console.log(data);
       let listNotify = stateRef.current;
       listNotify.unshift(data);
       setNotify({

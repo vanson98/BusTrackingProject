@@ -42,7 +42,8 @@ const DetailStudentComponent = ({route}) => {
             <Text style={styles.text}>Email: {student.email}</Text>
             <Text style={styles.text}>Lớp: {student.classOfStudent}</Text>
             <Text style={styles.text}>Xe: {student.busName}</Text>
-            <Text style={styles.text}>Địa chỉ điểm dừng: {student.stopAddress}</Text>
+            <Text style={styles.text}>Địa chỉ điểm đón: {student.stopPickAddress}</Text>
+            <Text style={styles.text}>Địa chỉ điểm trả: {student.stopDropAddress}</Text>
           </View>
           <View style={styles.ct_lable}>
             <Text style={styles.label}>THÔNG TIN PHỤ HUYNH</Text>

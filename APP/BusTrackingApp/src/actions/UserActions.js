@@ -22,6 +22,7 @@ const logout = () => ({
 // Đăng nhập 
 // NVS - 19/10/2020
 export const signIn = (userName, password) => async (dispatch) => {
+  console.log('haha');
   var responseObj ;
   try {
     responseObj = await userService.login(userName,password);

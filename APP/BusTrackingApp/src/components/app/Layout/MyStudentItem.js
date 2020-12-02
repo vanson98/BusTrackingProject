@@ -10,7 +10,7 @@ function MyChildrenItem (props) {
     // ================== Property ===============
     const { studentData }= props;
     const router = props.router;
-    const parent = useSelector((state)=>state.user);
+    const teacher = useSelector((state)=>state.user);
 
     // ================== State ==================
     const [student,setStudent] = useState(studentData);
@@ -22,20 +22,16 @@ function MyChildrenItem (props) {
         setStudent(studentData);
     },[studentData])
 
-    // Xin nghỉ cho học sinh
+    // Xác nhận học sinh đã tới lớp
     const checkIn = async (checkInResult) =>{
         var dateCheck = moment().subtract(10,'second').format("YYYY-MM-DDTHH:mm:ss");
-        var res = await StudentService.checkIn(student.id,student.monitorId,0,0,2,dateCheck,checkInResult,parent.userToken)
+        var res = await StudentService.checkIn(student.id,student.monitorId,0,0,0,dateCheck,checkInResult,teacher.userToken)
+        console.log(res);
         if(res.statusCode=='B002'){
             setStudent({
                 ...student,
                 status: res.result.checkInResult
             })
-            if(res.result.checkInResult==8){
-                Alert.alert('Xin nghỉ học thành công');
-            }else if(res.result.checkInResult==7){
-                Alert.alert('Xác nhận đón con thành công');
-            }
         }else{
             Alert.show('Đã có lỗi xảy ra');
         }
@@ -74,7 +70,6 @@ function MyChildrenItem (props) {
                             student.status == 10 ? 'Không có trong lớp' : ''
                         }
                     </Text>
-                    
                 </View>
                 <View style={styles.action}>
                         <TouchableOpacity 
@@ -88,20 +83,20 @@ function MyChildrenItem (props) {
                             <Text style={{color:'#FF9800'}}>Theo dõi xe</Text>
                         </TouchableOpacity>
                         <TouchableOpacity 
-                            style={[styles.container_action,(student.status!=0 | student.status==8) ? styles.blur : styles.notBlur]}
-                            onPress={()=>{checkIn(8)}}
-                            disabled={student.status!=0 | student.status==8}
+                            style={[styles.container_action,(student.status!=3) ? styles.blur : styles.notBlur]}
+                            onPress={()=>{checkIn(9)}}
+                            disabled={student.status!=3}
                             >
-                            <Ionicons name="thermometer-outline" style={[styles.action_icon,{color:'red',borderColor:'red'}]} />
-                            <Text style={{color:'red'}}>Xin nghỉ</Text>
+                            <Ionicons name="log-in-outline" style={[styles.action_icon,{color:'red',borderColor:'red'}]} />
+                            <Text style={{color:'red'}}>Đã tới lớp</Text>
                         </TouchableOpacity>
                         <TouchableOpacity 
-                            style={[styles.container_action,(student.status!=6) ? styles.blur : styles.notBlur]}
-                            onPress={()=>{checkIn(7)}}
-                            disabled={student.status!=6}
+                            style={[styles.container_action,(student.status!=3 | student.status==9) ? styles.blur : styles.notBlur]}
+                            onPress={()=>{checkIn(10)}}
+                            disabled={student.status!=3 | student.status==9}
                             >
-                            <Ionicons name="home-outline" style={[styles.action_icon,{color:'blue',borderColor:'blue'}]} />
-                            <Text style={{color:'blue'}}>Đã đón con</Text>
+                            <Ionicons name="megaphone-outline" style={[styles.action_icon,{color:'blue',borderColor:'blue'}]} />
+                            <Text style={{color:'blue'}}>Văng mặt</Text>
                         </TouchableOpacity>
                     </View>
               </View>

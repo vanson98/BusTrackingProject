@@ -24,6 +24,8 @@ namespace BusTracking.Data.FluentConfigModel
                    .WithMany(p => p.Students)
                    .HasForeignKey(s => s.ParentId);
             builder.Property(s => s.ParentId).IsRequired(true);
+            
+            builder.Property(s => s.TeacherId).IsRequired(true);
 
             builder.HasOne(x => x.Stop)
                    .WithMany(s => s.Students)
@@ -41,6 +43,7 @@ namespace BusTracking.Data.FluentConfigModel
             builder.Property(d => d.Dob).IsRequired();
             builder.Property(d => d.PhoneNumber).IsRequired();
             builder.Property(b => b.IsDeleted).HasDefaultValue(false);
+            builder.Property(x => x.WarningCheckIn).HasDefaultValue(false);
         }
     }
 }

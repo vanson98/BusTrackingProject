@@ -13,26 +13,36 @@ namespace BusTracking.BackendApi.Quartz
     {
         private readonly ISchedulerFactory _schedulerFactory;
         private readonly IJobFactory _jobFactory;
-        private readonly JobMetadata _jobMetadata;
-        public IScheduler Scheduler { get; set; }
+        private JobMetadata _jobMetadataReset;
+        private JobMetadata _jobMetadataCheck;
+        public IScheduler SchedulerResetStudentStatus { get; set; }
+        public IScheduler SchedulerCheckStudentStatus { get; set; }
         public QuartzHostedService(
             ISchedulerFactory schedulerFactory,
-            IJobFactory jobFactory,
-            JobMetadata jobMetadata)
+            IJobFactory jobFactory)
         {
             this._jobFactory = jobFactory;
             this._schedulerFactory = schedulerFactory;
-            this._jobMetadata = jobMetadata;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            Scheduler = await _schedulerFactory.GetScheduler();
-            Scheduler.JobFactory = _jobFactory;
-            var job = CreateJob(_jobMetadata);
-            var trigger = CreateTrigger(_jobMetadata);
-            await Scheduler.ScheduleJob(job, trigger, cancellationToken);
-            await Scheduler.Start(cancellationToken);
+            // Lịch reset trạng thái học sinh
+            SchedulerResetStudentStatus = await _schedulerFactory.GetScheduler();
+            SchedulerResetStudentStatus.JobFactory = _jobFactory;
+            this._jobMetadataReset = new JobMetadata(Guid.NewGuid(), typeof(UpdateStudentStatusJob), "Reset Student Status Job", "0 0 0 * * ?");
+            var jobReset = CreateJob(_jobMetadataReset);
+            var triggerReset = CreateTrigger(_jobMetadataReset);
+            await SchedulerResetStudentStatus.ScheduleJob(jobReset, triggerReset, cancellationToken);
+            await SchedulerResetStudentStatus.Start(cancellationToken);
+            //Lập lịch check student status
+            SchedulerCheckStudentStatus = await _schedulerFactory.GetScheduler();
+            SchedulerCheckStudentStatus.JobFactory = _jobFactory;
+            this._jobMetadataCheck = new JobMetadata(Guid.NewGuid(), typeof(CheckStudentStatusJob), "Check Student Status Job", "0 */1 * * * ?");
+            var jobCheck = CreateJob(_jobMetadataCheck);
+            var triggerCheck = CreateTrigger(_jobMetadataCheck);
+            await SchedulerCheckStudentStatus.ScheduleJob(jobCheck, triggerCheck, cancellationToken);
+            await SchedulerCheckStudentStatus.Start(cancellationToken);
         }
 
         private IJobDetail CreateJob(JobMetadata jobMetadata)
@@ -56,7 +66,7 @@ namespace BusTracking.BackendApi.Quartz
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            await Scheduler?.Shutdown(cancellationToken);
+            await SchedulerResetStudentStatus?.Shutdown(cancellationToken);
         }
     }
 }

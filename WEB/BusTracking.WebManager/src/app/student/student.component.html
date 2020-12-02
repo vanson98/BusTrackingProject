@@ -51,6 +51,8 @@
                                             <mat-option value="6">Đã trả (Chiều về)</mat-option>
                                             <mat-option value="7">Tại nhà</mat-option>
                                             <mat-option value="8">Nghỉ học</mat-option>
+                                            <mat-option value="9">Trong lớp</mat-option>
+                                            <mat-option value="10">Vắng mặt trong lớp</mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
@@ -109,6 +111,8 @@
                                 <span class="label label-info" *ngIf="student.status==6">Đã trả</span>
                                 <span class="label label-primary" *ngIf="student.status==7">Tại nhà</span>
                                 <span class="label label-warning" *ngIf="student.status==8">Nghỉ học</span>
+                                <span class="label label-success" *ngIf="student.status==9">Trong lớp</span>
+                                <span class="label label-danger" *ngIf="student.status==10">Vắng mặt trong lớp</span>
                             </td>
                             <td>
                                 <button class="action-button" mat-icon-button [matMenuTriggerFor]="actionsMenu">

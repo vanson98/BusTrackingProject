@@ -17,6 +17,7 @@ implements OnInit {
   saving = false;
   isActive = true;
   parents : UserDto[] = [];
+  teachers : UserDto[] = [];
   stopsPick : StopDto[] = [];
   stopsDrop : StopDto[] = [];
   buses : BusDto[] = [];
@@ -62,7 +63,6 @@ implements OnInit {
     this.address = new FormControl();
     this.class = new FormControl();
     this.teacher = new FormControl();
-    this.phoneTeacher = new FormControl();
     this.email = new FormControl();
     this.phone = new FormControl();
     this.bus = new FormControl();
@@ -75,7 +75,6 @@ implements OnInit {
       'address': this.address,
       'class': this.class,
       'teacher': this.teacher,
-      'phoneTeacher': this.phoneTeacher,
       'email': this.email,
       'phone': this.phone,
       'bus': this.bus,
@@ -99,7 +98,14 @@ implements OnInit {
       }else{
         abp.message.error(res.message);
       }
-    })
+    });
+    this._userService.getAllByType(3).subscribe(res=>{
+      if(res.statusCode==AppResCode.Success){
+        this.teachers = res.result;
+      }else{
+        abp.message.error(res.message);
+      }
+    });
     this._stopService.getAllByType(0).subscribe(res=>{
       if(res.statusCode==AppResCode.Success){
         this.stopsPick = res.result;
@@ -128,10 +134,10 @@ implements OnInit {
       )
       .subscribe((result) => {
         if(result != null && result.statusCode==AppResCode.Success){
-          this.notify.success("Tạo mới thành công");
+          this.notify.success("Cập nhật thành công");
           this.close(true);
         }else{
-          this.notify.success("Tạo mới thất bại");
+          this.notify.success("Cập nhật thất bại");
         }
       });
   }

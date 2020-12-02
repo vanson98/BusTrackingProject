@@ -12,14 +12,14 @@ namespace BusTracking.Data.Entities
         public int StopPickId { get; set; }
         public int StopDropId { get; set; }
         public Guid ParentId { get; set; }
-        public string TeacherName {get;set;}
-        public string PhoneTeacher { get; set; }
+        public Guid TeacherId { get; set; }
+        public Boolean WarningCheckIn  {get; set; }
         public string Name { get; set; }
         public DateTime Dob { get; set; }
         public string Address { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-        public StudentStatus? Status { get; set; }
+        public StudentStatus Status { get; set; }
         public string ClassOfStudent { get; set; }
         public Boolean IsDeleted { get; set; }
         public Bus Bus { get; set; }

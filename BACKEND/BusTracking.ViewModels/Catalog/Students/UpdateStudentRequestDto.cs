@@ -17,7 +17,6 @@ namespace BusTracking.ViewModels.Catalog.Students
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string ClassOfStudent { get; set; }
-        public string TeacherName { get; set; }
-        public string PhoneTeacher { get; set; }
+        public Guid TeacherId { get; set; }
     }
 }

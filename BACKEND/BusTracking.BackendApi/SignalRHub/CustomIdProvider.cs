@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 
-namespace BusTracking.BackendApi.HubConfig
+namespace BusTracking.BackendApi.SignalRHub
 {
     public class CustomIdProvider : IUserIdProvider
     {

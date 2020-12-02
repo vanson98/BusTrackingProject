@@ -1,13 +1,13 @@
 import React, { useEffect, useState,useRef } from 'react';
 import {StyleSheet} from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
-import MyChildrenItem from '../Layout/MyChildrenItem';
+import MyStudentItem from '../Layout/MyStudentItem';
 import StudentService from '../../../controllers/StudentService';
 import { useSelector } from 'react-redux';
 import SignalRService from '../../../controllers/SignalRService';
 import * as _ from 'lodash';
 
-const MyChildrenComponent = (props)=>{
+const MyStudentComponent = (props)=>{
     //======================== Property =========================
     const navigation = props.navigation;
     var user = useSelector((state)=>state.user);
@@ -18,10 +18,10 @@ const MyChildrenComponent = (props)=>{
     const [students, setListStudent]=useState(listStudent)
     stateRef.current = students;
 
-    // Lấy tất cả danh sách học sinh của
+    // Lấy tất cả danh sách học sinh của giáo viên
     useEffect(()=>{
         async function getListStudent(){
-            var response = await StudentService.getAllChildOfParent(user.userId,user.userToken);
+            var response = await StudentService.getAllStudentOfTeacher(user.userId,user.userToken);
             setListStudent(response.result)
         }
         getListStudent();
@@ -56,7 +56,7 @@ const MyChildrenComponent = (props)=>{
             style={styles.container}
             data={students}
             renderItem={({item})=>
-                <MyChildrenItem studentData={item} router={navigation}/>
+                <MyStudentItem studentData={item} router={navigation}/>
             }
             keyExtractor={item=>item.id.toString()}
         >
@@ -81,4 +81,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default MyChildrenComponent
+export default MyStudentComponent

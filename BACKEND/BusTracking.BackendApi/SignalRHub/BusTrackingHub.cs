@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BusTracking.BackendApi.HubConfig
+namespace BusTracking.BackendApi.SignalRHub
 {
     public class BusTrackingHub : Hub
     {
-        public async Task SendLocationToGroup(string groupName,Object data)
+        public async Task SendLocationToGroup(string groupName, object data)
         {
             await Clients.Group(groupName).SendAsync("ReceiveLocation", data);
             //await Clients.User(userId).SendAsync("ReceiveLocation", data);

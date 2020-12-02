@@ -1,5 +1,5 @@
 ﻿using BusTracking.Application.Catalog.StudentService;
-using BusTracking.BackendApi.HubConfig;
+using BusTracking.BackendApi.SignalRHub;
 using BusTracking.Data.Enum;
 using BusTracking.Utilities.Constants;
 using BusTracking.ViewModels.Catalog.Notification;
@@ -61,7 +61,7 @@ namespace StudentTracking.BackendApi.Controllers
         [HttpGet("GetByMonitorId")]
         public async Task<ResultDto<List<StudentDto>>> GetByMonitorId(Guid monitorId)
         {
-            var result = await _studentService.GetStudentByMonitorIdOrParentId(monitorId, null);
+            var result = await _studentService.GetStudentByUser(monitorId, null, null);
             return result;
         }
 
@@ -69,7 +69,15 @@ namespace StudentTracking.BackendApi.Controllers
         [HttpGet("GetByParentId")]
         public async Task<ResultDto<List<StudentDto>>> GetByParentId(Guid parentId)
         {
-            var result = await _studentService.GetStudentByMonitorIdOrParentId(null,parentId);
+            var result = await _studentService.GetStudentByUser(null,parentId,null);
+            return result;
+        }
+
+        [Authorize(Roles = "teacher")]
+        [HttpGet("GetByTeacherId")]
+        public async Task<ResultDto<List<StudentDto>>> GetByTeacherId(Guid teacherId)
+        {
+            var result = await _studentService.GetStudentByUser(null, null, teacherId);
             return result;
         }
 
@@ -97,6 +105,14 @@ namespace StudentTracking.BackendApi.Controllers
             return result;
         }
 
+        [Authorize(Roles = "teacher")]
+        [HttpGet("GetNotificationOfTeacher")]
+        public async Task<ResultDto<List<NotificationDto>>> GetNotificationOfTeacher([FromQuery] Guid teacherId, [FromQuery] DateTime fromDate, [FromQuery] DateTime toDate)
+        {
+            var result = await _studentService.GetAllNotificationOfTeacher(teacherId, fromDate, toDate);
+            return result;
+        }
+
         [Authorize(Roles = "admin")]
         [HttpGet("GetTotalStudentStatus")]
         public async Task<ResultDto<TotalStudentStatus>> GetTotalStudentStatus()
@@ -113,7 +129,7 @@ namespace StudentTracking.BackendApi.Controllers
             return result;
         }
 
-        [Authorize(Roles = "monitor,parent")]
+        [Authorize(Roles = "monitor,parent,teacher")]
         [HttpPost("CheckIn")]
         public async Task<ResultDto<StudentCheckInDto>> CheckIn([FromBody]CheckInRequestDto request)
         {
@@ -127,15 +143,23 @@ namespace StudentTracking.BackendApi.Controllers
                 // Message to All
                 await _hubContext.Clients.All.SendAsync("ReceiveCheckIn", res);
                 var notification = await _studentService.AddNotification(res.Result);
-                if (notification.TypeNotification != (int)TypeMessage.AtHome && notification.TypeNotification != (int)TypeMessage.OnLeave )
+                if (notification.TypeNotification==(int)TypeMessage.InClass | notification.TypeNotification == (int)TypeMessage.NotInClass)
                 {
-                    // Message to parent
+                    // Message to parent and monitor
                     await _hubContext.Clients.User(res.Result.ParentId.ToString()).SendAsync("ReceiveNotication", notification);
+                    await _hubContext.Clients.User(res.Result.MonitorId.ToString()).SendAsync("ReceiveNotication", notification);
+                }
+                else if(notification.TypeNotification != (int)TypeMessage.AtHome && notification.TypeNotification != (int)TypeMessage.OnLeave )
+                {
+                    // Message to parent and teacher
+                    await _hubContext.Clients.User(res.Result.ParentId.ToString()).SendAsync("ReceiveNotication", notification);
+                    await _hubContext.Clients.User(res.Result.TeacherId.ToString()).SendAsync("ReceiveNotication", notification);
                 }
                 else
                 {
-                    // Message to monitor
+                    // Message to monitor and teacher
                     await _hubContext.Clients.User(res.Result.MonitorId.ToString()).SendAsync("ReceiveNotication", notification);
+                    await _hubContext.Clients.User(res.Result.TeacherId.ToString()).SendAsync("ReceiveNotication", notification);
                 }
             }
             return res;

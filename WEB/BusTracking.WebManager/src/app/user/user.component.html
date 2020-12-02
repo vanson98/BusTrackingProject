@@ -45,6 +45,7 @@
                                             <mat-option value="1">Giám sát xe</mat-option>
                                             <mat-option value="0">Phụ huynh</mat-option>
                                             <mat-option value="2">Quản trị viên</mat-option>
+                                            <mat-option value="3">Giáo viên</mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
@@ -94,6 +95,7 @@
                                 <span class="label label-primary" *ngIf='user.typeAccount==0'>Phụ huynh</span>
                                 <span class="label label-success" *ngIf='user.typeAccount==1'>GSX</span>
                                 <span class="label label-info" *ngIf='user.typeAccount==2'>Quản trị</span>
+                                <span class="label label-warning" *ngIf='user.typeAccount==3'>Giáo viên</span>
                             </td>
                             <td align="center">
                                 <i class="material-icons check_box" *ngIf="user.status">

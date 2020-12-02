@@ -58,6 +58,8 @@
                                             <mat-option value="6">Đã trả</mat-option>
                                             <mat-option value="7">Tại nhà</mat-option>
                                             <mat-option value="8">Nghỉ học</mat-option>
+                                            <mat-option value="9">Trong lớp</mat-option>
+                                            <mat-option value="10">Vắng mặt trong lớp</mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
@@ -131,6 +133,8 @@
                                 <span class="label label-info" *ngIf="log.checkInResult==6">Đã trả</span>
                                 <span class="label label-primary" *ngIf="log.checkInResult==7">Tại nhà</span>
                                 <span class="label label-warning" *ngIf="log.checkInResult==8">Nghỉ học</span>
+                                <span class="label label-success" *ngIf="log.checkInResult==9">Trong lớp</span>
+                                <span class="label label-danger" *ngIf="log.checkInResult==10">Vắng mặt trong lớp</span>
                             </td>
                             <td>
                                 <button class="action-button" mat-icon-button [matMenuTriggerFor]="actionsMenu">

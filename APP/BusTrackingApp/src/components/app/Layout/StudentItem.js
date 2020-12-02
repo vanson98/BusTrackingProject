@@ -89,12 +89,26 @@ function StudentItem (props) {
                         </Text>
                     </TouchableOpacity>
                     <Text style={{fontSize: 16}}>{student.classOfStudent}</Text>
-                    <Text style={{marginTop:10,fontSize:16}}>
+                    <View style={{flexDirection:'row'}}>
+                        {
+                             typeCheck==0 ?
+                            <Text style={{fontSize: 16}}>Giờ đón: </Text>:
+                            <Text style={{fontSize: 16}}>Giờ trả: </Text>
+                        }
+                        {
+                            typeCheck==0 ?
+                            <Text style={{fontSize: 16}}>{student.stopPickTime.hours+":"+student.stopPickTime.minutes}</Text>:
+                            <Text style={{fontSize: 16}}>{student.stopDropTime.hours+":"+student.stopDropTime.minutes}</Text>
+                        }
+                    </View>
+                    <Text style={{marginTop:0,fontSize:16}}>
                         {   
                             (student.status == 1  ) ? 'Vắng mặt lúc đón' : 
                             (student.status == 2 && typeCheck==0 ) ? 'Đã đón' : 
-                            ((student.status == 3 |student.status == 4 | student.status ==5 | student.status ==6 | student.status ==7 ) && typeCheck==0) ? 'Đã tới trường' :
+                            ((student.status == 3 |student.status == 4 | student.status ==5 | student.status ==6 | student.status ==7 | student.status == 9 | student.status==10 ) && typeCheck==0) ? 'Đã tới trường' :
                             (student.status == 4 && typeCheck!=0 ) ? 'Vắng mặt lúc về' :
+                            (student.status == 9 && typeCheck!=0 ) ? 'Đã vào lớp học' :
+                            (student.status == 10 && typeCheck!=0 ) ? 'Vắng mặt trong lớp' :
                             (student.status == 5 && typeCheck!=0 ) ? 'Đang trên đường về' :
                             (student.status == 6 && typeCheck!=0 ) ? 'Đã trả' :
                             (student.status == 7 && typeCheck!=0 ) ? 'Đã về nhà' :
@@ -126,12 +140,12 @@ function StudentItem (props) {
                         <Text style={{color: '#FFF',fontSize:16}}>Đã trả</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
-                        style={[(typeCheck!=0 && student.status==3) ? styles.show3 : styles.hide]}
+                        style={[(typeCheck!=0 && (student.status==3 | student.status==9)) ? styles.show3 : styles.hide]}
                         onPress={()=>{checkIn(5)}}>
                         <Text style={{color: '#FFF',fontSize:16}}>Đã lên xe</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
-                        style={[(typeCheck!=0 && student.status==3) ? styles.show2 : styles.hide]}
+                        style={[(typeCheck!=0 && student.status==3 | student.status==9) ? styles.show2 : styles.hide]}
                         onPress={()=>{checkIn(4)}}>
                         <Text style={{color: '#FFF',fontSize:16}}>Vắng mặt</Text>
                     </TouchableOpacity>

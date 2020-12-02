@@ -15,6 +15,7 @@ implements OnInit {
   saving = false;
   isActive = true;
   parents : UserDto[] = [];
+  teachers : UserDto[] = [];
   stopsDrop : StopDto[] = [];
   stopsPick : StopDto[] = [];
   buses : BusDto[] = [];
@@ -42,14 +43,21 @@ implements OnInit {
       }else{
         abp.message.error(result.message);
       }
-    })
+    });
     this._userService.getAllByType(0).subscribe(res=>{
       if(res.statusCode==AppResCode.Success){
         this.parents = res.result;
       }else{
         abp.message.error(res.message);
       }
-    })
+    });
+    this._userService.getAllByType(3).subscribe(res=>{
+      if(res.statusCode==AppResCode.Success){
+        this.teachers = res.result;
+      }else{
+        abp.message.error(res.message);
+      }
+    });
     this._stopService.getAllByType(0).subscribe(res=>{
       if(res.statusCode==AppResCode.Success){
         this.stopsPick = res.result;

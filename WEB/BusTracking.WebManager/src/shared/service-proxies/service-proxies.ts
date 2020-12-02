@@ -1988,6 +1988,62 @@ export class StudentServiceProxy {
     }
 
     /**
+     * @param teacherId (optional) 
+     * @return Success
+     */
+    getByTeacherId(teacherId: string | undefined): Observable<StudentDtoListResultDto> {
+        let url_ = this.baseUrl + "/api/Student/GetByTeacherId?";
+        if (teacherId === null)
+            throw new Error("The parameter 'teacherId' cannot be null.");
+        else if (teacherId !== undefined)
+            url_ += "teacherId=" + encodeURIComponent("" + teacherId) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetByTeacherId(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetByTeacherId(<any>response_);
+                } catch (e) {
+                    return <Observable<StudentDtoListResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<StudentDtoListResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetByTeacherId(response: HttpResponseBase): Observable<StudentDtoListResultDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StudentDtoListResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<StudentDtoListResultDto>(<any>null);
+    }
+
+    /**
      * @param fromDate (optional) 
      * @param toDate (optional) 
      * @param studentName (optional) 
@@ -2181,6 +2237,72 @@ export class StudentServiceProxy {
     }
 
     protected processGetNotificationOfParent(response: HttpResponseBase): Observable<NotificationDtoListResultDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = NotificationDtoListResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<NotificationDtoListResultDto>(<any>null);
+    }
+
+    /**
+     * @param teacherId (optional) 
+     * @param fromDate (optional) 
+     * @param toDate (optional) 
+     * @return Success
+     */
+    getNotificationOfTeacher(teacherId: string | undefined, fromDate: moment.Moment | undefined, toDate: moment.Moment | undefined): Observable<NotificationDtoListResultDto> {
+        let url_ = this.baseUrl + "/api/Student/GetNotificationOfTeacher?";
+        if (teacherId === null)
+            throw new Error("The parameter 'teacherId' cannot be null.");
+        else if (teacherId !== undefined)
+            url_ += "teacherId=" + encodeURIComponent("" + teacherId) + "&"; 
+        if (fromDate === null)
+            throw new Error("The parameter 'fromDate' cannot be null.");
+        else if (fromDate !== undefined)
+            url_ += "fromDate=" + encodeURIComponent(fromDate ? "" + fromDate.toJSON() : "") + "&"; 
+        if (toDate === null)
+            throw new Error("The parameter 'toDate' cannot be null.");
+        else if (toDate !== undefined)
+            url_ += "toDate=" + encodeURIComponent(toDate ? "" + toDate.toJSON() : "") + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetNotificationOfTeacher(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetNotificationOfTeacher(<any>response_);
+                } catch (e) {
+                    return <Observable<NotificationDtoListResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<NotificationDtoListResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetNotificationOfTeacher(response: HttpResponseBase): Observable<NotificationDtoListResultDto> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -5424,6 +5546,7 @@ export class StudentDto implements IStudentDto {
     parentId: string;
     parentName: string | undefined;
     phoneParent: string | undefined;
+    teacherId: string;
     teacherName: string | undefined;
     phoneTeacher: string | undefined;
     classOfStudent: string | undefined;
@@ -5462,6 +5585,7 @@ export class StudentDto implements IStudentDto {
             this.parentId = data["parentId"];
             this.parentName = data["parentName"];
             this.phoneParent = data["phoneParent"];
+            this.teacherId = data["teacherId"];
             this.teacherName = data["teacherName"];
             this.phoneTeacher = data["phoneTeacher"];
             this.classOfStudent = data["classOfStudent"];
@@ -5500,6 +5624,7 @@ export class StudentDto implements IStudentDto {
         data["parentId"] = this.parentId;
         data["parentName"] = this.parentName;
         data["phoneParent"] = this.phoneParent;
+        data["teacherId"] = this.teacherId;
         data["teacherName"] = this.teacherName;
         data["phoneTeacher"] = this.phoneTeacher;
         data["classOfStudent"] = this.classOfStudent;
@@ -5538,6 +5663,7 @@ export interface IStudentDto {
     parentId: string;
     parentName: string | undefined;
     phoneParent: string | undefined;
+    teacherId: string;
     teacherName: string | undefined;
     phoneTeacher: string | undefined;
     classOfStudent: string | undefined;
@@ -5735,6 +5861,7 @@ export class StudentCheckInDto implements IStudentCheckInDto {
     studentId: number;
     parentId: string;
     monitorId: string | undefined;
+    teacherId: string | undefined;
     monitorName: string | undefined;
     studentName: string | undefined;
     busName: string | undefined;
@@ -5760,6 +5887,7 @@ export class StudentCheckInDto implements IStudentCheckInDto {
             this.studentId = data["studentId"];
             this.parentId = data["parentId"];
             this.monitorId = data["monitorId"];
+            this.teacherId = data["teacherId"];
             this.monitorName = data["monitorName"];
             this.studentName = data["studentName"];
             this.busName = data["busName"];
@@ -5785,6 +5913,7 @@ export class StudentCheckInDto implements IStudentCheckInDto {
         data["studentId"] = this.studentId;
         data["parentId"] = this.parentId;
         data["monitorId"] = this.monitorId;
+        data["teacherId"] = this.teacherId;
         data["monitorName"] = this.monitorName;
         data["studentName"] = this.studentName;
         data["busName"] = this.busName;
@@ -5810,6 +5939,7 @@ export interface IStudentCheckInDto {
     studentId: number;
     parentId: string;
     monitorId: string | undefined;
+    teacherId: string | undefined;
     monitorName: string | undefined;
     studentName: string | undefined;
     busName: string | undefined;
@@ -6457,8 +6587,7 @@ export class CreateStudentRequestDto implements ICreateStudentRequestDto {
     email: string | undefined;
     phoneNumber: string | undefined;
     classOfStudent: string | undefined;
-    teacherName: string | undefined;
-    phoneTeacher: string | undefined;
+    teacherId: string;
 
     constructor(data?: ICreateStudentRequestDto) {
         if (data) {
@@ -6481,8 +6610,7 @@ export class CreateStudentRequestDto implements ICreateStudentRequestDto {
             this.email = data["email"];
             this.phoneNumber = data["phoneNumber"];
             this.classOfStudent = data["classOfStudent"];
-            this.teacherName = data["teacherName"];
-            this.phoneTeacher = data["phoneTeacher"];
+            this.teacherId = data["teacherId"];
         }
     }
 
@@ -6505,8 +6633,7 @@ export class CreateStudentRequestDto implements ICreateStudentRequestDto {
         data["email"] = this.email;
         data["phoneNumber"] = this.phoneNumber;
         data["classOfStudent"] = this.classOfStudent;
-        data["teacherName"] = this.teacherName;
-        data["phoneTeacher"] = this.phoneTeacher;
+        data["teacherId"] = this.teacherId;
         return data; 
     }
 
@@ -6529,8 +6656,7 @@ export interface ICreateStudentRequestDto {
     email: string | undefined;
     phoneNumber: string | undefined;
     classOfStudent: string | undefined;
-    teacherName: string | undefined;
-    phoneTeacher: string | undefined;
+    teacherId: string;
 }
 
 export class UpdateStudentRequestDto implements IUpdateStudentRequestDto {
@@ -6545,8 +6671,7 @@ export class UpdateStudentRequestDto implements IUpdateStudentRequestDto {
     email: string | undefined;
     phoneNumber: string | undefined;
     classOfStudent: string | undefined;
-    teacherName: string | undefined;
-    phoneTeacher: string | undefined;
+    teacherId: string;
 
     constructor(data?: IUpdateStudentRequestDto) {
         if (data) {
@@ -6570,8 +6695,7 @@ export class UpdateStudentRequestDto implements IUpdateStudentRequestDto {
             this.email = data["email"];
             this.phoneNumber = data["phoneNumber"];
             this.classOfStudent = data["classOfStudent"];
-            this.teacherName = data["teacherName"];
-            this.phoneTeacher = data["phoneTeacher"];
+            this.teacherId = data["teacherId"];
         }
     }
 
@@ -6595,8 +6719,7 @@ export class UpdateStudentRequestDto implements IUpdateStudentRequestDto {
         data["email"] = this.email;
         data["phoneNumber"] = this.phoneNumber;
         data["classOfStudent"] = this.classOfStudent;
-        data["teacherName"] = this.teacherName;
-        data["phoneTeacher"] = this.phoneTeacher;
+        data["teacherId"] = this.teacherId;
         return data; 
     }
 
@@ -6620,8 +6743,7 @@ export interface IUpdateStudentRequestDto {
     email: string | undefined;
     phoneNumber: string | undefined;
     classOfStudent: string | undefined;
-    teacherName: string | undefined;
-    phoneTeacher: string | undefined;
+    teacherId: string;
 }
 
 export class UserDto implements IUserDto {

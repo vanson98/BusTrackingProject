@@ -17,7 +17,16 @@ const StudentService =  {
             }
         });
     },
+    getAllStudentOfTeacher: (teacherId,jwt)=>{
+        const url = "/Student/GetByTeacherId?teacherId="+teacherId;
+        return httpClient.get(url,{
+            headers:{
+                'Authorization': "Bearer " + jwt
+            }
+        });
+    },
     checkIn: (studentId,monitorId,longitude,latitude,checkInType,checkInTime,checkInResult,jwt)=>{
+        console.log(jwt);
         const url = "/Student/CheckIn";
         return httpClient.post(url,{
             studentId: studentId,
@@ -45,6 +54,15 @@ const StudentService =  {
 
     getAllNotificationOfParent: (parentId,fromDate,toDate,jwt)=>{
         const url = "Student/GetNotificationOfParent?parentId="+parentId+"&fromDate="+fromDate+"&toDate="+toDate;
+        return httpClient.get(url,{
+            headers: {
+                'Authorization': "Bearer " + jwt
+            }
+        })
+    },
+
+    getAllNotificationOfTeacher: (parentId,fromDate,toDate,jwt)=>{
+        const url = "Student/GetNotificationOfTeacher?teacherId="+parentId+"&fromDate="+fromDate+"&toDate="+toDate;
         return httpClient.get(url,{
             headers: {
                 'Authorization': "Bearer " + jwt

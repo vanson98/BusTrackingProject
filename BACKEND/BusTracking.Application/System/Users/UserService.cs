@@ -63,7 +63,7 @@ namespace BusTracking.Application.System.Users
                         where x.TypeAccount == (TypeAccount)type
                         where x.IsDeleted == false
                         select x;
-            var parents = await query.Select(x => new UserDto()
+            var users = await query.Select(x => new UserDto()
             {
                 Id = x.Id,
                 Dob = x.Dob,
@@ -74,7 +74,7 @@ namespace BusTracking.Application.System.Users
                 Status = (int)x.Status,
                 UserName = x.UserName
             }).ToListAsync();
-            return parents;
+            return users;
         }
 
         public async Task<PageResultDto<UserDto>> GetAllPaging(GetUserPagingRequestDto request)
